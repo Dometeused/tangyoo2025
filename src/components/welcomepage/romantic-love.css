@@ -1,0 +1,66 @@
+.romantic-container {
+  width: 100vw;
+  min-height: 100vh;
+  background: #FFC568;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  width: 500px;
+  height: 200px;
+  position: relative;
+  margin-top: 5vh;
+}
+
+.svg-container {
+  width: 500px;
+  height: 200px;
+  display: block;
+  margin: 0 auto;
+}
+
+.mo-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 500px;
+  height: 200px;
+  pointer-events: none;
+}
+
+.line {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+}
+.lttr {
+  fill: #763C8C;
+}
+.congrats-msg {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, 0);
+  background: rgba(255,255,255,0.97);
+  color: #763C8C;
+  padding: 1.3em 2em;
+  border-radius: 32px;
+  box-shadow: 0 4px 32px #763c8c33;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  z-index: 10;
+  animation: msg-fadein 1s cubic-bezier(.49,1.51,.3,1.09);
+}
+
+@keyframes msg-fadein {
+  from { opacity: 0; transform: translate(-50%, 25px) scale(0.85);}
+  to { opacity: 1; transform: translate(-50%, 0) scale(1);}
+}

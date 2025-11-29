@@ -1,0 +1,57 @@
+/* 📄 src/styles/dashboard.css */
+.dashboard {
+  background: #f8f9fc;
+  min-height: 100vh;
+  padding-bottom: 6rem;
+}
+.dashboard-nav {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  font-weight: bold;
+}
+.nav-item {
+  color: #333;
+  font-size: 1.1rem;
+}
+.dashboard-container {
+  display: grid;
+  gap: 1.5rem;
+  padding: 0 2rem;
+}
+.status-text {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+}
+.event-card {
+  background: white;
+  padding: 1rem;
+  border: 3px solid #ddd;
+  border-radius: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.cover-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+.event-info h3 {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+.event-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.delete-btn {
+  color: red;
+  font-size: 1.1rem;
+}
+.view-link {
+  color: #0066cc;
+  font-weight: bold;
+}
