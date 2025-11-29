@@ -1,0 +1,111 @@
+.romantic-container {
+  width: 100vw;
+  min-height: 100vh;
+  background: #FFC568;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  width: 500px;
+  height: 200px;
+  position: relative;
+  margin-top: 5vh;
+}
+
+.svg-container {
+  width: 500px;
+  height: 200px;
+  display: block;
+  margin: 0 auto;
+}
+
+.mo-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 500px;
+  height: 200px;
+  pointer-events: none;
+}
+
+.line {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+}
+.lttr {
+  fill: #763C8C;
+}
+.congrats-msg {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, 0);
+  background: rgba(255,255,255,0.97);
+  color: #763C8C;
+  padding: 1.3em 2em;
+  border-radius: 32px;
+  box-shadow: 0 4px 32px #763c8c33;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  z-index: 10;
+  animation: msg-fadein 1s cubic-bezier(.49,1.51,.3,1.09);
+}
+
+@keyframes msg-fadein {
+  from { opacity: 0; transform: translate(-50%, 25px) scale(0.85);}
+  to { opacity: 1; transform: translate(-50%, 0) scale(1);}
+}
+.romantic-card {
+  background: rgba(255,255,255,0.96);
+  box-shadow: 0 6px 36px #c7a2ff22, 0 2px 8px #fff6;
+  border-radius: 24px;
+  font-size: 22px;
+  padding: 28px 36px 22px 36px;
+  color: #763c8c;
+  font-weight: 600;
+  max-width: 90vw;
+  margin: 0 auto;
+  line-height: 1.6;
+  text-align: center;
+  position: relative;
+  animation: romantic-fadein 1s cubic-bezier(.42,0,.4,1.1);
+}
+@keyframes romantic-fadein {
+  0% { opacity:0; transform: translateY(-20px) scale(0.92);}
+  100% { opacity:1; transform: translateY(0) scale(1);}
+}
+.romantic-heartfall {
+  position: absolute;
+  top: 0; left: 50%;
+  font-size: 2.3em;
+  animation: heart-fall 1.7s cubic-bezier(.8,0,.5,1.1);
+  opacity: 0.88;
+  pointer-events: none;
+}
+@keyframes heart-fall {
+  0% { opacity:0; transform:translate(-50%,-40px) scale(0.9);}
+  40% { opacity:1;}
+  100% { opacity:1; transform:translate(-50%,55px) scale(1.10);}
+}
+.romantic-coverimg {
+  margin-top: 40px;
+  border-radius: 22px;
+  width: 340px;
+  max-width: 90vw;
+  box-shadow: 0 2px 18px #f9c6;
+  object-fit: cover;
+  aspect-ratio: 2/1;
+}
+@media (max-width: 600px) {
+  .romantic-card { padding: 18px 8vw 18px 8vw; font-size: 18px;}
+  .romantic-coverimg { width: 98vw; min-width: 0; margin-top: 22px;}
+}

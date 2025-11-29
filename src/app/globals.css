@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+/* 1. Root & Dark Mode */
+:root {
+  --background: #fff6fa;
+  --foreground: #251c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #161216;
+    --foreground: #ece1e7;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'SukhumvitSet', Arial, Helvetica, sans-serif;
+  /* (หรือจะคอมเมนต์บรรทัดบนนี้ออก ถ้าอยากใช้ Tailwind จัดการ font-family เอง) */
+}
+
+/* 2. ฟอนต์ Custom (วางไฟล์ไว้ที่ public/fonts/) */
+@font-face {
+  font-family: 'Jeamjit';
+  src: url('/fonts/Jeamjit.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'SukhumvitSet';
+  src: url('/fonts/SukhumvitSet-Medium.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: "Kart-Suparerk";
+  src: url("/fonts/Kart-Suparerk.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Juliette";
+  src: url("/fonts/Juliette.otf") format("opentype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "StyleScript";
+  src: url("/fonts/StyleScript-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "TimesCustom";
+  src: url("/fonts/times.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Kaewpet";
+  src: url("/fonts/TS-kaewpet Bold-NP.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Rukdeaw";
+  src: url("/fonts/can_Rukdeaw01.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* 3. Custom Font Classes (ซัพพอร์ต Tailwind) */
+.font-juliette { font-family: 'Juliette', cursive !important; }
+.font-stylescript { font-family: 'StyleScript', cursive !important; }
+.font-kart { font-family: 'Kart-Suparerk', sans-serif !important; }
+.font-sukhumvit { font-family: 'SukhumvitSet', sans-serif !important; }
+.font-kaewpet { font-family: 'Kaewpet', serif !important; }
+.font-jeamjit { font-family: 'Jeamjit', sans-serif !important; }
+.font-times { font-family: 'TimesCustom', serif !important; }
+.font-rukdeaw { font-family: 'Rukdeaw', cursive !important; }
+
+/* 4. Typography/Headline Responsive + Shadow (Minimal สวย) */
+.headline {
+  font-family: 'Juliette', cursive;
+  font-size: clamp(2.4rem, 8vw, 4.2rem);
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #502543;
+  font-weight: 400;
+  text-shadow:
+    0 3px 12px rgba(100, 0, 30, 0.10),
+    0 1px 10px rgba(255, 143, 203, 0.08);
+}
+.subheadline {
+  font-family: 'StyleScript', cursive;
+  font-size: clamp(1.3rem, 5vw, 2.2rem);
+  color: #b87596;
+  text-align: center;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  text-shadow: 0 1px 7px rgba(255, 143, 203, 0.10);
+}
+.invite-date {
+  font-family: 'Kart-Suparerk', sans-serif;
+  font-size: clamp(1.1rem, 4vw, 2.1rem);
+  color: #71586c;
+  text-align: center;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 8px rgba(150, 0, 50, 0.07);
+}
+
+/* 5. Text Shadow แบบ Glow/Outline */
+.text-glow {
+  text-shadow:
+    0 1px 10px rgba(255, 178, 222, 0.12),
+    0 0px 2px #fff6fa;
+}
+.text-outline {
+  /* สำหรับข้อความบนรูปเข้ม ให้ขาวฟุ้ง */
+  text-shadow:
+     1px  1px  0 #fff,
+    -1px  1px  0 #fff,
+     1px -1px  0 #fff,
+    -1px -1px  0 #fff;
+}
+
+/* 6. Responsive (Optional) */
+@media (max-width: 480px) {
+  .headline { font-size: clamp(1.3rem, 9vw, 2.3rem); }
+  .subheadline { font-size: clamp(0.9rem, 6vw, 1.3rem); }
+  .invite-date { font-size: clamp(0.8rem, 6vw, 1.1rem);}
+}
+
+@font-face {
+  font-family: 'Marykate';
+  src: url('/fonts/FontsFree-Net-Marykate-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+.container {
+  width: 50rem;
+  height: 20rem;
+  position: relative;
+}
+.svg-container {
+  z-index: 2;
+  position: absolute;
+}
+.mo-container {
+  width: 100%;
+  height: 100%;
+}
+.line {
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+}
+.lttr {
+  fill: #763C8C;
+}
+.sound {
+  position: fixed;
+  color: #763C8C;
+  font-size: 1.6rem;
+  bottom: 1rem;
+  right: 1rem;
+  text-decoration: underline;
+  cursor: default;
+}
+.sound--off {
+  text-decoration: line-through;
+}
+body, html {
+  min-height: 100vh;
+  background-color: #FFC568;
+  font-size: 62.5%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0; padding: 0;
+}
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.romantic-bg {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: #FFC568;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.romantic-card {
+  position: absolute;
+  top: 11vh;
+  left: 50%;
+  transform: translate(-50%, 0) scale(0.95);
+  width: 330px;
+  background: rgba(255,255,255,0.88);
+  box-shadow: 0 8px 32px #D5A6FF44;
+  border-radius: 32px;
+  padding: 32px 22px 18px 22px;
+  text-align: center;
+  z-index: 11;
+  opacity: 0;
+  transition: 0.45s cubic-bezier(.24,1.19,.23,.93);
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+}
+.romantic-card.pop-in {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1.01);
+}
+.romantic-msg {
+  font-size: 1.15rem;
+  color: #7C377A;
+  margin-bottom: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.love-emoji-row {
+  margin-bottom: 2px;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
+}
+.romantic-btn {
+  margin-top: 7px;
+  color: #a781ff;
+  font-size: 1.04rem;
+  cursor: pointer;
+  opacity: 0.88;
+  text-shadow: 0 1px 6px #e0d0ff66;
+  transition: 0.2s;
+}
+.romantic-btn:hover {
+  opacity: 1;
+  color: #633e90;
+}
+
+.romantic-ily {
+  font-family: 'Prompt', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #763C8C;
+  margin-top: 120px;
+  margin-bottom: 18px;
+  text-align: center;
+  z-index: 2;
+  user-select: none;
+}
+.romantic-cover-wrapper {
+  margin-top: 30px;
+  width: 320px;
+  height: 180px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 6px 32px #0001, 0 1.5px 6px #ff7bff11;
+  background: linear-gradient(120deg, #ffecb5cc 50%, #ffebff22 100%);
+}
+.romantic-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.93) contrast(1.08) saturate(1.08);
+}
+.floating-heart {
+  position: absolute;
+  left: 53%;
+  bottom: 22px;
+  font-size: 2.2rem;
+  opacity: 0.73;
+  animation: heartfloat 2.5s infinite alternate cubic-bezier(.63,.11,.67,1.27);
+  pointer-events: none;
+}
+@keyframes heartfloat {
+  0% { transform: translateY(0) scale(1);}
+  100% { transform: translateY(-30px) scale(1.25);}
+}
