@@ -40,6 +40,18 @@ export default function FooterComponent() {
           >
             About Us
           </a>
+          <a
+            href="/privacy"
+            className="text-gray-500 hover:text-black"
+          >
+            นโยบายความเป็นส่วนตัว
+          </a>
+          <a
+            href="/terms"
+            className="text-gray-500 hover:text-black"
+          >
+            ข้อกำหนดการใช้งาน
+          </a>
         </nav>
         {/* Made with love on mobile (ย้ายลงล่างเฉพาะ mobile) */}
         <span className="text-gray-400 text-sm md:hidden mt-2">

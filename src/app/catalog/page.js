@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 // หมวดสินค้า & mock ข้อมูล (เพิ่มเองได้)
 const CATEGORIES = [
@@ -139,10 +140,10 @@ export default function CatalogPage() {
           ))}
         </div>
         <div className={`text-xl font-semibold mb-2 ${config.text}`}>{config.header}</div>
-        <a
+        <Link
           href="/"
           className="inline-block px-7 py-2 mt-2 rounded-full bg-[#ece4d9] text-gray-800 hover:bg-yellow-100 transition font-medium shadow"
-        >กลับหน้าแรก</a>
+        >กลับหน้าแรก</Link>
       </header>
 
       {/* Grid สินค้า (4 columns, responsive) */}

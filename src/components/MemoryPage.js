@@ -1,4 +1,5 @@
 "use client";
+import dynamic from "next/dynamic";
 import { useAppMode } from "@/context/AppModeContext";
 import { THEMES_OBJ } from "@/constants/theme";
 import CoverSection from "@/components/CoverSection";
@@ -9,9 +10,9 @@ import BioBox2 from "@/components/BioBox2WeddingPoster";
 import BlessingButton from "@/components/BlessingSocialRow";
 import SocialMediaButton from "@/components/SocialMediaButton";
 
-// เพิ่ม BGM/Effect
-import BGMPlayer from "@/components/BGMPlayer";
-import ThemeEffect from "@/components/ThemeEffect";
+// Lazy load heavy components
+const BGMPlayer = dynamic(() => import("@/components/BGMPlayer"), { ssr: false });
+const ThemeEffect = dynamic(() => import("@/components/ThemeEffect"), { ssr: false });
 
 export default function MemoryPage({ event }) {
   const { role, theme, phase } = useAppMode();

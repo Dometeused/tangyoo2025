@@ -13,5 +13,11 @@ export async function GET(req: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
+  // รองรับ ?next= เพื่อให้ creation flow resume ได้หลัง OAuth
+  const next = requestUrl.searchParams.get("next");
+  const redirectTo = next
+    ? `${requestUrl.origin}${decodeURIComponent(next)}`
+    : `${requestUrl.origin}/dashboard`;
+
+  return NextResponse.redirect(redirectTo);
 }

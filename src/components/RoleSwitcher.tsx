@@ -1,8 +1,9 @@
 "use client";
 
 import { useAppMode } from "@/context/AppModeContext";
+import type { RoleType } from "@/context/AppModeContext";
 
-const ROLES = [
+const ROLES: { key: RoleType; label: string }[] = [
   { key: "owner", label: "เจ้าภาพ 👤" },
   { key: "guest", label: "แขก 🙋‍♂️" },
 ];

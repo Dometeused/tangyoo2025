@@ -39,7 +39,7 @@ export default function HeroSection({ current, onChange, THEMES }) {
       
       {/* DotThemeSwitcher center bottom */}
       <div className="absolute left-1/2 bottom-8 z-20 -translate-x-1/2">
-        <DotThemeSwitcher current={current} onChange={onChange} />
+        <DotThemeSwitcher current={current} onChange={onChange} themes={THEMES} />
       </div>
     </section>
   );

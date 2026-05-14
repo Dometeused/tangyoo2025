@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import LiveSVGPoster from "@/components/LiveSVGPoster";
 
 const THEMES = [
@@ -23,7 +23,7 @@ const THEMES = [
   },
 ];
 
-export default function InvitePosterCreatePage() {
+function InvitePosterCreateContent() {
   const params = useSearchParams();
   const themeKey = params.get("theme");
   const templateKey = params.get("template");
@@ -88,6 +88,14 @@ export default function InvitePosterCreatePage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function InvitePosterCreatePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400">กำลังโหลด...</div>}>
+      <InvitePosterCreateContent />
+    </Suspense>
   );
 }
 

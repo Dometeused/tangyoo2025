@@ -1,8 +1,9 @@
 "use client";
 
 import { useAppMode } from "@/context/AppModeContext";
+import type { PhaseType } from "@/context/AppModeContext";
 
-const PHASES = [
+const PHASES: { key: PhaseType; label: string }[] = [
   { key: "invitation", label: "ก่อนงาน 📅" },
   { key: "memory", label: "หลังงาน 🎞️" },
 ];

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useAppMode } from "@/context/AppModeContext";
 import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
 import CoverSection from "@/components/CoverSection";
@@ -9,15 +10,17 @@ import BioBox from "@/components/BioBox";
 import BioBox2 from "@/components/BioBox2";
 import ButtonGroupSection from "@/components/ButtonGroupSection";
 import Modal from "@/components/Modal";
-import TimelineTree from "@/components/timeline-tree/TimelineTree";
-import BGMPlayer from "@/components/BGMPlayer";
-import ThemeEffect from "@/components/ThemeEffect";
 import BlessingSocialRow from "@/components/BlessingSocialRow";
 import BioBox2EditModal from "@/components/BioBox2EditModal";
 import SectionTitle from "@/components/SectionTitle";
 import SectionQuote from "@/components/SectionQuote";
 import StoryDivider from "@/components/StoryDivider";
-import AIVideoSection from "@/components/ai-video/AIVideoSection";
+
+// Lazy load heavy components
+const TimelineTree = dynamic(() => import("@/components/timeline-tree/TimelineTree"), { ssr: false });
+const BGMPlayer = dynamic(() => import("@/components/BGMPlayer"), { ssr: false });
+const ThemeEffect = dynamic(() => import("@/components/ThemeEffect"), { ssr: false });
+const AIVideoSection = dynamic(() => import("@/components/ai-video/AIVideoSection"), { ssr: false });
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();

@@ -203,7 +203,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex items-center gap-2 mb-2">
-                <QRLightbox url={event.qr_url} />
+                <QRLightbox eventId={event.id} url={event.qr_url} />
                 <ShareButtons url={`/event/${event.id}`} />
                 <button
                   onClick={() => handleDelete(event.id)}

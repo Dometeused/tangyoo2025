@@ -6,6 +6,8 @@ import "yet-another-react-lightbox/styles.css";
 
 export default function GalleryPreview({ event }) {
   const router = useRouter();
+  const [openLightbox, setOpenLightbox] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   if (!event) return null;
 
@@ -17,9 +19,6 @@ export default function GalleryPreview({ event }) {
 
   const slots = [...images];
   while (slots.length < 3) slots.push(null);
-
-  const [openLightbox, setOpenLightbox] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const makeUrl = (filename) => {
     if (!filename) return null;

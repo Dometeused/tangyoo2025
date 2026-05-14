@@ -1,12 +1,9 @@
-// pages/index.js (Landing Page)
+// /app/page.js (Landing Page)
 "use client";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
-import DotThemeSwitcher from "@/components/DotThemeSwitcher";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const THEMES = [
 	{
@@ -14,7 +11,7 @@ const THEMES = [
 		label: "งานอาลัย",
 		bg: "bg-zinc-900",
 		text: "text-white",
-		dot: "bg-zinc-800",
+		dot: "bg-zinc-400",
 		ctaClass: "bg-zinc-900 hover:bg-zinc-800",
 		image: "/images/funeral.png",
 		title: "สร้างหน้าอาลัย บันทึกความทรงจำสุดท้าย",
@@ -120,7 +117,7 @@ const THEMES = [
 ];
 
 export default function Home() {
-	const [themeIdx, setThemeIdx] = useState(1); // default "งานครบรอบ"
+	const [themeIdx, setThemeIdx] = useState(2); // default "งานแต่ง"
 	const theme = THEMES[themeIdx];
 
 	return (
@@ -216,63 +213,43 @@ export default function Home() {
 				/>
 			</section>
 
-			{/* Testimonial */}
-			<section className="bg-orange-50 py-12 mt-8">
-				<div className="max-w-4xl mx-auto text-center">
-					<h2 className="font-bold text-2xl mb-6 text-orange-700">
-						เสียงจากผู้ใช้บริการ
+			{/* Early Access CTA */}
+			<section className="bg-orange-50 py-14 mt-8">
+				<div className="max-w-2xl mx-auto text-center px-4">
+					<div className="text-4xl mb-4">✨</div>
+					<h2 className="font-bold text-2xl mb-3 text-orange-700">
+						เป็นคนแรกที่สร้างความทรงจำกับ TangYoo
 					</h2>
-					<div className="flex flex-col gap-8">
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
-								"บริการของ TangYoo ช่วยให้การจัดงานอาลัยเป็นเรื่องง่ายและมีความหมาย ลูกเล่น QR Code ทำให้สามารถเก็บความทรงจำได้อย่างครบถ้วน"
-							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">🧑‍🦳</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
-										คุณสมชาย ใจดี
-									</span>
-									<span className="block text-sm text-gray-500">
-										ผู้ใช้บริการงานอาลัย
-									</span>
-								</div>
-							</div>
+					<p className="text-gray-600 mb-8 leading-relaxed">
+						TangYoo กำลังเปิดให้ใช้งาน Early Access — ลองสร้างหน้างานแรกของคุณได้เลย
+						ฟรี ไม่ต้องใช้บัตรเครดิต
+					</p>
+					<div className="flex flex-col sm:flex-row gap-3 justify-center">
+						<Link
+							href="/creation"
+							className="px-8 py-4 rounded-full bg-orange-500 text-white font-bold text-lg shadow-lg hover:bg-orange-600 transition"
+						>
+							สร้างหน้างานฟรี
+						</Link>
+						<Link
+							href="/about"
+							className="px-8 py-4 rounded-full bg-white border border-orange-200 text-orange-600 font-bold text-lg hover:bg-orange-50 transition"
+						>
+							เรียนรู้เพิ่มเติม
+						</Link>
+					</div>
+					<div className="flex justify-center gap-8 mt-10 text-sm text-gray-500">
+						<div className="flex flex-col items-center gap-1">
+							<span className="text-2xl font-bold text-orange-600">3</span>
+							<span>ประเภทงาน</span>
 						</div>
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
-								"ของขวัญจาก TangYoo ทำให้วันครบรอบของเราพิเศษยิ่งขึ้น การออกแบบกรอบรูปและสมุดโน๊ตคู่รักทำได้ดีมาก ๆ ค่ะ"
-							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">👩🏻‍🦰</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
-										คุณหญิง สวยงาม
-									</span>
-									<span className="block text-sm text-gray-500">
-										ผู้ใช้บริการงานครบรอบ
-									</span>
-								</div>
-							</div>
+						<div className="flex flex-col items-center gap-1">
+							<span className="text-2xl font-bold text-orange-600">QR</span>
+							<span>2-Phase</span>
 						</div>
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
-								"งานแต่งงานของเราเต็มไปด้วยความทรงจำที่สวยงาม ขอบคุณ TangYoo ที่ทำให้เราสามารถเก็บทุกโมเมนต์ได้อย่างมีค่า"
-							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">👩🏻‍❤️‍👨🏼</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
-										คุณเจมส์ และ คุณปุ้ย
-									</span>
-									<span className="block text-sm text-gray-500">
-										คู่บ่าวสาวผู้ใช้บริการ
-									</span>
-								</div>
-							</div>
+						<div className="flex flex-col items-center gap-1">
+							<span className="text-2xl font-bold text-orange-600">∞</span>
+							<span>ความทรงจำ</span>
 						</div>
 					</div>
 				</div>
