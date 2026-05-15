@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import BioBox2WeddingPoster from "@/components/BioBox2WeddingPoster"; // path ตามของจริง
 

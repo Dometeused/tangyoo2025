@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import ProfileImagePickerModal from "@/components/ProfileImagePickerModal";
 import { useAppMode } from "@/context/AppModeContext";

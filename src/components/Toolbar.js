@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 
 // กำหนดรายชื่อฟอนต์ตรงนี้ (ชื่อ value ต้องตรงกับ @font-face ใน global.css)

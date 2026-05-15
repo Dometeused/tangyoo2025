@@ -1,26 +1,28 @@
+"use client";
 import { useState } from "react";
 import { IoMdExpand } from "react-icons/io";
 import { useAppMode } from "@/context/AppModeContext";
-import BioBox2WeddingPoster from "@/components/BioBox2WeddingPoster";
-import BioBox2FuneralPoster from "@/components/BioBox2FuneralPoster";
+import BioBox2WeddingBio from "@/components/BioBox2WeddingBio";
+import BioBox2FuneralBio from "@/components/BioBox2FuneralBio";
 
 export default function BioBox2(props) {
   const [openLightbox, setOpenLightbox] = useState(false);
-  const { theme } = useAppMode();
+  const { theme, role } = useAppMode();
+  const isOwner = role === "owner";
 
   // mapping props สำหรับแต่ละ theme (wedding, funeral)
   let PosterComponent, posterProps, portraitHint;
   if (theme === "funeral") {
-    PosterComponent = BioBox2FuneralPoster;
-    const { profile, poster_name, word, living } = props;
-    posterProps = { profile, poster_name, word, living };
+    PosterComponent = BioBox2FuneralBio;
+    const { profile, poster_name, poster_caption, word, living } = props;
+    posterProps = { profile, poster_name, poster_caption, word, living };
     portraitHint = (
       <div className="text-xs text-gray-500 mb-2 text-center">
         * แนะนำ: ใช้รูปถ่ายแนวตั้ง (portrait) เพื่อความสวยงาม
       </div>
     );
   } else {
-    PosterComponent = BioBox2WeddingPoster;
+    PosterComponent = BioBox2WeddingBio;
     const { bridePic, groomPic, brideBio, groomBio, eventBio, funFact1, funFact2 } = props;
     posterProps = { bridePic, groomPic, brideBio, groomBio, eventBio, funFact1, funFact2 };
     portraitHint = (
@@ -32,7 +34,7 @@ export default function BioBox2(props) {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {portraitHint}
+      {isOwner && portraitHint}
 
       {/* กล่องโปสเตอร์พร้อม Lightbox */}
       <div

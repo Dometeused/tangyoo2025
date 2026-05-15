@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import Image from "next/image";
 // import { HelpCircle } from "lucide-react"; // ถ้าใช้ lucide-react
