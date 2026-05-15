@@ -3,7 +3,7 @@
 import { createContext, useContext, useState } from "react";
 
 // ===== Define types for safety =====
-export type ThemeType = "wedding" | "funeral" | "anniversary";
+export type ThemeType = "wedding" | "funeral" | "anniversary" | "baby" | "birthday";
 export type PhaseType = "invitation" | "memory";
 export type RoleType = "owner" | "guest";
 
