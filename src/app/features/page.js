@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // /pages/features.js
 import Link from "next/link";
 

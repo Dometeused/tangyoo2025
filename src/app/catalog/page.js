@@ -1,11 +1,17 @@
 "use client";
-import { useState } from "react";
+export const dynamic = "force-dynamic";
+;
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 // หมวดสินค้า & mock ข้อมูล (เพิ่มเองได้)
 const CATEGORIES = [
   { key: "all", label: "ทั้งหมด" },
-  { key: "notebook", label: "สมุดโน้ต" },
+  { key: "anniversary", label: "วันครบรอบ" },
   { key: "giftset", label: "ของขวัญ" },
+  { key: "notebook", label: "สมุดโน้ต" },
   { key: "mug", label: "แก้วน้ำ" },
 ];
 
@@ -44,6 +50,22 @@ const THEME_CONFIG = {
 
 const CATALOG = [
   {
+    id: "flowerbox001",
+    name: "Box of Eternal Love",
+    desc: "กล่องดอกไม้ประดิษฐ์เกรดพรีเมียม พร้อมการ์ดอวยพร",
+    img: "/catalog/flowerbox.png",
+    price: "฿1,290",
+    category: "anniversary"
+  },
+  {
+    id: "coupleframe001",
+    name: "Couple Memory Frame",
+    desc: "กรอบรูปคู่สลักชื่อ พร้อมอัดรูปคุณภาพสูง",
+    img: "/catalog/frame.png",
+    price: "฿590",
+    category: "anniversary"
+  },
+  {
     id: "notebook001",
     name: "สมุดโน้ตความทรงจำ",
     desc: "บันทึกความรู้สึกพิเศษสำหรับวันสำคัญ",
@@ -75,29 +97,58 @@ const CATALOG = [
     price: "฿159",
     category: "giftset"
   },
-  // ... เพิ่มสินค้าอีกได้เลย
 ];
 
 export default function CatalogPage() {
   const [selected, setSelected] = useState("all");
-  const [theme, setTheme] = useState("wedding");
+  const [theme, setTheme] = useState("gift"); // Default to gift theme for anniversary
   const [modal, setModal] = useState(null);
 
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get("eventId");
+  const [eventName, setEventName] = useState("");
+
   const config = THEME_CONFIG[theme];
+
+  // Logic to fetch event name (optional for better UX)
+  useEffect(() => {
+    if (eventId) {
+      // Fetch event name logic can be added here if needed
+      setEventName(`Event #${eventId.slice(0, 8)}`);
+    }
+  }, [eventId]);
+
 
   const items = selected === "all"
     ? CATALOG
     : CATALOG.filter(p => p.category === selected);
+
+  // Helper to generate Line URL
+  const getLineUrl = (item) => {
+    let message = `สวัสดีครับ สนใจสั่งซื้อ ${item.name} (${item.id})`;
+    if (eventId) {
+      message += `\nสำหรับงาน Event: ${eventId}`;
+    }
+    return `https://line.me/R/ti/p/@tangyoo?text=${encodeURIComponent(message)}`;
+  };
 
   return (
     <main className={`min-h-screen ${config.bg} font-sans flex flex-col items-center px-2`}>
       {/* Header + กลับ Dashboard */}
       <header className="w-full max-w-6xl text-center pt-12 pb-7 relative">
         {/* กลับ Dashboard (ขวาบน) */}
-        <a
-          href="/dashboard"
+        <Link
+          href={eventId ? `/event/${eventId}` : "/dashboard"}
           className="absolute right-0 top-0 mt-5 mr-7 px-5 py-2 rounded-full bg-[#ece4d9] text-gray-800 hover:bg-yellow-100 transition font-medium shadow"
-        >กลับ Dashboard</a>
+        >
+          {eventId ? "⬅️ กลับไปที่งาน" : "กลับ Dashboard"}
+        </Link>
+
+        {eventId && (
+          <div className="inline-block px-4 py-1 rounded-full bg-orange-100 text-orange-600 text-sm font-semibold mb-4 animate-pulse">
+            🎁 กำลังเลือกของขวัญสำหรับ {eventName}
+          </div>
+        )}
 
         <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
           TangYoo Catalog
@@ -139,10 +190,10 @@ export default function CatalogPage() {
           ))}
         </div>
         <div className={`text-xl font-semibold mb-2 ${config.text}`}>{config.header}</div>
-        <a
+        <Link
           href="/"
           className="inline-block px-7 py-2 mt-2 rounded-full bg-[#ece4d9] text-gray-800 hover:bg-yellow-100 transition font-medium shadow"
-        >กลับหน้าแรก</a>
+        >กลับหน้าแรก</Link>
       </header>
 
       {/* Grid สินค้า (4 columns, responsive) */}
@@ -154,40 +205,46 @@ export default function CatalogPage() {
             style={{ minHeight: 370 }}
             onClick={() => setModal(prod)}
           >
-            <img
-              src={prod.img}
-              alt={prod.name}
-              className="w-40 h-40 object-cover rounded-2xl border-2 border-[#f5eee6] shadow mb-6"
-            />
+            <div className="relative w-[160px] h-[160px] mb-6">
+              <Image
+                src={prod.img}
+                alt={prod.name}
+                fill
+                className="object-cover rounded-2xl border-2 border-[#f5eee6] shadow"
+              />
+            </div>
             <div className={`font-bold text-lg mb-1 tracking-tight ${config.text}`}>{prod.name}</div>
-            <div className="text-gray-600 text-sm mb-3 text-center font-light">{prod.desc}</div>
-            <div className={`font-semibold text-base mb-1 ${config.accent}`}>{prod.price}</div>
+            <div className="text-gray-600 text-sm mb-3 text-center font-light line-clamp-2">{prod.desc}</div>
+            <div className={`font-semibold text-base mb-1 ${config.accent} mt-auto`}>{prod.price}</div>
           </div>
         ))}
       </div>
 
       {/* Modal ดูรายละเอียดสินค้า */}
       {modal && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl p-8 shadow-2xl max-w-md w-full relative">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-[32px] p-8 shadow-2xl max-w-md w-full relative animate-fadeIn">
             <button
-              className="absolute top-3 right-3 text-2xl text-gray-400 hover:text-pink-500"
+              className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 transition-colors bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
               onClick={() => setModal(null)}
-            >×</button>
-            <img src={modal.img} alt={modal.name} className="w-48 h-48 mx-auto object-cover rounded-xl border-2 mb-5" />
-            <h2 className="text-xl font-bold mb-2">{modal.name}</h2>
-            <div className="mb-2">{modal.desc}</div>
-            <div className={`mb-3 font-semibold ${config.accent}`}>{modal.price}</div>
-            <div className="flex gap-4 justify-center mt-6">
+            >✕</button>
+            <div className="relative w-full aspect-square mb-6 rounded-2xl overflow-hidden shadow-inner">
+              <Image src={modal.img} alt={modal.name} fill className="object-cover" />
+            </div>
+            <h2 className={`text-2xl font-bold mb-2 ${config.text}`}>{modal.name}</h2>
+            <div className="mb-4 text-gray-600 leading-relaxed">{modal.desc}</div>
+            <div className={`text-2xl font-bold mb-6 ${config.accent}`}>{modal.price}</div>
+            <div className="flex flex-col gap-3">
               <a
-                href="https://lin.ee/xxxxxx"
-                className="bg-green-500 text-white rounded-full px-6 py-2 shadow hover:bg-green-600 transition"
+                href={getLineUrl(modal)}
+                className="w-full bg-[#06C755] hover:bg-[#05b34c] text-white rounded-xl px-6 py-3 shadow-lg shadow-green-500/20 transition-all transform hover:-translate-y-1 font-bold flex items-center justify-center gap-2"
                 target="_blank" rel="noopener noreferrer"
-              >แชทสั่งซื้อ (Line)</a>
-              <button
-                className="bg-gray-200 text-gray-700 rounded-full px-6 py-2 shadow hover:bg-gray-300 transition"
-                onClick={() => setModal(null)}
-              >ปิด</button>
+              >
+                <span>💬</span> แชทสั่งซื้อ (Line)
+              </a>
+              <p className="text-xs text-center text-gray-400">
+                {eventId ? `*ระบบจะแนบรหัสงาน ${eventId.slice(0, 8)}... ไปในแชทอัตโนมัติ` : "*ท่านสามารถแจ้งรหัสงาน Event ในแชทได้"}
+              </p>
             </div>
           </div>
         </div>
