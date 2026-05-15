@@ -1,5 +1,5 @@
-export const dynamic = "force-dynamic";
 // /app/qrcode-success/page.js
+export const dynamic = "force-dynamic";
 
 import QRCode from "react-qr-code";
 

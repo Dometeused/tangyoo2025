@@ -1,6 +1,6 @@
-export const dynamic = "force-dynamic";
 // /app/creationpage/page.js
 "use client";
+export const dynamic = "force-dynamic";
 import CreationPage from "@/components/creation/CreationPage";
 
 export default function Page() {
