@@ -5,8 +5,10 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb', // ✅ เพิ่ม limit ได้ถึง 10MB
+      bodySizeLimit: '10mb',
     },
+    workerThreads: false,
+    cpus: 1,
   },
   images: {
     remotePatterns: [
