@@ -1,8 +1,8 @@
 "use client";
 
-import { useAppMode } from "@/context/AppModeContext";
+import { useAppMode, RoleType } from "@/context/AppModeContext";
 
-const ROLES = [
+const ROLES: { key: RoleType; label: string }[] = [
   { key: "owner", label: "เจ้าภาพ 👤" },
   { key: "guest", label: "แขก 🙋‍♂️" },
 ];
@@ -19,10 +19,9 @@ export default function RoleSwitcher() {
             key={r.key}
             onClick={() => setRole(r.key)}
             className={`px-3 py-1 rounded-full text-sm font-medium shadow
-              ${
-                role === r.key
-                  ? "bg-orange-500 text-white"
-                  : "bg-white text-gray-700 hover:bg-orange-100"
+              ${role === r.key
+                ? "bg-orange-500 text-white"
+                : "bg-white text-gray-700 hover:bg-orange-100"
               }
               transition-all duration-150`}
           >

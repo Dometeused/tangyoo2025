@@ -1,8 +1,8 @@
 "use client";
 
-import { useAppMode } from "@/context/AppModeContext";
+import { useAppMode, PhaseType } from "@/context/AppModeContext";
 
-const PHASES = [
+const PHASES: { key: PhaseType; label: string }[] = [
   { key: "invitation", label: "ก่อนงาน 📅" },
   { key: "memory", label: "หลังงาน 🎞️" },
 ];
@@ -19,10 +19,9 @@ export default function PhaseSwitcher() {
             key={p.key}
             onClick={() => setPhase(p.key)}
             className={`px-3 py-1 rounded-full text-sm font-medium shadow
-              ${
-                phase === p.key
-                  ? "bg-orange-500 text-white"
-                  : "bg-white text-gray-700 hover:bg-orange-100"
+              ${phase === p.key
+                ? "bg-orange-500 text-white"
+                : "bg-white text-gray-700 hover:bg-orange-100"
               }
               transition-all duration-150`}
           >
