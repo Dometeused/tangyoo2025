@@ -1,7 +1,6 @@
 "use client";
 export const dynamic = "force-dynamic";
-;
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -99,7 +98,7 @@ const CATALOG = [
   },
 ];
 
-export default function CatalogPage() {
+function CatalogContent() {
   const [selected, setSelected] = useState("all");
   const [theme, setTheme] = useState("gift"); // Default to gift theme for anniversary
   const [modal, setModal] = useState(null);
@@ -250,5 +249,13 @@ export default function CatalogPage() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function CatalogPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <CatalogContent />
+    </Suspense>
   );
 }
