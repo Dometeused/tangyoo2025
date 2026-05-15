@@ -1,6 +1,5 @@
 "use client";
 export const dynamic = "force-dynamic";
-;
 import React, { useState, useRef, useEffect } from 'react';
 import ChatPanel from './components/ChatPanel';
 import DraftPanel from './components/DraftPanel';

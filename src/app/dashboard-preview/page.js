@@ -1,6 +1,6 @@
+"use client";
 export const dynamic = "force-dynamic";
 // PREVIEW ONLY — ลบทิ้งได้หลัง review
-"use client";
 import { useState } from "react";
 import { Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, Sparkles } from "lucide-react";
 import Link from "next/link";
