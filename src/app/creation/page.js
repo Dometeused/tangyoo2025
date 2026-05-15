@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // /app/creationpage/page.js
 "use client";
 import CreationPage from "@/components/creation/CreationPage";

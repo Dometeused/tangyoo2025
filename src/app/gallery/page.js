@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 "use client";
 
 import { useState, useEffect } from "react";
@@ -49,7 +50,7 @@ export default function GalleryGlobalPage() {
       setUserId(data.user?.id || "");
       setUserEmail(data.user?.email || "");
     });
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     if (!userEmail) return;
@@ -64,7 +65,7 @@ export default function GalleryGlobalPage() {
           setSlotImages(data[0]);
         }
       });
-  }, [userEmail]);
+  }, [userEmail, supabase]);
 
   useEffect(() => {
     if (!userId) return;
@@ -74,7 +75,7 @@ export default function GalleryGlobalPage() {
       .then(({ data }) => {
         setImages(data || []);
       });
-  }, [userId]);
+  }, [userId, supabase]);
 
   const handleEventChange = (e) => {
     const ev = events.find(ev => ev.id === e.target.value);
@@ -90,7 +91,7 @@ export default function GalleryGlobalPage() {
     const uploadTasks = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const filename = `${Date.now()}_${Math.random().toString(36).slice(2,7)}_${file.name}`;
+      const filename = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}_${file.name}`;
       uploadTasks.push(
         supabase.storage.from("gallery").upload(`${userId}/${filename}`, file, { upsert: true })
       );

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import EventPageRouter from "@/components/EventPageRouter";
 import { getEventById } from "@/lib/server-events";
 
