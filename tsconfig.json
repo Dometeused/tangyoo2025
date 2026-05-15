@@ -51,6 +51,8 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "tangyoo-memories",
+    "tangyoo-memories/**/*"
   ]
 }
