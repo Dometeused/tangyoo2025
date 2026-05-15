@@ -18,10 +18,16 @@ import SectionTitle from "@/components/SectionTitle";
 import SectionQuote from "@/components/SectionQuote";
 import StoryDivider from "@/components/StoryDivider";
 import AIVideoSection from "@/components/ai-video/AIVideoSection";
+import AIGuideBubble from "@/components/ai-butler/AIGuideBubble"; // New Import
+import CandleScrollTrail from "@/components/CandleScrollTrail";
+import PetalScrollTrail from "@/components/PetalScrollTrail";
+import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
   const isOwner = role === "owner";
+
+  const [showEditBioModal, setShowEditBioModal] = useState(false);
 
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
@@ -30,8 +36,6 @@ export default function InvitationPage({ event, refetchEvent }) {
     anniversary: "/anniversary-bg.jpg",
   };
   const bgImage = bgImageMap[theme] || "/wedding-bg.jpg";
-
-  const [showEditBioModal, setShowEditBioModal] = useState(false);
 
   const HEADLINES = {
     wedding: {
@@ -64,23 +68,39 @@ export default function InvitationPage({ event, refetchEvent }) {
   if (!event) return <div className="p-10 text-center">⏳ กำลังโหลดข้อมูล...</div>;
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      {/* BG */}
-      <img
-        src={bgImage}
-        alt="background"
-        className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none select-none"
-        style={{ minHeight: "100vh" }}
-        aria-hidden="true"
+    <main className="relative min-h-screen overflow-hidden" style={{ background: theme === "funeral" ? "#f7f3ef" : "#fdf6f0" }}>
+      {/* BG Image */}
+      <div
+        className={`fixed inset-0 w-full h-full z-0 transition-opacity duration-1000 ${theme === 'funeral' ? 'opacity-55' : 'opacity-80'}`}
+        style={{
+          backgroundImage: `url(${bgImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          /* Sepia tint on funeral bg image */
+          filter: theme === 'funeral' ? 'sepia(0.4) brightness(0.75)' : 'none',
+        }}
+      />
+      {/* Soft warm overlay so content stays readable */}
+      <div
+        className="fixed inset-0 z-[1] pointer-events-none"
+        style={{ background: theme === 'funeral' ? 'rgba(15,8,3,0.45)' : 'rgba(253,246,240,0.45)' }}
       />
 
-      <div className="relative z-20 p-6 text-gray-800 transition-all max-w-6xl mx-auto">
-        <BGMPlayer />
+      <div className="relative z-20 pt-24 px-6 pb-32 text-gray-800 transition-all max-w-3xl mx-auto">
+        <BGMPlayer
+          src={`/audio/${theme || "wedding"}.mp3`}
+          youtubeUrl={event.youtube_link}
+          isOwner={isOwner}
+          eventId={event.id}
+        />
         <ThemeEffect />
+        <CandleScrollTrail theme={theme} />
+        <PetalScrollTrail theme={theme} />
+        <SparkleScrollTrail theme={theme} />
 
         {/* ส่วนหัว */}
         <SectionTitle title={h.invite} theme={theme} />
-        <SectionQuote>{h.inviteQuote}</SectionQuote>
+        <SectionQuote theme={theme}>{h.inviteQuote}</SectionQuote>
         <div className="mb-4">
           <BioBox bio={event.bio} eventId={event.id} theme={theme} phase={phase} />
         </div>
@@ -92,57 +112,47 @@ export default function InvitationPage({ event, refetchEvent }) {
         </div>
 
         {/* Layout QR + AI Video (เฉพาะ funeral) */}
-        {theme === "funeral" ? (
-          <div className="flex flex-col md:flex-row gap-6 mb-8">
-            <div className="md:w-1/2 w-full">
-              <AIVideoSection event={event} isOwner={isOwner} />
-            </div>
-            <div className="md:w-1/2 w-full">
-              <QRCodeAndScheduleSection
-                qrImageUrl={event.qr_url}
-                scheduleImageUrl={event.schedule_url}
-                event={event}
-              />
-            </div>
-          </div>
-        ) : (
-          // theme อื่นใช้ QR เดี่ยว
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
-            <div className="flex-1">
-              <QRCodeAndScheduleSection
-                qrImageUrl={event.qr_url}
-                scheduleImageUrl={event.schedule_url}
-                event={event}
-              />
-            </div>
-          </div>
-        )}
+        <div className="mb-8">
+          <QRCodeAndScheduleSection
+            qrImageUrl={event.qr_url}
+            scheduleImageUrl={event.schedule_url}
+            event={event}
+          />
+        </div>
 
-        <StoryDivider />
+        <StoryDivider theme={theme} />
         <SectionTitle title={h.gallery} theme={theme} />
-        <SectionQuote>{h.galleryQuote}</SectionQuote>
+        <SectionQuote theme={theme}>{h.galleryQuote}</SectionQuote>
         <div className="mb-8">
           <GalleryPreview event={event} featuredOnly />
         </div>
 
-        <StoryDivider />
+        <StoryDivider theme={theme} />
         <SectionTitle title={h.bless} theme={theme} />
-        <SectionQuote>{h.blessQuote}</SectionQuote>
+        <SectionQuote theme={theme}>{h.blessQuote}</SectionQuote>
         <div className="flex justify-center gap-3 mb-8">
-          <BlessingSocialRow event={event} />
+          <BlessingSocialRow event={event} socialProps={{
+            line: event.line,
+            facebook: event.facebook,
+            instagram: event.instagram,
+            phone: event.phone,
+            isOwner: isOwner,
+            eventId: event.id,
+            onEdit: () => { }
+          }} />
         </div>
 
         {/* BioBox2/Timeline/Guestbook */}
         <div className="flex flex-col md:flex-row gap-8 mb-12 items-start">
           {/* Left Column: Story + Guestbook */}
           <div className="md:w-1/2 w-full flex flex-col gap-16">
+            <GuestBookSection memoryId={event.id} role={role} theme={theme} />
             <TimelineTree
               eventId={event.id}
               event={event}
               theme={theme}
               style={{ maxHeight: 200, minHeight: 90 }}
             />
-            <GuestBookSection memoryId={event.id} role={role} theme={theme} />
           </div>
 
           {/* Right Column: Sticky Poster */}
@@ -153,12 +163,13 @@ export default function InvitationPage({ event, refetchEvent }) {
               groomPic={event.groomPic}
               brideBio={event.brideBio}
               groomBio={event.groomBio}
-              eventBio={event.eventBio}
+              eventBio={event.bio2 || event.eventBio}
               funFact1={event.funFact1}
               funFact2={event.funFact2}
               // Funeral
               profile={event.profile}
               poster_name={event.poster_name}
+              poster_caption={event.poster_caption}
               word={event.word}
               living={event.living}
               isOwner={isOwner}
@@ -180,6 +191,9 @@ export default function InvitationPage({ event, refetchEvent }) {
           saving={false}
         />
       </div>
+
+      {/* AI Museum Guide Bubble */}
+      <AIGuideBubble event={event} />
     </main>
   );
 }

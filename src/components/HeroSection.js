@@ -8,35 +8,16 @@ import DotThemeSwitcher from "@/components/DotThemeSwitcher";
 export default function HeroSection({ current, onChange, THEMES }) {
     const theme = THEMES[current];
 
-    // Refined button styles (less intense gradients, more elegant)
-    const getButtonStyle = () => {
+    // Theme-aware accent colours for AI button + bolt icon
+    const getThemeAccent = () => {
         switch (theme.key) {
-            case 'wedding':
-                return {
-                    bg: 'bg-rose-500',
-                    text: 'text-rose-600',
-                    ring: 'ring-rose-200',
-                    hoverRing: 'group-hover:ring-rose-300'
-                };
-            case 'funeral':
-                return {
-                    bg: 'bg-zinc-700',
-                    text: 'text-zinc-600',
-                    ring: 'ring-zinc-200',
-                    hoverRing: 'group-hover:ring-zinc-300'
-                };
+            case 'wedding':   return { from: 'rgba(244,63,126,0.18)', to: 'rgba(251,113,133,0.10)', bolt: '#f472b6' };
+            case 'funeral':   return { from: 'rgba(249,115,22,0.18)', to: 'rgba(251,191,36,0.10)', bolt: '#fb923c' };
             case 'anniversary':
-            default:
-                return {
-                    bg: 'bg-indigo-500',
-                    text: 'text-indigo-600',
-                    ring: 'ring-indigo-200',
-                    hoverRing: 'group-hover:ring-indigo-300'
-                };
+            default:          return { from: 'rgba(245,158,11,0.18)', to: 'rgba(253,224,71,0.10)',  bolt: '#fbbf24' };
         }
     };
-
-    const style = getButtonStyle();
+    const accent = getThemeAccent();
 
     return (
         <section className="relative w-full h-[92vh] flex items-center justify-center overflow-hidden bg-black/90">
@@ -56,8 +37,8 @@ export default function HeroSection({ current, onChange, THEMES }) {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid place-items-center">
-                <div className="text-center space-y-8 max-w-4xl mx-auto animate-fade-in-up">
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid place-items-center pt-20 pb-8">
+                <div className="text-center space-y-6 max-w-4xl mx-auto animate-fade-in-up">
 
                     {/* Minimalist Theme Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-premium text-sm font-medium tracking-wide text-white/90 shadow-sm animate-float-gentle">
@@ -67,7 +48,7 @@ export default function HeroSection({ current, onChange, THEMES }) {
 
                     {/* Typography - Bigger, Bolder, Cleaner */}
                     <div className="space-y-4">
-                        <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] drop-shadow-2xl font-kanit text-balance">
+                        <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] drop-shadow-2xl font-kanit text-balance">
                             {theme.title}
                         </h1>
                         <p className="text-white/80 text-lg md:text-2xl font-light tracking-wide max-w-2xl mx-auto leading-relaxed text-balance">
@@ -76,7 +57,7 @@ export default function HeroSection({ current, onChange, THEMES }) {
                     </div>
 
                     {/* Action Area */}
-                    <div className="pt-4 flex flex-col items-center gap-6">
+                    <div className="pt-4 flex flex-col md:flex-row items-center justify-center gap-4">
                         <Link
                             href={theme.ctaLink}
                             className={`group relative px-10 py-4 bg-white text-black rounded-full font-semibold text-lg hover:px-12 transition-all duration-500 ease-out shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)]`}
@@ -87,6 +68,27 @@ export default function HeroSection({ current, onChange, THEMES }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </span>
+                        </Link>
+
+                        {/* Create with AI Button — theme-aware warm gradient */}
+                        <Link
+                            href="/create-realtime"
+                            className="group/ai relative px-8 py-4 bg-gray-900/40 backdrop-blur-md text-white border border-white/20 rounded-full font-medium text-lg hover:bg-black/60 transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                        >
+                            <span
+                                className="absolute inset-0 opacity-0 group-hover/ai:opacity-100 transition-opacity duration-500"
+                                style={{
+                                    background: `linear-gradient(to right, ${accent.from}, ${accent.to}, ${accent.from})`,
+                                }}
+                            />
+                            <svg
+                                className="w-5 h-5 transition-colors duration-300"
+                                style={{ color: accent.bolt }}
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <span className="relative z-10">ให้ AI ช่วยสร้าง</span>
                         </Link>
 
                         {/* Theme Switcher - Clean & Minimal */}

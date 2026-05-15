@@ -15,16 +15,21 @@ const getThemeColors = (themeKey) => {
             };
         case 'funeral':
             return {
-                line: '#52525b', // zinc-600
-                glow: 'rgba(82, 82, 91, 0.5)',
-                bg: 'bg-zinc-50'
+                line: '#f97316', // orange-500 (Candlelight)
+                glow: 'rgba(249, 115, 22, 0.6)', // Warm Orange Glow
+                bg: 'bg-stone-950' // Dark warm background
             };
         case 'anniversary':
+            return {
+                line: '#eab308', // yellow-500 (Gold)
+                glow: 'rgba(234, 179, 8, 0.5)',
+                bg: 'bg-amber-50'
+            };
         default:
             return {
-                line: '#3b82f6', // blue-500
-                glow: 'rgba(59, 130, 246, 0.5)',
-                bg: 'bg-indigo-50'
+                line: '#ec4899',
+                glow: 'rgba(236, 72, 153, 0.5)',
+                bg: 'bg-pink-50'
             };
     }
 };
@@ -103,12 +108,23 @@ export default function TimelineFeatureSection({ theme }) {
                             d="M 600 0 C 600 0, 600 150, 400 250 C 200 350, 400 450, 600 500 C 800 550, 1000 650, 600 800"
                             fill="none"
                             stroke={colors.glow}
-                            strokeWidth="12"
-                            strokeOpacity="0.3"
+                            strokeWidth={theme.key === 'funeral' ? "20" : "12"}
+                            strokeOpacity={theme.key === 'funeral' ? 0.6 : 0.3}
                             style={{
                                 pathLength: pathLength,
-                                opacity: useTransform(pathLength, [0, 0.1], [0, 0.5])
+                                opacity: useTransform(pathLength, [0, 0.1], [0, theme.key === 'funeral' ? 0.8 : 0.5]),
+                                filter: theme.key === 'funeral' ? 'blur(8px)' : 'none'
                             }}
+                            animate={theme.key === 'funeral' ? {
+                                strokeOpacity: [0.6, 0.8, 0.5, 0.7, 0.6],
+                                strokeWidth: [18, 22, 19, 21, 20]
+                            } : {}}
+                            transition={theme.key === 'funeral' ? {
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatType: "mirror",
+                                ease: "easeInOut"
+                            } : {}}
                         />
                     </svg>
                 </div>
@@ -130,7 +146,20 @@ export default function TimelineFeatureSection({ theme }) {
                                 className={`flex-1 text-center md:text-left ${step.align === 'right' ? 'md:text-right' : ''
                                     }`}
                             >
-                                <div className={`inline-block p-4 rounded-2xl bg-white shadow-warm-lg mb-6 text-4xl transform hover:scale-110 transition-transform duration-300`}>
+                                <div
+                                    className="inline-block p-4 rounded-2xl mb-6 text-4xl transform hover:scale-110 transition-all duration-300 relative"
+                                    style={{
+                                        background: "rgba(255,255,255,0.85)",
+                                        backdropFilter: "blur(12px)",
+                                        boxShadow: `0 8px 28px ${colors.glow.replace('0.5','0.18')}, 0 2px 8px rgba(0,0,0,0.07)`,
+                                        border: `1.5px solid ${colors.line}30`,
+                                    }}
+                                >
+                                    {/* Subtle glow ring on hover */}
+                                    <div
+                                        className="absolute inset-0 rounded-2xl opacity-0 hover:opacity-100 transition-opacity duration-300"
+                                        style={{ boxShadow: `inset 0 0 0 1.5px ${colors.line}60` }}
+                                    />
                                     {step.icon}
                                 </div>
                                 <h3 className="text-2xl md:text-3xl font-bold mb-4 text-neutral-800">

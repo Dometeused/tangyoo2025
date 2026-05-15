@@ -1,9 +1,19 @@
-export default function SectionQuote({ text, theme = "wedding" }) {
+const COLORS = {
+  wedding:     "text-[#9e6b7d]",
+  funeral:     "text-[#c9b49a]",
+  anniversary: "text-[#9e7e46]",
+  family:      "text-[#6b7f9e]",
+};
+
+// Accepts children (primary) or text prop for backward compat
+export default function SectionQuote({ children, text, theme = "wedding" }) {
+  const content = children ?? text;
+  if (!content) return null;
   return (
-    <div className="flex justify-center mb-4">
-      <span className={`italic text-base md:text-lg px-4 py-2 rounded-xl bg-pink-50/80 border-l-4 border-pink-200 text-pink-500`}>
-        {text}
-      </span>
-    </div>
+    <p
+      className={`text-center italic text-sm md:text-base font-light mb-6 leading-relaxed px-4 ${COLORS[theme] ?? COLORS.wedding}`}
+    >
+      {content}
+    </p>
   );
 }

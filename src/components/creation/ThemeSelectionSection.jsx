@@ -39,11 +39,26 @@ export default function ThemeSelectionSection({ onNext }) {
             <h3 className={`text-xl font-bold mb-2 ${theme.text.replace("text-white", "text-zinc-900")}`}>
               {theme.label}
             </h3>
-            <p className="text-sm text-gray-600 line-clamp-2">
+            <p className="text-sm text-gray-600 line-clamp-2 mb-3">
               {theme.desc}
             </p>
 
-            <div className={`mt-4 py-2 px-4 rounded-full text-sm font-semibold text-white opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 ${theme.ctaClass}`}>
+            {/* Feature chips */}
+            {theme.features && (
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {theme.features.map((f) => (
+                  <span
+                    key={f}
+                    className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                    style={{ background: "rgba(0,0,0,0.06)", color: "#555" }}
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className={`py-2 px-4 rounded-full text-sm font-semibold text-white opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 ${theme.ctaClass}`}>
               เลือกธีมนี้
             </div>
           </div>

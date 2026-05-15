@@ -134,23 +134,35 @@ export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
     { icon: <FiShare2 />, label: "แชร์", action: "share", desc: "Share" },
   ];
 
+  const hoverColor = theme === "funeral" ? "group-hover:text-stone-500 group-hover:border-stone-300"
+    : theme === "anniversary" ? "group-hover:text-amber-600 group-hover:border-amber-200"
+    : "group-hover:text-rose-400 group-hover:border-rose-200";
+
   return (
-    <div className="flex flex-wrap justify-center gap-6 my-6">
-      {buttons.map((btn, i) => (
-        <div key={i} className="flex flex-col items-center">
-          <button
-            className={`group w-16 h-16 rounded-full bg-white flex items-center justify-center 
-              text-gray-700 text-xl transition-all duration-200
-              hover:scale-110 hover:${THEME_GLOW[theme]}
-              shadow-md`}
-            title={btn.label}
+    <>
+      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-4 md:gap-6 bg-white/75 backdrop-blur-2xl border border-white/60 shadow-lg rounded-full px-5 py-2.5 transition-all duration-300">
+        {buttons.map((btn, i) => (
+          <div
+            key={i}
+            className="relative flex flex-col items-center gap-0.5 group cursor-pointer"
             onClick={() => handleClick(btn.action)}
+            title={btn.label}
           >
-            {btn.icon}
-          </button>
-          <div className="text-xs text-gray-500 mt-2 select-none">{btn.label}</div>
-        </div>
-      ))}
+            <div
+              className={`w-9 h-9 rounded-full flex items-center justify-center text-base
+                text-gray-400 border border-transparent transition-all duration-200
+                group-hover:bg-white group-hover:shadow-sm group-hover:-translate-y-0.5 ${hoverColor}`}
+            >
+              {btn.icon}
+            </div>
+            {/* Label — fades in under icon on hover */}
+            <span className="text-[9px] font-medium text-gray-400 group-hover:text-gray-600 transition-colors leading-none">
+              {btn.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
       {/* Modal สำหรับแก้ไข */}
       <EditModal
         open={modal.open}
@@ -159,6 +171,6 @@ export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
         onSave={handleSave}
         onClose={() => setModal({ open: false, field: "", label: "", value: "" })}
       />
-    </div>
+    </>
   );
 }

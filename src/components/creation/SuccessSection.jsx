@@ -1,12 +1,24 @@
+"use client";
 import QRCode from "react-qr-code";
-import { Download, ExternalLink, Share2 } from "lucide-react";
+import { Download, ExternalLink, Share2, Copy, Check } from "lucide-react";
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import * as htmlToImage from "html-to-image";
 
 export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) {
   const qrRef = useRef(null);
+  const [copied, setCopied] = useState(false);
   const memoryUrl = `https://tangyoo.com/memory/${memoryId}`; // In real app, use actual domain
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(memoryUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback: select text
+    }
+  };
 
   const downloadQR = () => {
     if (qrRef.current) {
@@ -58,9 +70,19 @@ export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) 
           >
             <QRCode value={memoryUrl} size={200} />
           </div>
-          <p className="text-sm text-gray-500 mb-4 break-all font-mono bg-gray-100 px-3 py-1 rounded">
-            {memoryUrl}
-          </p>
+          {/* URL + Copy Button */}
+          <div className="flex items-center gap-2 mb-4 w-full max-w-sm">
+            <p className="flex-1 text-sm text-gray-500 font-mono bg-gray-100 px-3 py-1.5 rounded truncate">
+              {memoryUrl}
+            </p>
+            <button
+              onClick={copyLink}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-medium transition-all shrink-0 ${copied ? "bg-green-50 border-green-300 text-green-600" : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"}`}
+            >
+              {copied ? <Check size={15} /> : <Copy size={15} />}
+              {copied ? "คัดลอกแล้ว!" : "คัดลอก"}
+            </button>
+          </div>
 
           <div className="flex gap-3 justify-center w-full">
             <button

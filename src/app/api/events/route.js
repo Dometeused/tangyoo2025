@@ -46,7 +46,7 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: "unauthenticated" }, { status: 401 });
   }
 
-  const { name, date, place, theme } = await req.json();
+  const { name, date, place, theme, bio, story, timeline_events, coverImage, youtube_link, impressions, theme_song } = await req.json();
   if (!name || !date || !place || !theme) {
     console.error("[API/Events][POST] missing fields", { name, date, place, theme });
     return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
@@ -60,6 +60,13 @@ export async function POST(req) {
         date,
         place,
         theme,
+        bio: bio || "",
+        bio2: story || "", // Map story to bio2
+        timeline_events: timeline_events || [],
+        cover_url: coverImage || "",
+        youtube_link: youtube_link || "",
+        impressions: impressions || [],
+        theme_song: theme_song || "",
         phase: "invitation",
         email: user.email,
       },

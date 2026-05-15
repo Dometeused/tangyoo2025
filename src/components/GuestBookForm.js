@@ -59,7 +59,7 @@ const themeStyleMap = {
 
 export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
   const { role } = useAppMode();
-  if (role !== "guest" && role !== "owner") return null;
+
 
   const PROMPTS = PROMPT_BY_THEME[theme] || PROMPT_BY_THEME["wedding"];
   const style = themeStyleMap[theme] || themeStyleMap["wedding"];
@@ -74,6 +74,8 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
   useEffect(() => {
     setPrompt(PROMPTS[0]);
   }, [theme]);
+
+  if (role !== "guest" && role !== "owner") return null;
 
   const handleRandomPrompt = () => {
     const otherPrompts = PROMPTS.filter((p) => p !== prompt);

@@ -5,9 +5,15 @@ import CoverSection from "@/components/CoverSection";
 import GalleryPreview from "@/components/GalleryPreview";
 import GuestBookSection from "@/components/GuestBookSection";
 import BioBox from "@/components/BioBox";
-import BioBox2 from "@/components/BioBox2WeddingPoster";
+import BioBox2 from "@/components/BioBox2";
 import BlessingButton from "@/components/BlessingSocialRow";
 import SocialMediaButton from "@/components/SocialMediaButton";
+import TimelineTree from "@/components/timeline-tree/TimelineTree";
+
+import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
+import CandleScrollTrail from "@/components/CandleScrollTrail";
+import PetalScrollTrail from "@/components/PetalScrollTrail";
+import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 
 // เพิ่ม BGM/Effect
 import BGMPlayer from "@/components/BGMPlayer";
@@ -39,6 +45,9 @@ export default function MemoryPage({ event }) {
       {/* BGM และ Theme Effect */}
       <BGMPlayer />
       <ThemeEffect />
+      <CandleScrollTrail theme={theme} />
+      <PetalScrollTrail theme={theme} />
+      <SparkleScrollTrail theme={theme} />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 pt-6">
 
@@ -67,6 +76,7 @@ export default function MemoryPage({ event }) {
             <GuestBookSection memoryId={event.id} role={role} theme={theme} />
           </div>
 
+
           {/* 5. Right Sidebar (Bio2 + Social + Blessing) */}
           <div className="col-span-1 md:col-span-2 lg:col-span-5 flex flex-col gap-6">
             {/* Bio 2 */}
@@ -75,6 +85,7 @@ export default function MemoryPage({ event }) {
                 theme={event.theme}
                 name={event.name}
                 bio2={event.bio2}
+                eventBio={event.bio2} // ✅ Map Story to Poster Bio
                 eventId={event.id}
                 isOwner={isOwner}
               />
@@ -82,7 +93,7 @@ export default function MemoryPage({ event }) {
 
             {/* Blessing Actions */}
             <div className="glass-card p-4">
-              <BlessingButton eventId={event.id} theme={theme} phase={phase} />
+              <BlessingButton event={event} theme={theme} phase={phase} />
             </div>
 
             {/* Social Links */}
@@ -96,6 +107,28 @@ export default function MemoryPage({ event }) {
                 isOwner={isOwner}
                 eventId={event.id}
                 onEdit={() => { }}
+              />
+            </div>
+          </div>
+
+          {/* 6. Timeline Tree (Full Width) - Added based on user feedback */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-12">
+            <div className="glass-card p-4 md:p-8">
+              <TimelineTree
+                eventId={event.id}
+                event={event}
+                theme={event.theme || theme}
+              />
+            </div>
+          </div>
+
+          {/* 7. QR Code + Dress Code + Schedule (Full Width) */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-12">
+            <div className="glass-card p-4 md:p-8">
+              <QRCodeAndScheduleSection
+                qrImageUrl={event.qr_url}
+                scheduleImageUrl={event.schedule_url}
+                event={event}
               />
             </div>
           </div>

@@ -93,7 +93,7 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
         alt=""
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{
-          width: "350px",
+          width: "350px", // Keep fixed size for the frame graphic
           height: "350px",
           opacity: 0.62,
           pointerEvents: "none",
@@ -105,8 +105,8 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
       />
 
       <div
-        className="relative z-10 flex flex-col items-center justify-center"
-        style={{ width: "350px", minHeight: "260px", padding: "0 10px" }}
+        className="relative z-10 flex flex-col items-center justify-center w-full max-w-[350px] md:max-w-2xl px-4 font-kanit"
+        style={{ minHeight: "260px" }}
       >
         {editing && role === "owner" && <Toolbar editor={editor} />}
 
@@ -123,10 +123,9 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
           ) : (
             <div
               onClick={() => role === "owner" && setEditing(true)}
-              className={(role === "owner" ? "cursor-pointer " : "") + "w-full text-center"}
+              className={(role === "owner" ? "cursor-pointer " : "") + "w-full text-center flex flex-col items-center"}
               style={{
                 wordBreak: "break-word",
-                textShadow: "0 1px 8px #eee, 0 0px 2px #bbb",
                 fontWeight: 400,
                 fontSize: "1.05rem",
                 lineHeight: 1.8,
@@ -134,7 +133,7 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
               }}
             >
               {bio ? (
-                <div dangerouslySetInnerHTML={{ __html: bio }} />
+                <div dangerouslySetInnerHTML={{ __html: bio }} className="w-full text-center mx-auto" />
               ) : (
                 <p className="text-gray-400 italic">ยังไม่มีข้อความความทรงจำ</p>
               )}

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import ProgressBar from "@/components/creation/ProgressBar";
 import ThemeSelectionSection from "@/components/creation/ThemeSelectionSection";
@@ -12,8 +11,9 @@ export default function CreationPage() {
   const [step, setStep] = useState(1);
   const [themeKey, setThemeKey] = useState("");
   const [memoryId, setMemoryId] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState("");
 
-  // Simplified to 3 steps: Theme -> Preview -> Success
   const totalStep = 3;
 
   const handleThemeNext = (selectedThemeKey) => {
@@ -27,20 +27,38 @@ export default function CreationPage() {
     window.scrollTo(0, 0);
   };
 
-  const handlePreviewNext = () => {
-    // Generate ID and move to success
-    const newId = uuidv4();
-    setMemoryId(newId);
-
-    // In a real app, we would create the initial record here
-    console.log("Initializing memory page:", { id: newId, theme: themeKey });
-
-    setStep(3);
-    window.scrollTo(0, 0);
+  const handlePreviewNext = async (formData) => {
+    setCreating(true);
+    setCreateError("");
+    try {
+      const res = await fetch("/api/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          date: formData.date,
+          place: formData.place,
+          theme: themeKey,
+          introEffect: true,
+        }),
+      });
+      const json = await res.json();
+      if (json.success && json.data?.id) {
+        setMemoryId(json.data.id);
+        setStep(3);
+        window.scrollTo(0, 0);
+      } else {
+        setCreateError("สร้าง Event ไม่สำเร็จ กรุณาลองใหม่");
+      }
+    } catch {
+      setCreateError("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    } finally {
+      setCreating(false);
+    }
   };
 
   const handleGoToDashboard = () => {
-    window.location.href = "/";
+    window.location.href = "/dashboard";
   };
 
   return (
@@ -61,7 +79,11 @@ export default function CreationPage() {
             themeKey={themeKey}
             onBack={handlePreviewBack}
             onNext={handlePreviewNext}
+            loading={creating}
           />
+          {createError && (
+            <p className="text-center text-red-500 text-sm mt-4">{createError}</p>
+          )}
         </div>
       )}
 
