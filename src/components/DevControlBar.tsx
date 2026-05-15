@@ -1,21 +1,21 @@
 "use client";
 
 import React from "react";
-import { useAppMode } from "@/context/AppModeContext";
+import { useAppMode, ThemeType, RoleType, PhaseType } from "@/context/AppModeContext";
 
 // ========== Theme Config ==========
-const THEMES = [
+const THEMES: { key: ThemeType; label: string; icon: string }[] = [
   { key: "funeral", label: "งานอาลัย", icon: "🕯️" },
   { key: "anniversary", label: "ของขวัญ", icon: "🎁" },
   { key: "wedding", label: "งานแต่ง", icon: "💍" },
 ];
 
-const ROLES = [
+const ROLES: { key: RoleType; label: string }[] = [
   { key: "owner", label: "เจ้าภาพ 👤" },
   { key: "guest", label: "แขก 🙋‍♂️" },
 ];
 
-const PHASES = [
+const PHASES: { key: PhaseType; label: string }[] = [
   { key: "invitation", label: "ก่อนงาน 📅" },
   { key: "memory", label: "หลังงาน 🎞️" },
 ];
