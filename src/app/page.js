@@ -1,132 +1,17 @@
-// pages/index.js (Landing Page)
 "use client";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
-import DotThemeSwitcher from "@/components/DotThemeSwitcher";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-
-const THEMES = [
-	{
-		key: "funeral",
-		label: "งานอาลัย",
-		bg: "bg-zinc-900",
-		text: "text-white",
-		dot: "bg-zinc-800",
-		ctaClass: "bg-zinc-900 hover:bg-zinc-800",
-		image: "/images/funeral.png",
-		title: "สร้างหน้าอาลัย บันทึกความทรงจำสุดท้าย",
-		desc: "ให้ 'ตั้งอยู่' เก็บความหมายอาลัย ไม่ให้ความทรงจำหายไป",
-		cta: "สร้างหน้าอาลัย",
-		ctaLink: "/creation?theme=funeral",
-		menuCTA: "สร้างหน้าอาลัย",
-		middleSection: {
-			image: "/images/qr2way-funeral.png",
-			title: "เชื่อมโยงความทรงจำ… จากวันแรกถึงวันอาลัย",
-			desc: "QR Code 2-Phase ของ 'ตั้งอยู่' จะอยู่กับคุณในทุกช่วงเวลา ไม่ว่าก่อนหรือหลังวันสำคัญ ความทรงจำจะไม่มีวันหายไป",
-		},
-		catalog: [
-			{
-				name: "กรอบรูปอาลัย",
-				img: "/images/catalog-souvenir-funeral-1.png",
-				link: "#",
-			},
-			{
-				name: "ของชำร่วยอาลัย",
-				img: "/images/catalog-souvenir-funeral-2.png",
-				link: "#",
-			},
-			{
-				name: "แก้วน้ำอาลัย",
-				img: "/images/catalog-souvenir-funeral-3.png",
-				link: "#",
-			},
-		],
-	},
-	{
-		key: "anniversary",
-		label: "งานครบรอบ/ของขวัญ",
-		bg: "bg-blue-50",
-		text: "text-blue-800",
-		dot: "bg-blue-400",
-		ctaClass: "bg-blue-500 hover:bg-blue-600",
-		image: "/images/anniversary.png",
-		title: "ของขวัญความทรงจำ สำหรับคนพิเศษ",
-		desc: "ส่งต่อความรู้สึกดี ๆ ในวันสำคัญ ด้วยของขวัญที่มีเรื่องราว",
-		cta: "สร้างของขวัญพิเศษ",
-		ctaLink: "/creation?theme=anniversary",
-		menuCTA: "สร้างของขวัญพิเศษ",
-		middleSection: {
-			image: "/images/anniversary-gift.png",
-			title: "ของขวัญที่มีความหมาย… เฉพาะคุณ",
-			desc: "ทุก Memory Page คือกล่องความทรงจำที่ออกแบบมาเพื่อวันสำคัญ ให้ความรู้สึกพิเศษที่ไม่มีใครเหมือน",
-		},
-		catalog: [
-			{
-				name: "เคสโทรศัพท์",
-				img: "/images/catalog-souvenir-anniversary-1.png",
-				link: "#",
-			},
-			{
-				name: "กรอบรูปตั้งโต๊ะ",
-				img: "/images/catalog-souvenir-anniversary-2.png",
-				link: "#",
-			},
-			{
-				name: "เสื้อคู่ความทรงจำ",
-				img: "/images/catalog-souvenir-anniversary-3.png",
-				link: "#",
-			},
-		],
-	},
-	{
-		key: "wedding",
-		label: "งานแต่ง",
-		bg: "bg-pink-50",
-		text: "text-pink-700",
-		dot: "bg-pink-400",
-		ctaClass: "bg-pink-500 hover:bg-pink-600",
-		image: "/images/wedding.png",
-		title: "เก็บทุกโมเมนต์แห่งความรัก",
-		desc: "รวมภาพความประทับใจและคำอวยพรสำคัญในวันแต่งงาน",
-		cta: "สร้างหน้าแต่งงาน",
-		ctaLink: "/creation?theme=wedding",
-		menuCTA: "สร้างหน้าแต่งงาน",
-		middleSection: {
-			image: "/images/qr2way-wedding.png",
-			title: "เก็บความทรงจำทุกโมเมนต์แห่งความรัก",
-			desc: "QR Code 2-Phase สำหรับงานแต่งงาน เก็บทั้งบรรยากาศงานและเรื่องราวหลังวันสำคัญ ให้ความรักยัง ‘ตั้งอยู่’ กับคุณเสมอ",
-		},
-		catalog: [
-			{
-				name: "ที่เปิดขวดที่ระลึก",
-				img: "/images/catalog-souvenir-wedding-1.png",
-				link: "#",
-			},
-			{
-				name: "สมุดโน๊ตคู่รัก",
-				img: "/images/catalog-souvenir-wedding-2.png",
-				link: "#",
-			},
-			{
-				name: "แก้วน้ำแต่งงาน",
-				img: "/images/catalog-souvenir-wedding-3.png",
-				link: "#",
-			},
-		],
-	},
-];
+import { THEMES } from "@/data/themes";
+import TimelineFeatureSection from "@/components/TimelineFeatureSection";
 
 export default function Home() {
 	const [themeIdx, setThemeIdx] = useState(1); // default "งานครบรอบ"
 	const theme = THEMES[themeIdx];
 
 	return (
-		<div
-			className={`min-h-screen flex flex-col font-kanit transition-colors duration-500 ${theme.bg} ${theme.text}`}
-		>
+		<div className={`min-h-screen flex flex-col font-kanit transition-colors duration-500 ${theme.bg} ${theme.text}`}>
 			{/* Hero Section */}
 			<HeroSection
 				current={themeIdx}
@@ -134,141 +19,154 @@ export default function Home() {
 				THEMES={THEMES}
 			/>
 
-			
+			{/* Timeline Feature Section (New Interactive Map) */}
+			<TimelineFeatureSection theme={theme} />
 
-			{/* QR2Phase Feature (with CTA buttons under the box) */}
-			<section className="flex flex-col md:flex-row gap-10 items-center justify-center my-8 px-6 max-w-5xl mx-auto">
-				<div className="flex-1 flex justify-center">
-					<Image
-						src={theme.middleSection.image}
-						alt="special"
-						width={
-							theme.key === "anniversary" ? 340 : 250
-						}
-						height={220}
-						className="rounded-xl shadow-lg"
-					/>
-				</div>
-				<div className="flex-1 max-w-xl text-left bg-white/80 rounded-xl shadow p-6">
-					<h2 className="font-bold text-2xl mb-3 text-orange-700">
-						{theme.middleSection.title}
-					</h2>
-					<p className="text-base md:text-lg leading-relaxed text-gray-700 font-medium mb-5">
-						{theme.middleSection.desc}
-					</p>
-					<div className="flex gap-3 mt-2">
-						<Link
-							href="/features"
-							className="flex-1 px-4 py-3 rounded-full font-bold shadow bg-orange-500 text-white hover:bg-orange-600 transition text-base text-center"
-						>
-							รู้จักฟีเจอร์ของเรา
-						</Link>
-						<Link
-							href="/about"
-							className="flex-1 px-4 py-3 rounded-full font-bold shadow bg-gray-100 text-gray-800 hover:bg-gray-200 transition text-base text-center"
-						>
-							About Us
-						</Link>
+			{/* Catalog Section */}
+			<section className="py-20 px-4 sm:px-6 w-full">
+				<div className="max-w-7xl mx-auto">
+					{/* Section Header */}
+					<div className="text-center mb-16">
+						<h2 className="font-bold text-4xl md:text-5xl mb-4 text-gradient-warm">
+							คาตาล็อคของขวัญ
+						</h2>
+						<p className="text-neutral-600 text-lg max-w-2xl mx-auto">
+							ของขวัญพิเศษที่ออกแบบมาเพื่อความทรงจำที่ไม่รู้ลืม
+						</p>
+						<div className="divider-warm w-32 mx-auto mt-6" />
+					</div>
+
+					<div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+						{theme.catalog.map((item, idx) => (
+							<Link
+								key={idx}
+								href="/catalog"
+								className="glass-strong rounded-3xl shadow-warm-lg p-8 flex flex-col items-center card-hover group border-2 border-orange-100/50 overflow-hidden relative"
+								style={{ animationDelay: `${idx * 0.1}s` }}
+							>
+								{/* Background Glow on Hover */}
+								<div className="absolute inset-0 bg-gradient-to-br from-orange-100/0 via-orange-100/0 to-rose-100/0 group-hover:from-orange-100/30 group-hover:via-rose-100/20 group-hover:to-amber-100/30 transition-all duration-500" />
+
+								<div className="relative w-full aspect-square mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50 shadow-warm">
+									<Image
+										src={item.img}
+										alt={item.name}
+										width={250}
+										height={250}
+										loading="lazy"
+										className="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+									/>
+								</div>
+
+								<span className="relative font-bold text-xl mb-5 text-neutral-800 text-center group-hover:text-orange-700 transition-colors">
+									{item.name}
+								</span>
+
+								<span className="relative px-8 py-3 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-base font-semibold group-hover:from-orange-600 group-hover:to-rose-600 transition-all duration-300 cursor-pointer shadow-warm-lg group-hover:shadow-warm-xl">
+									ดูรายละเอียด
+								</span>
+							</Link>
+						))}
 					</div>
 				</div>
 			</section>
 
-			{/* Catalog */}
-			<section className="max-w-6xl mx-auto py-12 px-4">
-				<h2 className="text-center font-bold text-2xl mb-8 text-orange-700">
-					คาตาล็อคของขวัญ
-				</h2>
-				<div className="grid gap-6 sm:grid-cols-3">
-					{theme.catalog.map((item, idx) => (
-						<a
-							key={idx}
-							href="/catalog"
-							className="bg-white rounded-2xl shadow-md p-5 flex flex-col items-center hover:shadow-xl transition group border border-orange-50"
-							style={{ textDecoration: "none" }}
-						>
-							<Image
-								src={item.img}
-								alt={item.name}
-								width={140}
-								height={140}
-								className="rounded-lg mb-3 group-hover:scale-105 transition"
-							/>
-							<span className="font-bold text-lg mb-1 text-gray-900">
-								{item.name}
-							</span>
-							<span className="mt-2 px-5 py-2 rounded-full bg-orange-500 text-white text-xs group-hover:bg-orange-600 transition cursor-pointer">
-								ดูรายละเอียด
-							</span>
-						</a>
-					))}
+			{/* Painpoint Section */}
+			<section className="py-20 px-4 sm:px-6 w-full">
+				<div className="max-w-6xl mx-auto">
+					<div className="relative group">
+						{/* Glow Effect */}
+						<div className="absolute -inset-6 bg-gradient-to-r from-orange-300/20 via-rose-300/20 to-amber-300/20 rounded-[2.5rem] blur-3xl group-hover:blur-[4rem] transition-all duration-700" />
+
+						<Image
+							src="/images/painpoint.png"
+							alt="Pain Point"
+							width={1200}
+							height={800}
+							loading="lazy"
+							className="relative rounded-[2rem] shadow-warm-2xl w-full h-auto transition-transform duration-500 hover:scale-[1.02]"
+						/>
+					</div>
 				</div>
 			</section>
 
-			{/* Painpoint */}
-			<section className="flex flex-col items-center my-12">
-				<Image
-					src="/images/painpoint.png"
-					alt="Pain Point"
-					width={640}
-					height={426}
-					className="rounded-2xl shadow-lg"
-					priority
-				/>
-			</section>
+			{/* Testimonial Section */}
+			<section className="relative py-24 mt-12 overflow-hidden w-full">
+				{/* Gradient Background with Pattern */}
+				<div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50" />
+				<div className="absolute inset-0 opacity-40" style={{
+					backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(251, 146, 60, 0.15) 1px, transparent 0)',
+					backgroundSize: '48px 48px'
+				}} />
 
-			{/* Testimonial */}
-			<section className="bg-orange-50 py-12 mt-8">
-				<div className="max-w-4xl mx-auto text-center">
-					<h2 className="font-bold text-2xl mb-6 text-orange-700">
-						เสียงจากผู้ใช้บริการ
-					</h2>
-					<div className="flex flex-col gap-8">
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
+				<div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+					{/* Section Header */}
+					<div className="text-center mb-16">
+						<h2 className="font-bold text-4xl md:text-5xl mb-4 text-gradient-warm">
+							เสียงจากผู้ใช้บริการ
+						</h2>
+						<p className="text-neutral-600 text-lg max-w-2xl mx-auto">
+							ความประทับใจจากผู้ที่ไว้วางใจให้เราเก็บรักษาความทรงจำ
+						</p>
+						<div className="divider-warm w-32 mx-auto mt-6" />
+					</div>
+
+					<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+						{/* Testimonial 1 */}
+						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group">
+							{/* Quote Icon */}
+							<div className="absolute top-4 right-4 text-6xl text-orange-200/30 group-hover:text-orange-300/40 transition-colors">"</div>
+
+							<p className="relative text-neutral-700 mb-6 leading-relaxed text-base font-light">
 								"บริการของ TangYoo ช่วยให้การจัดงานอาลัยเป็นเรื่องง่ายและมีความหมาย ลูกเล่น QR Code ทำให้สามารถเก็บความทรงจำได้อย่างครบถ้วน"
 							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">🧑‍🦳</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
+							<div className="flex items-center gap-4 pt-4 border-t-2 border-orange-100/50">
+								<span className="text-5xl">🧑‍🦳</span>
+								<div>
+									<span className="block font-bold text-neutral-900 text-lg">
 										คุณสมชาย ใจดี
 									</span>
-									<span className="block text-sm text-gray-500">
+									<span className="block text-sm text-neutral-500 mt-1">
 										ผู้ใช้บริการงานอาลัย
 									</span>
 								</div>
 							</div>
 						</div>
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
+
+						{/* Testimonial 2 */}
+						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group" style={{ animationDelay: '0.1s' }}>
+							<div className="absolute top-4 right-4 text-6xl text-rose-200/30 group-hover:text-rose-300/40 transition-colors">"</div>
+
+							<p className="relative text-neutral-700 mb-6 leading-relaxed text-base font-light">
 								"ของขวัญจาก TangYoo ทำให้วันครบรอบของเราพิเศษยิ่งขึ้น การออกแบบกรอบรูปและสมุดโน๊ตคู่รักทำได้ดีมาก ๆ ค่ะ"
 							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">👩🏻‍🦰</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
+							<div className="flex items-center gap-4 pt-4 border-t-2 border-rose-100/50">
+								<span className="text-5xl">👩🏻‍🦰</span>
+								<div>
+									<span className="block font-bold text-neutral-900 text-lg">
 										คุณหญิง สวยงาม
 									</span>
-									<span className="block text-sm text-gray-500">
+									<span className="block text-sm text-neutral-500 mt-1">
 										ผู้ใช้บริการงานครบรอบ
 									</span>
 								</div>
 							</div>
 						</div>
-						{/* Testimonial Item */}
-						<div className="bg-white p-6 rounded-xl shadow-md">
-							<p className="text-gray-900 mb-4">
+
+						{/* Testimonial 3 */}
+						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group md:col-span-2 lg:col-span-1" style={{ animationDelay: '0.2s' }}>
+							<div className="absolute top-4 right-4 text-6xl text-amber-200/30 group-hover:text-amber-300/40 transition-colors">"</div>
+
+							<p className="relative text-neutral-700 mb-6 leading-relaxed text-base font-light">
 								"งานแต่งงานของเราเต็มไปด้วยความทรงจำที่สวยงาม ขอบคุณ TangYoo ที่ทำให้เราสามารถเก็บทุกโมเมนต์ได้อย่างมีค่า"
 							</p>
-							<div className="flex items-center justify-center gap-4">
-								<span className="text-4xl">👩🏻‍❤️‍👨🏼</span>
-								<div className="text-left">
-									<span className="block font-semibold text-gray-900">
+							<div className="flex items-center gap-4 pt-4 border-t-2 border-amber-100/50">
+								<span className="text-5xl">👩🏻‍❤️‍👨🏼</span>
+								<div>
+									<span className="block font-bold text-neutral-900 text-lg">
 										คุณเจมส์ และ คุณปุ้ย
 									</span>
-									<span className="block text-sm text-gray-500">
+									<span className="block text-sm text-neutral-500 mt-1">
 										คู่บ่าวสาวผู้ใช้บริการ
 									</span>
 								</div>

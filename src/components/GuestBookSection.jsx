@@ -50,64 +50,95 @@ export default function GuestBookSection({
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .slice(0, 4);
 
-  // สี open book เบจ/ชมพูจาง (แนะนำใช้ bg-page อยู่แล้ว, ตรงนี้ไม่ต้อง card อีก)
   return (
-    <section className="w-full flex flex-col items-center mb-10 relative">
-      {/* SVG/shape “open book” faint (mobile: ซ่อน, desktop: โชว์ faint ๆ) */}
-      <div className="hidden md:block absolute inset-0 z-0 pointer-events-none">
-        <svg width="100%" height="100%" viewBox="0 0 800 370" fill="none" className="w-full h-full">
-          {/* left page */}
-          <rect x="0" y="0" width="390" height="370" rx="32" fill="#fefbf6" opacity="0.75" />
-          {/* right page */}
-          <rect x="410" y="0" width="390" height="370" rx="32" fill="#fdf6fa" opacity="0.75" />
-          {/* center shadow */}
-          <rect x="397" y="0" width="6" height="370" fill="#eab1c6" opacity="0.12" />
-          {/* faint heart/emoji */}
-          <text x="60" y="340" fontSize="40" opacity="0.07">💗</text>
-          <text x="690" y="340" fontSize="32" opacity="0.05">✨</text>
-        </svg>
-      </div>
+    <section className="w-full flex justify-center py-10 px-4 md:px-0 bg-transparent">
+      {/* Book Container */}
+      <div className="relative w-full max-w-5xl transition-all duration-500">
 
-      {/* Headline กลาง + emoji faint */}
-      <div className="w-full flex flex-col items-center z-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-center tracking-wide mb-2 relative">
-          ฝากคำอวยพร
-          <span className="ml-2 text-2xl select-none pointer-events-none align-middle opacity-30">💌</span>
-        </h2>
-        <div className="w-12 h-1 bg-pink-200 rounded-full mb-4 opacity-40" />
-      </div>
+        {/* Book Cover / Shadow Layer */}
+        <div className="absolute inset-0 bg-[#e3d5c5] rounded-lg shadow-2xl transform translate-y-2 translate-x-1 md:rotate-1 z-0 pointer-events-none border border-[#d4c5b5]"></div>
 
-      {/* Card Preview (ไม่มี card-box ไม่มี bg-white) */}
-      {entries.length > 0 ? (
-        <div className="w-full max-w-3xl grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mt-2 z-10">
-          {previewCards.map((entry, idx) => (
-            <GuestBookCard
-              key={entry.id || idx}
-              {...entry}
-              theme={theme}
-              onDelete={handleDelete}
-            />
-          ))}
+        {/* Open Book Surface */}
+        <div className="relative z-10 bg-[#fdfaf5] rounded-l-md rounded-r-md shadow-inner flex flex-col md:flex-row overflow-hidden min-h-[600px] border border-[#f0e6d2]">
+
+          {/* Spine Shadow (Desktop Center) */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-8 -ml-4 pointer-events-none z-20 hidden md:block"
+            style={{
+              background: "linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.05) 100%)"
+            }}
+          />
+
+          {/* Left Page */}
+          <div className="flex-1 p-6 md:p-10 relative flex flex-col items-center border-b md:border-b-0 md:border-r border-[#f3ebdb]">
+            {/* Paper Texture/Fold effect left */}
+            <div className="absolute right-0 top-0 bottom-0 w-12 pointer-events-none hidden md:block"
+              style={{ background: "linear-gradient(to right, rgba(255,255,255,0), rgba(0,0,0,0.03))" }}></div>
+
+            <div className="relative z-10 w-full flex flex-col items-center">
+              <h2 className="text-3xl font-serif text-[#5a4a42] mb-6 flex items-center gap-2">
+                <span>✍️</span> ฝากคำอวยพร
+              </h2>
+
+              <div className="w-full max-w-sm">
+                {/* Form Component */}
+                <GuestBookForm
+                  theme={theme}
+                  memoryId={memoryId}
+                  onSubmitSuccess={fetchGuestbook}
+                />
+              </div>
+
+              <div className="mt-8 text-center text-[#8c7b70] text-sm opacity-80">
+                <p>ขอขอบคุณสำหรับทุกคำอวยพร</p>
+                <p>ที่เป็นกำลังใจให้เราสองคน</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Page */}
+          <div className="flex-1 p-6 md:p-10 relative bg-[#fffefa]">
+            {/* Paper Texture/Fold effect right */}
+            <div className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none hidden md:block"
+              style={{ background: "linear-gradient(to left, rgba(255,255,255,0), rgba(0,0,0,0.03))" }}></div>
+
+            <div className="relative z-10 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6 border-b border-[#ece4d9] pb-3">
+                <h3 className="text-xl font-serif text-[#5a4a42]">ข้อความล่าสุด</h3>
+                <span className="text-xs text-[#9c8b80] font-mono">Page 1 of {Math.ceil(entries.length / 4) || 1}</span>
+              </div>
+
+              {entries.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4 flex-grow">
+                  {previewCards.map((entry, idx) => (
+                    <div key={entry.id || idx} className="transform rotate-0 hover:rotate-1 transition-transform duration-200">
+                      <GuestBookCard
+                        {...entry}
+                        theme={theme}
+                        onDelete={handleDelete}
+                        // Simplify card style if needed inside book
+                        className="bg-white/50 border-none shadow-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex-grow flex flex-col items-center justify-center text-[#bcaaa0] italic opacity-60 min-h-[200px]">
+                  <p>ยังไม่มีข้อความ... เป็นคนแรกเลยไหม?</p>
+                </div>
+              )}
+
+              <div className="mt-6 pt-4 border-t border-[#ece4d9] flex justify-center">
+                <button
+                  onClick={() => setModalOpen(true)}
+                  className="text-sm font-semibold text-[#8c7b70] hover:text-[#5a4a42] hover:underline transition-all flex items-center gap-1"
+                >
+                  เปิดดูทั้งหมด <span>📖</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
-      ) : (
-        <p className="text-gray-400 italic mt-4 z-10">ยังไม่มีข้อความอวยพร</p>
-      )}
-
-      {/* ปุ่ม modal */}
-      <button
-        className="mt-5 w-auto px-6 bg-pink-50/60 text-pink-700 rounded-full py-2 font-semibold shadow hover:bg-pink-200/70 transition z-10"
-        onClick={() => setModalOpen(true)}
-      >
-        ดู Guest Book ทั้งหมด
-      </button>
-
-      {/* ฟอร์ม (soft, ไม่ใช่กล่อง, มี bg faint ได้) */}
-      <div className="mt-8 w-full max-w-md z-10">
-        <GuestBookForm
-          theme={theme}
-          memoryId={memoryId}
-          onSubmitSuccess={fetchGuestbook}
-        />
       </div>
 
       {/* Modal */}

@@ -1,92 +1,81 @@
-// /components/creation/CreationPage.jsx
 "use client";
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import ProgressBar from "@/components/creation/ProgressBar";
 import ThemeSelectionSection from "@/components/creation/ThemeSelectionSection";
-import ExampleSection from "@/components/creation/ExampleSection";
-import HowToSection from "@/components/creation/HowToSection";
-import FormSection from "@/components/creation/FormSection";
-import LoginSection from "@/components/creation/LoginSection";
+import PreviewSection from "@/components/creation/PreviewSection";
 import SuccessSection from "@/components/creation/SuccessSection";
 import HelpSection from "@/components/creation/HelpSection";
-// import PreviewSection from "@/components/creation/PreviewSection"; // (optional)
 
 export default function CreationPage() {
-  // Step state (1–6)
   const [step, setStep] = useState(1);
+  const [themeKey, setThemeKey] = useState("");
+  const [memoryId, setMemoryId] = useState("");
 
-  // Data state
-  const [theme, setTheme] = useState("");
-  const [formData, setFormData] = useState({});
-  const [isLogin, setIsLogin] = useState(false);
+  // Simplified to 3 steps: Theme -> Preview -> Success
+  const totalStep = 3;
 
-  // ปรับตาม step ที่ใช้จริง
-  const totalStep = 6;
-
-  // Callback สำหรับแต่ละ section
-  const handleThemeNext = (selectedTheme) => {
-    setTheme(selectedTheme);
+  const handleThemeNext = (selectedThemeKey) => {
+    setThemeKey(selectedThemeKey);
     setStep(2);
+    window.scrollTo(0, 0);
   };
 
-  const handleExampleNext = () => setStep(3);
-
-  const handleHowToNext = () => setStep(4);
-
-  const handleFormNext = (data) => {
-    setFormData(data);
-    setStep(5);
+  const handlePreviewBack = () => {
+    setStep(1);
+    window.scrollTo(0, 0);
   };
 
-  const handleLoginSuccess = () => {
-    setIsLogin(true);
-    setStep(6);
-  };
+  const handlePreviewNext = () => {
+    // Generate ID and move to success
+    const newId = uuidv4();
+    setMemoryId(newId);
 
-  const handleGoToMemory = () => {
-    // logic ไป MemoryPage
-    window.location.href = "/memory";
+    // In a real app, we would create the initial record here
+    console.log("Initializing memory page:", { id: newId, theme: themeKey });
+
+    setStep(3);
+    window.scrollTo(0, 0);
   };
 
   const handleGoToDashboard = () => {
-    // logic ไป Dashboard
-    window.location.href = "/dashboard";
+    window.location.href = "/";
   };
 
-  // Render แต่ละ step
   return (
-    <div className="max-w-xl mx-auto py-8 px-2">
-      <ProgressBar step={step} total={totalStep} />
+    <div className="max-w-6xl mx-auto py-12 px-4">
+      <div className="mb-12 max-w-xl mx-auto">
+        <ProgressBar step={step} total={totalStep} />
+      </div>
 
       {step === 1 && (
-        <ThemeSelectionSection onNext={handleThemeNext} />
+        <div className="animate-fadeIn">
+          <ThemeSelectionSection onNext={handleThemeNext} />
+        </div>
       )}
 
       {step === 2 && (
-        <ExampleSection onNext={handleExampleNext} />
+        <div className="animate-fadeIn">
+          <PreviewSection
+            themeKey={themeKey}
+            onBack={handlePreviewBack}
+            onNext={handlePreviewNext}
+          />
+        </div>
       )}
 
       {step === 3 && (
-        <HowToSection onNext={handleHowToNext} />
-      )}
-
-      {step === 4 && (
-        <FormSection onNext={handleFormNext} />
-      )}
-
-      {step === 5 && (
-        <LoginSection onLogin={handleLoginSuccess} />
-      )}
-
-      {step === 6 && (
         <SuccessSection
-          onGoToMemory={handleGoToMemory}
+          memoryId={memoryId}
+          themeKey={themeKey}
           onGoToDashboard={handleGoToDashboard}
         />
       )}
 
-      <HelpSection />
+      <div className="mt-16 border-t pt-8">
+        <HelpSection />
+      </div>
     </div>
   );
 }

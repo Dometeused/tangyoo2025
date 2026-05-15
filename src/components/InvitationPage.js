@@ -74,7 +74,7 @@ export default function InvitationPage({ event, refetchEvent }) {
         aria-hidden="true"
       />
 
-      <div className="relative z-20 p-6 text-gray-800 transition-all">
+      <div className="relative z-20 p-6 text-gray-800 transition-all max-w-6xl mx-auto">
         <BGMPlayer />
         <ThemeEffect />
 
@@ -133,11 +133,20 @@ export default function InvitationPage({ event, refetchEvent }) {
         </div>
 
         {/* BioBox2/Timeline/Guestbook */}
-        <div className="flex flex-col md:flex-row gap-8 mb-12">
-          <div className="md:w-2/3 w-full">
+        <div className="flex flex-col md:flex-row gap-8 mb-12 items-start">
+          {/* Left Column: Story + Guestbook */}
+          <div className="md:w-1/2 w-full flex flex-col gap-16">
+            <TimelineTree
+              eventId={event.id}
+              event={event}
+              theme={theme}
+              style={{ maxHeight: 200, minHeight: 90 }}
+            />
             <GuestBookSection memoryId={event.id} role={role} theme={theme} />
           </div>
-          <div className="md:w-1/3 w-full flex flex-col gap-8">
+
+          {/* Right Column: Sticky Poster */}
+          <div className="md:w-1/2 w-full sticky top-24 self-start">
             <BioBox2
               // Wedding
               bridePic={event.bridePic}
@@ -154,12 +163,6 @@ export default function InvitationPage({ event, refetchEvent }) {
               living={event.living}
               isOwner={isOwner}
               onEdit={() => setShowEditBioModal(true)}
-            />
-            <TimelineTree
-              eventId={event.id}
-              event={event}
-              theme={theme}
-              style={{ maxHeight: 200, minHeight: 90 }}
             />
           </div>
         </div>

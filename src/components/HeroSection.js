@@ -1,46 +1,110 @@
+// path: src/components/HeroSection.jsx
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import DotThemeSwitcher from "@/components/DotThemeSwitcher";
 
 export default function HeroSection({ current, onChange, THEMES }) {
-  const theme = THEMES[current];
+    const theme = THEMES[current];
 
-  return (
-    <section className="relative w-full h-[85vh] min-h-[520px] flex items-center justify-center overflow-hidden">
-      {/* BG Image เดี่ยว */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <Image
-          src={theme.image}
-          alt={theme.label}
-          fill
-          style={{ objectFit: "cover" }}
-          className="brightness-75"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
+    // Refined button styles (less intense gradients, more elegant)
+    const getButtonStyle = () => {
+        switch (theme.key) {
+            case 'wedding':
+                return {
+                    bg: 'bg-rose-500',
+                    text: 'text-rose-600',
+                    ring: 'ring-rose-200',
+                    hoverRing: 'group-hover:ring-rose-300'
+                };
+            case 'funeral':
+                return {
+                    bg: 'bg-zinc-700',
+                    text: 'text-zinc-600',
+                    ring: 'ring-zinc-200',
+                    hoverRing: 'group-hover:ring-zinc-300'
+                };
+            case 'anniversary':
+            default:
+                return {
+                    bg: 'bg-indigo-500',
+                    text: 'text-indigo-600',
+                    ring: 'ring-indigo-200',
+                    hoverRing: 'group-hover:ring-indigo-300'
+                };
+        }
+    };
 
-      {/* Content overlay */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-4">
-        <h1 className="text-white text-2xl md:text-4xl font-bold mb-3 text-center drop-shadow-[0_3px_18px_rgba(0,0,0,0.85)]">
-          {theme.title}
-        </h1>
-        <div className="text-white text-base md:text-2xl mb-6 text-center drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
-          {theme.desc}
-        </div>
-        <Link
-          href={theme.ctaLink}
-          className="px-6 py-2 md:px-10 md:py-4 rounded-full bg-orange-500 text-white font-bold text-lg md:text-2xl shadow-lg hover:bg-orange-600 transition mb-1"
-        >
-          {theme.cta}
-        </Link>
-      </div>
-      
-      {/* DotThemeSwitcher center bottom */}
-      <div className="absolute left-1/2 bottom-8 z-20 -translate-x-1/2">
-        <DotThemeSwitcher current={current} onChange={onChange} />
-      </div>
-    </section>
-  );
+    const style = getButtonStyle();
+
+    return (
+        <section className="relative w-full h-[92vh] flex items-center justify-center overflow-hidden bg-black/90">
+            {/* Background Image - Cinematic Zoom Effect */}
+            <div className="absolute inset-0 w-full h-full z-0 select-none">
+                <Image
+                    src={theme.image}
+                    alt={theme.label}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="opacity-60 scale-105 animate-[scaleIn_20s_ease-out_forwards]"
+                    priority
+                />
+
+                {/* Simplified Elegant Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/60" />
+            </div>
+
+            {/* Main Content */}
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 grid place-items-center">
+                <div className="text-center space-y-8 max-w-4xl mx-auto animate-fade-in-up">
+
+                    {/* Minimalist Theme Badge */}
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-premium text-sm font-medium tracking-wide text-white/90 shadow-sm animate-float-gentle">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                        {theme.label}
+                    </div>
+
+                    {/* Typography - Bigger, Bolder, Cleaner */}
+                    <div className="space-y-4">
+                        <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] drop-shadow-2xl font-kanit text-balance">
+                            {theme.title}
+                        </h1>
+                        <p className="text-white/80 text-lg md:text-2xl font-light tracking-wide max-w-2xl mx-auto leading-relaxed text-balance">
+                            {theme.desc}
+                        </p>
+                    </div>
+
+                    {/* Action Area */}
+                    <div className="pt-4 flex flex-col items-center gap-6">
+                        <Link
+                            href={theme.ctaLink}
+                            className={`group relative px-10 py-4 bg-white text-black rounded-full font-semibold text-lg hover:px-12 transition-all duration-500 ease-out shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)]`}
+                        >
+                            <span className="relative z-10 flex items-center gap-2">
+                                {theme.cta}
+                                <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </span>
+                        </Link>
+
+                        {/* Theme Switcher - Clean & Minimal */}
+                        <div className="mt-8">
+                            <div className="glass-premium px-4 py-2 rounded-full inline-block">
+                                <DotThemeSwitcher
+                                    current={current}
+                                    onChange={onChange}
+                                    THEMES={THEMES}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Fade */}
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[var(--background)] to-transparent z-20 pointer-events-none" />
+        </section>
+    );
 }

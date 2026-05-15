@@ -36,7 +36,7 @@ export default function BioBox2(props) {
 
       {/* กล่องโปสเตอร์พร้อม Lightbox */}
       <div
-        className="relative w-full max-w-[420px] aspect-[7/10] rounded-2xl overflow-hidden shadow cursor-pointer bg-white border border-gray-100"
+        className="relative w-full max-w-[420px] aspect-[7/10] rounded-2xl overflow-hidden shadow-2xl cursor-pointer bg-white border border-gray-100 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:-translate-y-1"
         onClick={() => setOpenLightbox(true)}
         tabIndex={0}
         aria-label="แสดงโปสเตอร์เต็มจอ"
