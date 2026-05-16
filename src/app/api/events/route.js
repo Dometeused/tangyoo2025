@@ -10,10 +10,8 @@ export async function GET(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log("[API/Events][GET] user:", user);
 
   if (authError || !user) {
-    console.error("[API/Events][GET] unauthenticated", authError);
     return NextResponse.json({ success: false, error: "unauthenticated" }, { status: 401 });
   }
 
@@ -24,7 +22,6 @@ export async function GET(req) {
     .eq("email", user.email);
 
   if (error) {
-    console.error("[API/Events][GET] Supabase error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 
@@ -39,16 +36,13 @@ export async function POST(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log("[API/Events][POST] user:", user);
 
   if (authError || !user) {
-    console.error("[API/Events][POST] unauthenticated", authError);
     return NextResponse.json({ success: false, error: "unauthenticated" }, { status: 401 });
   }
 
   const { name, date, place, theme, bio, story, timeline_events, coverImage, youtube_link, impressions, theme_song } = await req.json();
   if (!name || !date || !place || !theme) {
-    console.error("[API/Events][POST] missing fields", { name, date, place, theme });
     return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
   }
 
@@ -75,7 +69,6 @@ export async function POST(req) {
     .single();
 
   if (error) {
-    console.error("[API/Events][POST] Supabase error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 
@@ -90,16 +83,13 @@ export async function DELETE(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  console.log("[API/Events][DELETE] user:", user);
 
   if (authError || !user) {
-    console.error("[API/Events][DELETE] unauthenticated", authError);
     return NextResponse.json({ success: false, error: "unauthenticated" }, { status: 401 });
   }
 
   const { id } = await req.json();
   if (!id) {
-    console.error("[API/Events][DELETE] missing id");
     return NextResponse.json({ success: false, error: "missing id" }, { status: 400 });
   }
 
@@ -111,10 +101,8 @@ export async function DELETE(req) {
     .eq("email", user.email);
 
   if (error) {
-    console.error("[API/Events][DELETE] Supabase error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 
-  console.log("[API/Events][DELETE] deleted event:", id);
   return NextResponse.json({ success: true });
 }
