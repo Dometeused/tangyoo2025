@@ -8,9 +8,11 @@ import GuestBookModal from "@/components/GuestBookModal";
 
 export default function GuestBookSection({
   memoryId,
+  role = "guest",
   theme = "wedding",
   phase = "invitation",
 }) {
+  const isOwner = role === "owner" || role === "admin";
   const [modalOpen, setModalOpen] = useState(false);
   const [signModalOpen, setSignModalOpen] = useState(false);
   const [entries, setEntries] = useState([]);
@@ -18,9 +20,6 @@ export default function GuestBookSection({
   const [deleteTarget, setDeleteTarget] = useState(null); // id ที่จะลบ
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    console.log("📒 GuestBookSection loaded with:", { memoryId, theme, phase });
-  }, [memoryId, theme, phase]);
 
   const fetchGuestbook = async () => {
     if (!memoryId) return;
@@ -174,7 +173,7 @@ export default function GuestBookSection({
                           <GuestBookCard
                             {...entry}
                             theme={theme}
-                            onDelete={handleDelete}
+                            onDelete={isOwner ? handleDelete : undefined}
                             compact={true} // Force compact mode
                             className="shadow-none border-none p-0 bg-transparent"
                           />
@@ -196,8 +195,7 @@ export default function GuestBookSection({
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cream-paper.png')" }} />
 
             <div className="relative z-10 h-full flex flex-col">
-              <div className="flex justify-between items-end mb-6 border-b-2 border-[#efebe9] pb-2">
-                <span className="text-xs text-[#a1887f] font-mono mb-1">Page {currentPage * 2 + 2}</span>
+              <div className="flex justify-end items-end mb-6 border-b-2 border-[#efebe9] pb-2">
                 <span className="text-xs text-[#a1887f] font-mono mb-1">Page {currentPage * 2 + 2}</span>
               </div>
 
@@ -218,7 +216,7 @@ export default function GuestBookSection({
                           <GuestBookCard
                             {...entry}
                             theme={theme}
-                            onDelete={handleDelete}
+                            onDelete={isOwner ? handleDelete : undefined}
                             compact={true} // Force compact mode
                             className="shadow-none border-none p-0 bg-transparent"
                           />
