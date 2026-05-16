@@ -12,26 +12,34 @@ import { FontFamily } from "@/extensions/FontFamily";
 import Toolbar from "@/components/Toolbar";
 
 const getDefaultTemplate = (theme, phase) => {
-  if (theme === "funeral" && phase === "invitation") {
-    return "งานศพของคุณ…\nวันที่…\nสถานที่…";
-  }
-  if (theme === "funeral" && phase === "memory") {
-    return "หน้าแห่งความทรงจำ\nคุณ…\nผู้ที่อาลัยรักยิ่ง\nจากครอบครัว…";
-  }
-  if (theme === "wedding" && phase === "invitation") {
-    return "ขอเรียนเชิญร่วมงานแต่งของ… และ…\nในวันที่…\nณ สถานที่…";
-  }
-  if (theme === "wedding" && phase === "memory") {
-    return "ความทรงจำในวันพิเศษของ… และ…\nขอบคุณทุกคนที่มาร่วมเป็นสักขีพยาน";
-  }
-  return "";
+  const templates = {
+    wedding: {
+      invitation: "ขอเรียนเชิญร่วมงานแต่งของ… และ…\nในวันที่…\nณ สถานที่…",
+      memory: "ความทรงจำในวันพิเศษของ… และ…\nขอบคุณทุกคนที่มาร่วมเป็นสักขีพยาน",
+    },
+    funeral: {
+      invitation: "งานพิธีของคุณ…\nวันที่…\nสถานที่…",
+      memory: "หน้าแห่งความทรงจำ\nคุณ…\nผู้ที่อาลัยรักยิ่ง\nจากครอบครัว…",
+    },
+    anniversary: {
+      invitation: "ขอเชิญร่วมฉลองวันครบรอบของ… และ…\nวันที่…\nณ สถานที่…",
+      memory: "ความทรงจำแห่งรัก… ปีที่ผ่านมา\nขอบคุณทุกคนที่อยู่เคียงข้าง",
+    },
+    baby: {
+      invitation: "ขอต้อนรับน้อง…\nเกิดวันที่…\nน้ำหนัก… กิโลกรัม",
+      memory: "บันทึกช่วงเวลาพิเศษของน้อง…\nทุกวินาทีคือความทรงจำ",
+    },
+  };
+  return templates[theme]?.[phase] || "";
 };
 
 export default function BioBox({ bio, eventId, theme = "funeral", phase = "invitation" }) {
   const supabase = createClientComponentClient();
   const { role } = useAppMode();
+  const isOwner = role === "owner" || role === "admin";
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const defaultTemplate = getDefaultTemplate(theme, phase);
 
   const editor = useEditor({
@@ -60,9 +68,9 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
 
   useEffect(() => {
     if (editor) {
-      editor.setEditable(editing && role === "owner");
+      editor.setEditable(editing && isOwner);
     }
-  }, [editing, editor, role]);
+  }, [editing, editor, isOwner]);
 
   const handleSave = async () => {
     if (!editor) return;
@@ -74,11 +82,11 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
       .eq("id", eventId);
 
     setSaving(false);
-    if (!error) setEditing(false);
-    else alert("บันทึกไม่สำเร็จ");
+    if (!error) { setEditing(false); setSaveError(""); }
+    else setSaveError("บันทึกไม่สำเร็จ กรุณาลองใหม่");
   };
 
-  if (!bio && !editing && role !== "owner") {
+  if (!bio && !editing && !isOwner) {
     return (
       <section className="w-full flex flex-col items-center text-center mb-8">
         <div className="text-gray-400 italic text-base">ยังไม่มีข้อความความทรงจำ</div>
@@ -108,10 +116,10 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
         className="relative z-10 flex flex-col items-center justify-center w-full max-w-[350px] md:max-w-2xl px-4 font-kanit"
         style={{ minHeight: "260px" }}
       >
-        {editing && role === "owner" && <Toolbar editor={editor} />}
+        {editing && isOwner && <Toolbar editor={editor} />}
 
         <div style={{ width: "100%", minHeight: "100px" }}>
-          {editing && role === "owner" ? (
+          {editing && isOwner ? (
             <EditorContent
               editor={editor}
               className="text-lg"
@@ -122,8 +130,8 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
             />
           ) : (
             <div
-              onClick={() => role === "owner" && setEditing(true)}
-              className={(role === "owner" ? "cursor-pointer " : "") + "w-full text-center flex flex-col items-center"}
+              onClick={() => isOwner && setEditing(true)}
+              className={(isOwner ? "cursor-pointer " : "") + "w-full text-center flex flex-col items-center"}
               style={{
                 wordBreak: "break-word",
                 fontWeight: 400,
@@ -141,8 +149,9 @@ export default function BioBox({ bio, eventId, theme = "funeral", phase = "invit
           )}
         </div>
 
-        {editing && role === "owner" && (
+        {editing && isOwner && (
           <div className="text-right w-full mt-2">
+            {saveError && <p className="text-red-500 text-xs mb-2">{saveError}</p>}
             <button
               onClick={handleSave}
               className="px-4 py-2 bg-black text-white text-sm rounded hover:bg-opacity-80"
