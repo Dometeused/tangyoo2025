@@ -9,7 +9,7 @@ import { useAppMode } from "@/context/AppModeContext";
 export default function GalleryPreview({ event }) {
   const router = useRouter();
   const { role } = useAppMode();
-  const isOwner = role === "owner";
+  const isOwner = role === "owner" || role === "admin";
   const [openLightbox, setOpenLightbox] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
 
