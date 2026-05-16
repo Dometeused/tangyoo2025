@@ -22,11 +22,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/event/:path*",
-    "/memorypage/:path*",
-    "/invitationpage/:path*",
-  ],
-};

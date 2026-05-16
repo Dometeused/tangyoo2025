@@ -5,36 +5,37 @@ import { useEffect, useState } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const supabase = createClientComponentClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ STEP 1: ถ้า login อยู่แล้ว ไม่ต้องให้เข้าหน้า login
+    // ถ้า login อยู่แล้ว redirect ไปที่ ?next= หรือ /dashboard
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        router.replace("/dashboard"); // ใช้ replace ป้องกัน back กลับมา login อีก
+        const next = searchParams.get("next") || "/dashboard";
+        router.replace(next);
       } else {
         setLoading(false);
       }
     });
 
-    // ✅ STEP 2: ฟัง event login สำเร็จ
+    // ฟัง event login สำเร็จ
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        // (ถ้าอยาก save email)
-        localStorage.setItem("userEmail", session.user.email);
-        router.replace("/dashboard");
+        const next = searchParams.get("next") || "/dashboard";
+        router.replace(next);
       }
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [supabase, router, searchParams]);
 
   if (loading) {
     return (
