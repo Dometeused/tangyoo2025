@@ -8,17 +8,17 @@ import Modal from "@/components/Modal";
 import { useAppMode } from "@/context/AppModeContext";
 
 const TIMELINE_TITLE = {
-  wedding: "การเดินทางของเรา",
-  funeral: "เรื่องราวความทรงจำ",
-  family:  "ชีวิตครอบครัว",
+  wedding:     "การเดินทางของเรา",
+  funeral:     "เรื่องราวความทรงจำ",
+  anniversary: "ชีวิตร่วมกันของเรา",
+  baby:        "เติบโตทีละก้าว",
 };
 
-// Per-theme accent colours that match the rest of the page
 const THEME = {
   wedding:     { line: "#ddb0c0", dot: "#6b2d4a", year: "#9e6b7d", title: "#3d2020", badge: "#6b2d4a", badgeBg: "#fdf2f8" },
   funeral:     { line: "#c9a882", dot: "#5a3a1a", year: "#9e7e46", title: "#2a1a0a", badge: "#5a3a1a", badgeBg: "#fdf8f0" },
-  family:      { line: "#8aacc8", dot: "#2d4a6b", year: "#4a6b8a", title: "#1a2a3d", badge: "#2d4a6b", badgeBg: "#f0f4f8" },
   anniversary: { line: "#c9a050", dot: "#6b4a1e", year: "#9e7e46", title: "#2a1a0a", badge: "#6b4a1e", badgeBg: "#fdf8f0" },
+  baby:        { line: "#c8a8d8", dot: "#7b3f8a", year: "#9e6b8a", title: "#3d1a3d", badge: "#7b3f8a", badgeBg: "#fdf0ff" },
 };
 
 export default function TimelineTree({ eventId, event, theme = "wedding" }) {
@@ -32,6 +32,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, text }
 
   const { role } = useAppMode();
+  const isOwner = role === "owner" || role === "admin";
   const t = THEME[theme] ?? THEME.wedding;
 
   /* ─── Candle waypoint glow (funeral only) ─── */
@@ -109,11 +110,16 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
   }, [eventId, event]);
 
   /* ─── Final card ─── */
+  const finalCardText = {
+    wedding:     { text: "Our Wedding Day",   detail: "วันที่สองหัวใจได้มาบรรจบกัน" },
+    funeral:     { text: "วันที่ระลึก",        detail: "วันแห่งการรำลึกและขอบคุณทุกความทรงจำ" },
+    anniversary: { text: "วันครบรอบพิเศษ",    detail: "ขอบคุณทุกปีที่ผ่านมาร่วมกัน" },
+    baby:        { text: "วันเกิดของหนูน้อย", detail: "จุดเริ่มต้นของการเดินทางอันแสนพิเศษ" },
+  };
   const finalCard = {
     isFinal: true,
     year: event?.date ? event.date.slice(0, 4) : new Date().getFullYear().toString(),
-    text: theme === "wedding" ? "Our Wedding Day" : "วันที่ระลึก",
-    detail: theme === "wedding" ? "วันที่สองหัวใจได้มาบรรจบกัน" : "วันแห่งการรำลึกและขอบคุณทุกความทรงจำ",
+    ...(finalCardText[theme] ?? finalCardText.wedding),
   };
 
   const timelineItems = [...[...milestones].sort((a, b) => a.year > b.year ? 1 : -1), finalCard];
@@ -289,7 +295,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
                 )}
 
                 {/* Owner: delete */}
-                {role === "owner" && !m.isFinal && (
+                {isOwner && !m.isFinal && (
                   <button
                     onClick={() => setDeleteTarget({ id: m.id, text: m.text })}
                     className="mt-2 flex items-center gap-1 text-[10px] transition-colors"
@@ -302,7 +308,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
                 )}
 
                 {/* Owner: add button (on final card) */}
-                {role === "owner" && m.isFinal && (
+                {isOwner && m.isFinal && (
                   <button
                     onClick={() => setShowForm(true)}
                     className="mt-4 flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors hover:opacity-80"
