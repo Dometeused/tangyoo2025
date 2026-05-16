@@ -28,17 +28,29 @@ const PROMPT_BY_THEME = {
     "📖 คำสอนหรือข้อคิดที่คุณได้จากผู้วายชนม์",
     "🫂 ช่วงเวลาที่ท่านช่วยเหลือ/ให้กำลังใจคุณ",
   ],
-  family: [
-    "🎈 ความสุขที่ได้อยู่กับเจ้าของวันเกิด?",
-    "🥳 เรื่องขำ ๆ หรือประทับใจที่อยากเล่า",
-    "🎂 มีคำอวยพรหรือความในใจไหม?",
-    "📸 อัปโหลดรูป/วิดีโอโมเมนต์น่ารัก ๆ",
-    "🌟 ความรู้สึกในวันนี้เป็นยังไง?",
-    "🎁 ของขวัญในใจที่อยากมอบให้ (ไม่ต้องเป็นของจริงก็ได้!)",
-    "👨‍👩‍👧‍👦 กิจกรรมในครอบครัวที่ชอบที่สุด?",
-    "🍽️ เมนูที่ทำให้นึกถึงเจ้าของวันเกิด",
-    "💬 ถ้าจะบอกอะไรกับเจ้าของวันเกิด 1 ประโยค จะพูดว่าอะไร?",
-    "📝 เล่าเหตุการณ์น่าประทับใจที่เคยเกิดร่วมกัน",
+  anniversary: [
+    "💍 ความทรงจำที่ประทับใจที่สุดตลอดกาลกับคู่นี้?",
+    "🎊 มีคำอวยพรพิเศษสำหรับวันครบรอบนี้?",
+    "💑 รู้จักกันมาได้ยังไงและนานแค่ไหน?",
+    "📸 แชร์รูปความทรงจำของพวกเขา",
+    "🌟 สิ่งที่คุณชื่นชมในคู่รักนี้มากที่สุด?",
+    "🥂 ปีที่น่าประทับใจที่สุดที่คุณเห็นพวกเขา?",
+    "💌 ข้อความถึงคู่รักที่แสนพิเศษ",
+    "🌹 บอกความในใจที่อยากส่งให้พวกเขา",
+    "🎂 ความสุขที่ได้เป็นส่วนหนึ่งของวันพิเศษนี้",
+    "✨ เคล็ดลับความรักที่อยากฝากถึงคู่รักนี้",
+  ],
+  baby: [
+    "🍼 ความรู้สึกเมื่อได้ยินข่าวการมาของน้อง?",
+    "👶 คำอวยพรพิเศษถึงน้องน้อยคนใหม่",
+    "🌟 ชื่อน่ารักๆ ที่คุณอยากตั้งให้น้อง?",
+    "📸 อัปโหลดรูปน่ารัก ๆ ของน้องหรือครอบครัว",
+    "🎁 ของขวัญในใจสำหรับน้องน้อย",
+    "💕 ความหวังที่คุณมีต่ออนาคตของน้อง",
+    "🌸 ข้อแนะนำดีๆ สำหรับคุณพ่อคุณแม่มือใหม่",
+    "🧸 ความทรงจำแรกที่อยากสร้างกับน้อง",
+    "🌈 สิ่งที่น้องจะต้องเติบโตมาได้รู้",
+    "🫶 คำอวยพรจากใจถึงครอบครัวใหม่",
   ],
 };
 
@@ -51,15 +63,19 @@ const themeStyleMap = {
     btn: "bg-gray-700 hover:bg-gray-800 text-white",
     border: "border-gray-600",
   },
-  family: {
-    btn: "bg-yellow-400 hover:bg-yellow-500 text-white",
-    border: "border-yellow-300",
+  anniversary: {
+    btn: "bg-amber-500 hover:bg-amber-600 text-white",
+    border: "border-amber-200",
+  },
+  baby: {
+    btn: "bg-purple-400 hover:bg-purple-500 text-white",
+    border: "border-purple-200",
   },
 };
 
 export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
   const { role } = useAppMode();
-
+  const isOwner = role === "owner" || role === "admin";
 
   const PROMPTS = PROMPT_BY_THEME[theme] || PROMPT_BY_THEME["wedding"];
   const style = themeStyleMap[theme] || themeStyleMap["wedding"];
@@ -70,12 +86,15 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     setPrompt(PROMPTS[0]);
   }, [theme]);
 
-  if (role !== "guest" && role !== "owner") return null;
+  // Only hide from non-authenticated non-guests (shouldn't happen, but guard anyway)
+  if (role !== "guest" && !isOwner) return null;
 
   const handleRandomPrompt = () => {
     const otherPrompts = PROMPTS.filter((p) => p !== prompt);
@@ -111,17 +130,18 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
         }),
       });
 
-      alert("ขอบคุณที่ฝาก Guest Book 💖");
+      setSubmitSuccess(true);
+      setSubmitError("");
       setName("");
       setPrompt(PROMPTS[0]);
       setMessage("");
       setImageFile(null);
       setImageUrl("");
+      setTimeout(() => setSubmitSuccess(false), 3000);
 
       if (onSubmitSuccess) onSubmitSuccess();
     } catch (err) {
-      alert("เกิดข้อผิดพลาดในการส่งข้อความ");
-      console.error(err);
+      setSubmitError("เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่");
     }
 
     setSubmitting(false);
@@ -187,12 +207,21 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
         )}
       </div>
 
+      {submitSuccess && (
+        <div className="text-green-600 text-sm font-semibold text-center py-2">
+          ขอบคุณที่ฝาก Guest Book 💖
+        </div>
+      )}
+      {submitError && (
+        <div className="text-red-500 text-sm text-center py-1">{submitError}</div>
+      )}
+
       <button
         type="submit"
         disabled={submitting}
         className={`${style.btn} font-bold px-6 py-3 rounded-2xl shadow flex items-center justify-center gap-2 text-lg`}
       >
-        ฝาก Guest Book
+        {submitting ? "กำลังส่ง..." : "ฝาก Guest Book"}
       </button>
     </form>
   );

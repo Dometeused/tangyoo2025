@@ -8,7 +8,7 @@ import BioBox2FuneralBio from "@/components/BioBox2FuneralBio";
 export default function BioBox2(props) {
   const [openLightbox, setOpenLightbox] = useState(false);
   const { theme, role } = useAppMode();
-  const isOwner = role === "owner";
+  const isOwner = role === "owner" || role === "admin";
 
   // mapping props สำหรับแต่ละ theme (wedding, funeral)
   let PosterComponent, posterProps, portraitHint;

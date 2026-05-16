@@ -17,6 +17,7 @@ export default function QRCodeAndScheduleSection({
 }) {
   const supabase = createClientComponentClient();
   const { role, theme, phase } = useAppMode();
+  const isOwner = isOwner || role === "admin";
 
   const THEME_STYLES = {
     funeral: {
@@ -37,14 +38,23 @@ export default function QRCodeAndScheduleSection({
       buttonSecondary: "bg-rose-50 text-[#6b2d4a] hover:bg-rose-100",
       input: "bg-white border-rose-100 text-stone-800 placeholder-stone-400",
     },
-    family: {
-      heading: "text-orange-700",
-      text: "text-gray-800",
-      subtext: "text-gray-500",
-      border: "border-orange-200",
-      buttonPrimary: "bg-orange-500 text-white hover:bg-orange-600",
-      buttonSecondary: "bg-orange-50 text-orange-700 hover:bg-orange-100",
-      input: "bg-white border-orange-200 text-gray-800 placeholder-gray-400",
+    anniversary: {
+      heading: "text-amber-700",
+      text: "text-amber-900",
+      subtext: "text-amber-500",
+      border: "border-amber-200",
+      buttonPrimary: "bg-amber-600 text-white hover:bg-amber-700",
+      buttonSecondary: "bg-amber-50 text-amber-700 hover:bg-amber-100",
+      input: "bg-white border-amber-200 text-amber-900 placeholder-amber-400",
+    },
+    baby: {
+      heading: "text-purple-700",
+      text: "text-purple-900",
+      subtext: "text-purple-400",
+      border: "border-purple-200",
+      buttonPrimary: "bg-purple-500 text-white hover:bg-purple-600",
+      buttonSecondary: "bg-purple-50 text-purple-700 hover:bg-purple-100",
+      input: "bg-white border-purple-200 text-purple-900 placeholder-purple-400",
     },
     default: {
       heading: "text-gray-800",
@@ -101,6 +111,9 @@ export default function QRCodeAndScheduleSection({
     img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
   };
 
+  // Copy feedback
+  const [copied, setCopied] = useState(false);
+
   // QR note
   const [editing, setEditing] = useState(false);
   const [qrNote, setQrNote] = useState(event?.qr_note || "");
@@ -116,7 +129,8 @@ export default function QRCodeAndScheduleSection({
     const accountNum = m ? m[0] : "";
     if (accountNum) {
       navigator.clipboard.writeText(accountNum);
-      alert("คัดลอกเลขบัญชีแล้ว!");
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -155,7 +169,7 @@ export default function QRCodeAndScheduleSection({
       <div className="flex-1 w-full order-2 md:order-1 flex flex-col items-center justify-center">
 
         {/* Toggle Video Mode (Owner Only) */}
-        {role === "owner" && !isMemoryPhase && (
+        {isOwner && !isMemoryPhase && (
           <div className={`flex p-1 rounded-full mb-4 shadow-sm relative z-20 ${theme === 'funeral' ? 'bg-gray-800' : 'bg-gray-100'}`}>
             {["ai", "youtube", "none"].map((m) => {
               const label = m === "ai" ? "AI Video" : m === "youtube" ? "YouTube" : "ปิด";
@@ -182,7 +196,7 @@ export default function QRCodeAndScheduleSection({
         {/* Render Content Based on Mode */}
         {videoMode === "none" ? (
           // Placeholder or Empty
-          role === "owner" ? (
+          isOwner ? (
             <div className={`w-full h-32 border-2 border-dashed rounded-xl flex items-center justify-center text-sm ${tStyle.border} ${tStyle.subtext}`}>
               ปิดการแสดงผลวิดีโอ
             </div>
@@ -196,7 +210,7 @@ export default function QRCodeAndScheduleSection({
           // YouTube Component
           <>
             {/* Video Input (Owner) */}
-            {role === "owner" && !isMemoryPhase && (
+            {isOwner && !isMemoryPhase && (
               <div className="mb-2 w-full flex flex-col items-center z-20 relative">
                 <input
                   value={videoInput}
@@ -304,7 +318,7 @@ export default function QRCodeAndScheduleSection({
         </div>
 
         {/* Download button (Owner only) */}
-        {role === "owner" && (
+        {isOwner && (
           <button
             onClick={handleDownloadQR}
             className={`mt-3 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md ${tStyle.buttonSecondary}`}
@@ -321,7 +335,7 @@ export default function QRCodeAndScheduleSection({
 
         {/* QR Note */}
         <div className="mt-4 w-full text-center">
-          {editing && role === "owner" ? (
+          {editing && isOwner ? (
             <div className={`flex flex-col items-center gap-2 p-3 rounded-lg backdrop-blur mx-auto max-w-xs shadow-sm ${theme === 'funeral' ? 'bg-gray-800/90' : 'bg-white/80'}`}>
               <input
                 className={`w-full border p-2 rounded text-center text-sm ${tStyle.input}`}
@@ -352,7 +366,7 @@ export default function QRCodeAndScheduleSection({
               <span className={`font-medium text-sm ${tStyle.text}`}>
                 {qrNote || "รหัสสำหรับกรอกแทนการสแกน"}
               </span>
-              {role === "owner" && (
+              {isOwner && (
                 <button onClick={() => setEditing(true)}>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded transition ${tStyle.buttonSecondary}`}>แก้ไข</span>
                 </button>
@@ -363,7 +377,7 @@ export default function QRCodeAndScheduleSection({
 
         {/* Bank info */}
         <div className="mt-2 w-full text-center">
-          {editingBank && role === "owner" ? (
+          {editingBank && isOwner ? (
             <div className={`flex flex-col items-center gap-2 p-3 rounded-lg backdrop-blur mx-auto max-w-xs shadow-sm mt-1 ${theme === 'funeral' ? 'bg-gray-800/90' : 'bg-white/80'}`}>
               <input
                 className={`w-full border p-2 rounded text-center text-sm ${tStyle.input}`}
@@ -395,7 +409,7 @@ export default function QRCodeAndScheduleSection({
                 <span className={`text-sm font-medium border-b border-dashed pb-0.5 ${tStyle.text} ${theme === 'funeral' ? 'border-gray-500' : 'border-gray-300'}`}>
                   {bankInfo || "ชื่อบัญชี ธนาคาร เลขบัญชี"}
                 </span>
-                {role === "owner" && (
+                {isOwner && (
                   <button onClick={() => setEditingBank(true)}>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded transition ${tStyle.buttonSecondary}`}>แก้ไข</span>
                   </button>
@@ -407,7 +421,7 @@ export default function QRCodeAndScheduleSection({
                   onClick={handleCopy}
                 >
                   <FiCopy size={12} />
-                  <span>คัดลอกเลขบัญชี</span>
+                  <span>{copied ? "คัดลอกแล้ว!" : "คัดลอกเลขบัญชี"}</span>
                 </button>
               )}
             </div>

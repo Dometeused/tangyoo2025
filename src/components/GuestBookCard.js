@@ -15,7 +15,7 @@ function parseGift(prompt) {
 }
 
 // ── GIFT CARD — premium voucher layout ──────────────────────────────────────
-function GiftCard({ gift, name, message, date, id, role, onDelete, compact }) {
+function GiftCard({ gift, name, message, date, id, isOwner, onDelete, compact }) {
   const formattedDate = date
     ? new Date(date).toLocaleString("th-TH", {
         year: "numeric", month: "short", day: "numeric",
@@ -42,7 +42,7 @@ function GiftCard({ gift, name, message, date, id, role, onDelete, compact }) {
             )}
           </div>
         </div>
-        {role === "owner" && onDelete && (
+        {isOwner && onDelete && (
           <button onClick={() => onDelete(id)} className="absolute top-2 right-2 text-[10px] text-amber-400 hover:text-red-400 z-10">
             <FaTrashAlt />
           </button>
@@ -59,7 +59,7 @@ function GiftCard({ gift, name, message, date, id, role, onDelete, compact }) {
       }}>
 
       {/* Delete button */}
-      {role === "owner" && onDelete && (
+      {isOwner && onDelete && (
         <button onClick={() => onDelete(id)}
           className="absolute top-3 right-3 text-xs text-amber-300 hover:text-red-400 z-20 transition-colors">
           <FaTrashAlt />
@@ -135,20 +135,22 @@ export default function GuestBookCard({
   id, onDelete, compact = false,
 }) {
   const { theme, role } = useAppMode();
+  const isOwner = role === "owner" || role === "admin";
   const photoUrl = image_url;
   const gift = parseGift(prompt);
 
   // Delegate to premium gift card
   if (gift) {
     return <GiftCard gift={gift} name={name} message={message} date={date}
-      id={id} role={role} onDelete={onDelete} compact={compact} />;
+      id={id} isOwner={isOwner} onDelete={onDelete} compact={compact} />;
   }
 
   // ── Regular card ──────────────────────────────────────────────────────────
   const bgMap = {
     wedding: "bg-white/70 border-pink-100",
     funeral: "bg-white/60 border-gray-200",
-    family: "bg-[#fffde7]/70 border-yellow-100",
+    anniversary: "bg-[#fffbeb]/70 border-amber-100",
+    baby: "bg-[#f3e8ff]/70 border-purple-100",
   };
   const bgClass = bgMap[theme] || "bg-white/80 border-gray-100";
 
@@ -161,7 +163,7 @@ export default function GuestBookCard({
 
   const [showLightbox, setShowLightbox] = useState(false);
   const [imgPos, setImgPos] = useState(50);
-  const showMoveBtn = !!photoUrl && role === "owner";
+  const showMoveBtn = !!photoUrl && isOwner;
 
   const paddingClass = compact ? "px-3 py-2 my-2" : "px-4 py-3 my-3";
   const nameClass = compact
@@ -175,7 +177,7 @@ export default function GuestBookCard({
       className={`relative border shadow-sm rounded-2xl ${paddingClass} ${bgClass} transition-all group`}
       style={{ fontFamily: "'SukhumvitSet', 'Inter', 'sans-serif'", minHeight: compact ? 70 : 90 }}
     >
-      {role === "owner" && onDelete && (
+      {isOwner && onDelete && (
         <button onClick={() => onDelete(id)}
           className="absolute top-2 right-2 text-xs text-pink-400 hover:text-pink-600 z-10">
           <FaTrashAlt />
