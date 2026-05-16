@@ -13,32 +13,48 @@ export default function EventPageRouter() {
   const { id: eventId } = useParams();
   const { setRole, setTheme, setPhase } = useAppMode();
   const supabase = createClientComponentClient();
+
   const [event, setEvent] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!eventId) return;
 
     const load = async () => {
+      // 1. Load event
       const event = await getEventById(eventId);
       if (!event) {
-        console.error("❌ ไม่พบ Event จาก getEventById");
+        setNotFound(true);
         return;
       }
+
+      // 2. Get current user
       const { data: { user } } = await supabase.auth.getUser();
-      const savedEmail = typeof window !== "undefined" ? localStorage.getItem("userEmail") : null;
 
-      const normalizedUser = user?.email?.trim().toLowerCase();
-      const normalizedLocal = savedEmail?.trim().toLowerCase();
-      const normalizedOwner = event.email?.trim().toLowerCase();
-      const isOwner = normalizedUser === normalizedOwner || normalizedLocal === normalizedOwner;
+      // 3. Determine role (admin > owner > guest)
+      let role = "guest";
 
-      // log event
-      console.log("[EventPageRouter] loaded event:", event);
+      if (user) {
+        // Check admin via profiles table
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
 
-      setTheme(event.theme);
-      setPhase(event.phase);
-      setRole(isOwner ? "owner" : "guest");
+        if (profile?.is_admin) {
+          role = "admin";
+        } else if (event.user_id && user.id === event.user_id) {
+          // Owner = user_id ตรงกัน (ไม่ใช้ email)
+          role = "owner";
+        }
+      }
+
+      // 4. Set context
+      setTheme(event.theme || "wedding");
+      setPhase(event.phase || "invitation");
+      setRole(role);
 
       setEvent(event);
       setIsReady(true);
@@ -47,11 +63,42 @@ export default function EventPageRouter() {
     load();
   }, [eventId]);
 
-  if (!event || !isReady) {
-    return <div className="text-center py-10">⏳ กำลังโหลดข้อมูล Event...</div>;
+  // Loading
+  if (!isReady && !notFound) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-gray-400 text-sm">กำลังโหลดข้อมูล...</p>
+        </div>
+      </div>
+    );
   }
 
-  return event.phase === "memory"
-    ? <MemoryPage event={event} />
-    : <InvitationPage event={event} />;
+  // Not found
+  if (notFound) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center space-y-4">
+          <div className="text-5xl">🔍</div>
+          <h1 className="text-xl font-bold text-gray-800">ไม่พบ Event นี้</h1>
+          <p className="text-gray-400 text-sm">Event อาจถูกลบหรือ URL ไม่ถูกต้อง</p>
+          <a href="/dashboard" className="inline-block mt-2 px-6 py-2 bg-orange-500 text-white rounded-full text-sm font-medium hover:bg-orange-600 transition">
+            กลับ Dashboard
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Route by phase
+  if (event.phase === "memory") return <MemoryPage event={event} />;
+  if (event.phase === "invitation") return <InvitationPage event={event} />;
+
+  // Fallback
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-400">ไม่รู้จัก phase: {event.phase}</p>
+    </div>
+  );
 }
