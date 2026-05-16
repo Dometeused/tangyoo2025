@@ -8,6 +8,8 @@ export default function EditEventForm({ eventData }) {
   const [date, setDate] = useState(eventData.date || "");
   const [place, setPlace] = useState(eventData.place || "");
   const [bio, setBio] = useState(eventData.bio || "");
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState(false);
 
   const supabase = createClientComponentClient();
   const router = useRouter();
@@ -21,10 +23,10 @@ export default function EditEventForm({ eventData }) {
       .eq("id", eventData.id);
 
     if (error) {
-      alert("เกิดข้อผิดพลาด: " + error.message);
+      setFormError("เกิดข้อผิดพลาด: " + error.message);
     } else {
-      alert("บันทึกเรียบร้อยแล้ว");
-      router.push(`/event/${eventData.id}`);
+      setFormSuccess(true);
+      setTimeout(() => router.push(`/event/${eventData.id}`), 1000);
     }
   };
 
@@ -62,6 +64,9 @@ export default function EditEventForm({ eventData }) {
         onChange={(e) => setBio(e.target.value)}
         placeholder="คำอธิบาย / bio"
       />
+
+      {formError && <p className="text-red-500 text-sm">{formError}</p>}
+      {formSuccess && <p className="text-green-600 text-sm font-semibold">บันทึกเรียบร้อยแล้ว ✓</p>}
 
       <button
         type="submit"

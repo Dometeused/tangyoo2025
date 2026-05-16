@@ -6,6 +6,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function DresscodePicker({ event }) {
   const { theme, role } = useAppMode();
+  const isOwner = isOwner || role === "admin";
   const supabase = createClientComponentClient();
   const preset = THEME_DRESSCODE[theme] || THEME_DRESSCODE["wedding"];
 
@@ -27,7 +28,7 @@ export default function DresscodePicker({ event }) {
   const [isSaved, setIsSaved] = useState(true); // ✅ เริ่มต้นถือว่าบันทึกแล้ว
 
   const toggleColor = (color) => {
-    if (role !== "owner") return;
+    if (!isOwner) return;
     setSelected((prev) =>
       prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
     );
@@ -41,7 +42,7 @@ export default function DresscodePicker({ event }) {
       .eq("id", event.id);
     setSaving(false);
     setEditing(false);
-    if (error) return alert("บันทึกไม่สำเร็จ");
+    if (error) { setSaving(false); return; }
     setIsSaved(true);
   };
 
@@ -82,7 +83,7 @@ export default function DresscodePicker({ event }) {
             </button>
           </div>
 
-          {editing && role === "owner" && (
+          {editing && isOwner && (
             <div className="flex flex-col items-center mt-2 bg-white rounded-xl shadow px-3 py-2 border z-50">
               <input
                 type="color"
@@ -140,7 +141,7 @@ export default function DresscodePicker({ event }) {
       </div>
 
       {/* ปุ่มบันทึก */}
-      {role === "owner" && !isSaved && (
+      {isOwner && !isSaved && (
         <button
           onClick={handleSave}
           className="mt-2 px-3 py-1 bg-pink-500 text-white rounded shadow text-xs"
@@ -151,7 +152,7 @@ export default function DresscodePicker({ event }) {
       )}
 
       {/* ปุ่มแก้ไข (เฉพาะ owner เท่านั้น) */}
-      {role === "owner" && isSaved && (
+      {isOwner && isSaved && (
         <button
           onClick={handleEdit}
           className="mt-2 px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full border border-blue-200 hover:bg-blue-100 transition"

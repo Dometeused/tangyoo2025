@@ -72,8 +72,7 @@ export default function CoverSection({ event }) {
         .update({ profile_url: null })
         .eq("id", event.id)
         .then(({ error }) => {
-          if (error) alert("ลบโปรไฟล์ในฐานข้อมูลไม่สำเร็จ");
-          setProfileUrl("");
+          if (!error) setProfileUrl("");
         });
     }
   }, [showProfile, profileUrl, supabase, event.id]);

@@ -28,7 +28,7 @@ export default function MemoryPage({ event }) {
   const [showIntro, setShowIntro] = useState(event?.introEffect !== false);
 
   if (!event) return <div className="min-h-screen flex items-center justify-center text-gray-400 font-light text-lg">⏳ กำลังโหลดข้อมูลแห่งความทรงจำ...</div>;
-  const isOwner = role === "owner";
+  const isOwner = role === "owner" || role === "admin";
   // Use theme background or fallback to soft gradient
   const bgClass = THEMES_OBJ[theme]?.bg || "bg-gradient-to-br from-[#fff6fa] to-[#fff0f5]";
 

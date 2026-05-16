@@ -41,7 +41,7 @@ export default function ThemeEffect() {
 
   // Apply theme body class
   useEffect(() => {
-    document.body.classList.remove("theme-wedding", "theme-funeral", "theme-anniversary", "theme-family");
+    document.body.classList.remove("theme-wedding", "theme-funeral", "theme-anniversary", "theme-baby");
     if (theme) document.body.classList.add(`theme-${theme}`);
   }, [theme]);
 
@@ -123,12 +123,22 @@ export default function ThemeEffect() {
     );
   }
 
-  // --- Anniversary / Family: warm gold overlay ---
-  if (theme === "anniversary" || theme === "family") {
+  // --- Anniversary: warm gold overlay ---
+  if (theme === "anniversary") {
     return (
       <div className="fixed inset-0 pointer-events-none z-[10] overflow-hidden">
         <div className="absolute inset-0 bg-yellow-500/5 mix-blend-overlay" />
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-yellow-300/10 to-transparent" />
+      </div>
+    );
+  }
+
+  // --- Baby: soft lavender overlay ---
+  if (theme === "baby") {
+    return (
+      <div className="fixed inset-0 pointer-events-none z-[10] overflow-hidden">
+        <div className="absolute inset-0 bg-purple-400/5 mix-blend-overlay" />
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-purple-200/10 to-transparent" />
       </div>
     );
   }

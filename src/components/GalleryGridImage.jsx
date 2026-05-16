@@ -22,10 +22,7 @@ export default function GalleryGridImage({ file, eventId, index, onClick, onDele
       .from("user-gallery")
       .remove([`${eventId}/${file.name}`]);
 
-    if (error) {
-      alert("ลบไม่สำเร็จ");
-      console.error(error);
-    } else {
+    if (!error) {
       if (onDeleted) onDeleted(file.name);
     }
   };

@@ -19,11 +19,15 @@ export default function AIGuideBubble({ event }) {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isOpen]);
 
+    const [listenError, setListenError] = useState("");
+
     const startListening = () => {
         if (!('webkitSpeechRecognition' in window)) {
-            alert("ขออภัยครับ เบราว์เซอร์ของคุณไม่รองรับการพิมพ์ด้วยเสียง (แนะนำ Google Chrome)");
+            setListenError("เบราว์เซอร์ของคุณไม่รองรับการพิมพ์ด้วยเสียง (แนะนำ Google Chrome)");
+            setTimeout(() => setListenError(""), 3000);
             return;
         }
+        setListenError("");
         const recognition = new window.webkitSpeechRecognition();
         recognition.lang = 'th-TH';
         recognition.interimResults = false;
@@ -78,8 +82,7 @@ export default function AIGuideBubble({ event }) {
             const data = await res.json();
             const aiMsg = { id: Date.now() + 1, text: data.reply, isAi: true };
             setMessages(prev => [...prev, aiMsg]);
-        } catch (error) {
-            console.error(error);
+        } catch {
             setMessages(prev => [...prev, { id: Date.now() + 1, text: "ขออภัยครับ ระบบขัดข้องเล็กน้อย ลองใหม่นะครับ", isAi: true }]);
         } finally {
             setIsTyping(false);
@@ -150,6 +153,13 @@ export default function AIGuideBubble({ event }) {
                                 </button>
                             ))}
                         </div>
+
+                        {/* Listen error */}
+                        {listenError && (
+                            <div className="px-4 py-1 bg-red-50 text-red-500 text-xs text-center border-t border-red-100">
+                                {listenError}
+                            </div>
+                        )}
 
                         {/* Input */}
                         <div className="p-3 bg-white border-t border-gray-100 flex gap-2 items-center">

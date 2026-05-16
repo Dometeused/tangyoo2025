@@ -136,7 +136,6 @@ export default function FullGallery() {
     const { error } = await setFeaturedImage(eventId, filename);
     if (error) {
       setGallery(oldGallery);
-      alert("ไม่สามารถตั้งเป็นรูปเด่นได้");
     }
   }
 
@@ -155,7 +154,6 @@ export default function FullGallery() {
     const { error } = await setCoverImage(eventId, filename);
     if (error) {
       setGallery(oldGallery);
-      alert("ไม่สามารถตั้งเป็นรูปปกได้");
     }
   }
 
@@ -174,7 +172,6 @@ export default function FullGallery() {
     const { error } = await setProfileImage(eventId, filename);
     if (error) {
       setGallery(oldGallery);
-      alert("ไม่สามารถตั้งเป็นรูปโปรไฟล์ได้");
     }
   }
 

@@ -23,12 +23,10 @@ export default function GalleryUploader({ eventId, onUpload }) {
       .upload(filePath, file);
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
       setError("เกิดข้อผิดพลาดในการอัปโหลด");
     } else {
-      alert("✅ อัปโหลดสำเร็จ");
       setFile(null);
-      onUpload?.(); // 👉 เรียกฟังก์ชัน refresh ถ้ามีส่งมา
+      onUpload?.();
     }
 
     setUploading(false);
