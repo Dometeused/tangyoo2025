@@ -20,7 +20,6 @@ export default function EditBioBox2Modal({
 
   useEffect(() => {
     if (open) {
-      console.log("Modal open: setForm from initialData", initialData);
       setForm({
         bridePic: initialData.bridePic || "",
         groomPic: initialData.groomPic || "",
@@ -34,16 +33,10 @@ export default function EditBioBox2Modal({
   }, [open, initialData]);
 
   const handleSave = () => {
-    console.log("กดบันทึก", form);
     onSave?.(form);
   };
 
-  if (!open) {
-    console.log("Modal return null เพราะ open =", open);
-    return null;
-  }
-
-  console.log("Modal render อยู่ open =", open);
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/40 z-[9999] flex items-center justify-center">

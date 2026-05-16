@@ -186,7 +186,6 @@ export default function FullGallery() {
 
     const { error } = await updateGalleryCaption(eventId, filename, newCaption);
     if (error) {
-      console.error("Failed to update caption:", error);
     }
   }
 

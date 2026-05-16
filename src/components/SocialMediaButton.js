@@ -1,10 +1,7 @@
 import { FiFacebook, FiInstagram, FiPhone, FiMessageCircle } from "react-icons/fi";
 
 export default function SocialMediaButton({ line, facebook, instagram, phone, isOwner, onEdit }) {
-  // DEBUG: log props ทุกครั้งที่ render
-  console.log("[SocialMediaButton] props =", { line, facebook, instagram, phone, isOwner, onEdit });
-
-  const socials = [
+const socials = [
     {
       key: "line",
       url: line ? (line.startsWith("http") ? line : `https://line.me/ti/p/${line}`) : "",

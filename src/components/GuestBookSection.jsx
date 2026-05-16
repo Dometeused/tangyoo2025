@@ -27,8 +27,8 @@ export default function GuestBookSection({
       const res = await fetch(`/api/guestbook?memoryId=${memoryId}`);
       const json = await res.json();
       if (json.success) setEntries(json.data);
-    } catch (err) {
-      console.error("❌ Guestbook fetch error:", err);
+    } catch {
+      // Silently ignore fetch errors
     }
   };
 
