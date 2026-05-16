@@ -5,6 +5,7 @@ import { X, Send, Sparkles, Mic } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 
 export default function AIChatWindow({ isOpen, onClose, onComplete }) {
+    const [listenError, setListenError] = useState("");
     const [messages, setMessages] = useState([
         { id: 1, text: "สวัสดีครับ! ผมคือ TangYoo AI ผู้ช่วยเก็บความทรงจำของคุณครับ 🤖✨", isAi: true },
         { id: 2, text: "วันนี้คุณอยากจะสร้างพื้นที่ความทรงจำสำหรับโอกาสพิเศษอะไรครับ? (เช่น วันครบรอบ, วันเกิด, หรือบันทึกการเติบโตของลูกน้อย)", isAi: true }
@@ -47,12 +48,11 @@ export default function AIChatWindow({ isOpen, onClose, onComplete }) {
                 if (jsonMatch && jsonMatch[1]) {
                     try {
                         const extractedData = JSON.parse(jsonMatch[1]);
-                        console.log("MAGIC EXTRACTED:", extractedData);
                         if (extractedData.readyToCreate) {
                             if (onComplete) onComplete(extractedData);
                         }
-                    } catch (e) {
-                        console.error("JSON Parse Error", e);
+                    } catch {
+                        // Silently ignore JSON parse errors
                     }
                 }
 
@@ -60,8 +60,7 @@ export default function AIChatWindow({ isOpen, onClose, onComplete }) {
                 const newAiMsg = { id: Date.now() + 1, text: "ขออภัยครับ ระบบขัดข้องเล็กน้อย (กรุณาเช็ค API Key) 😅", isAi: true };
                 setMessages(prev => [...prev, newAiMsg]);
             }
-        } catch (error) {
-            console.error(error);
+        } catch {
             const newAiMsg = { id: Date.now() + 1, text: "เกิดข้อผิดพลาดในการเชื่อมต่อครับ", isAi: true };
             setMessages(prev => [...prev, newAiMsg]);
         } finally {
@@ -78,9 +77,11 @@ export default function AIChatWindow({ isOpen, onClose, onComplete }) {
 
     const startListening = () => {
         if (!('webkitSpeechRecognition' in window)) {
-            alert("ขออภัยครับ เบราว์เซอร์ของคุณไม่รองรับการพิมพ์ด้วยเสียง (แนะนำ Google Chrome)");
+            setListenError("เบราว์เซอร์ของคุณไม่รองรับการพิมพ์ด้วยเสียง (แนะนำ Google Chrome)");
+            setTimeout(() => setListenError(""), 3000);
             return;
         }
+        setListenError("");
         const recognition = new window.webkitSpeechRecognition();
         recognition.lang = 'th-TH'; // Lang Support
         recognition.interimResults = false;
@@ -143,6 +144,13 @@ export default function AIChatWindow({ isOpen, onClose, onComplete }) {
                         )}
                         <div ref={messagesEndRef} />
                     </div>
+
+                    {/* Listen Error */}
+                    {listenError && (
+                        <div className="px-4 py-1 bg-red-50 text-red-500 text-xs text-center border-t border-red-100">
+                            {listenError}
+                        </div>
+                    )}
 
                     {/* Input Area */}
                     <div className="p-4 bg-white border-t border-gray-100">

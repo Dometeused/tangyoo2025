@@ -21,12 +21,19 @@ export default function PremiumEnvelope({ theme, onOpen }) {
             text: "text-amber-900",
             sealText: "Memory",
         },
-        family: {
-            envelope: "bg-orange-50 border-orange-100",
-            flap: "bg-orange-100 border-orange-200",
-            seal: "bg-orange-600",
-            text: "text-orange-900",
-            sealText: "Family",
+        baby: {
+            envelope: "bg-purple-50 border-purple-100",
+            flap: "bg-purple-100 border-purple-200",
+            seal: "bg-purple-500",
+            text: "text-purple-900",
+            sealText: "Baby",
+        },
+        funeral: {
+            envelope: "bg-gray-100 border-gray-200",
+            flap: "bg-gray-200 border-gray-300",
+            seal: "bg-gray-700",
+            text: "text-gray-900",
+            sealText: "In Memory",
         }
     };
 

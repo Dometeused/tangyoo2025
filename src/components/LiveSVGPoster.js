@@ -55,7 +55,7 @@ export default function LiveSVGPoster({ svgUrl, form, imageUrl, style }) {
   // Download PNG (object-cover + offset)
   async function handleDownload() {
     const svgElem = svgRef.current?.contentDocument?.documentElement;
-    if (!svgElem) return alert("SVG ยังโหลดไม่เสร็จ");
+    if (!svgElem) return;
     const svgString = new XMLSerializer().serializeToString(svgElem);
     const svgBase64 = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgString)));
 

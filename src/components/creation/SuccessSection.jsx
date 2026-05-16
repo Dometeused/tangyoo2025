@@ -30,8 +30,8 @@ export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) 
           link.href = dataUrl;
           link.click();
         })
-        .catch((err) => {
-          console.error("Could not download QR", err);
+        .catch(() => {
+          // Silently ignore QR download errors
         });
     }
   };
