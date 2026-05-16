@@ -12,9 +12,10 @@ export default function HeroSection({ current, onChange, THEMES }) {
     const getThemeAccent = () => {
         switch (theme.key) {
             case 'wedding':   return { from: 'rgba(244,63,126,0.18)', to: 'rgba(251,113,133,0.10)', bolt: '#f472b6' };
-            case 'funeral':   return { from: 'rgba(249,115,22,0.18)', to: 'rgba(251,191,36,0.10)', bolt: '#fb923c' };
+            case 'funeral':    return { from: 'rgba(249,115,22,0.18)', to: 'rgba(251,191,36,0.10)', bolt: '#fb923c' };
+            case 'baby':       return { from: 'rgba(167,139,250,0.18)', to: 'rgba(196,181,253,0.10)', bolt: '#a78bfa' };
             case 'anniversary':
-            default:          return { from: 'rgba(245,158,11,0.18)', to: 'rgba(253,224,71,0.10)',  bolt: '#fbbf24' };
+            default:           return { from: 'rgba(245,158,11,0.18)', to: 'rgba(253,224,71,0.10)',  bolt: '#fbbf24' };
         }
     };
     const accent = getThemeAccent();

@@ -115,10 +115,10 @@ export const THEMES = [
     {
         key: "baby",
         label: "เด็กแรกเกิด/วันเกิด",
-        bg: "bg-yellow-50",
-        text: "text-yellow-700",
-        dot: "bg-yellow-400",
-        ctaClass: "bg-yellow-500 hover:bg-yellow-600",
+        bg: "bg-purple-50",
+        text: "text-purple-700",
+        dot: "bg-purple-400",
+        ctaClass: "bg-purple-500 hover:bg-purple-600 text-white",
         image: "/images/baby.png", // Placeholder
         title: "ต้อนรับสมาชิกใหม่ของครอบครัว",
         desc: "บันทึกก้าวแรกและพัฒนาการสำคัญของลูกน้อย",

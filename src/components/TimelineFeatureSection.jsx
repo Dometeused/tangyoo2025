@@ -21,9 +21,15 @@ const getThemeColors = (themeKey) => {
             };
         case 'anniversary':
             return {
-                line: '#eab308', // yellow-500 (Gold)
+                line: '#eab308',
                 glow: 'rgba(234, 179, 8, 0.5)',
                 bg: 'bg-amber-50'
+            };
+        case 'baby':
+            return {
+                line: '#8b5cf6',
+                glow: 'rgba(139, 92, 246, 0.5)',
+                bg: 'bg-purple-50'
             };
         default:
             return {
@@ -188,12 +194,21 @@ export default function TimelineFeatureSection({ theme }) {
                                 className="flex-1 w-full"
                             >
                                 <div className="aspect-video rounded-3xl overflow-hidden glass-strong shadow-warm-lg border-2 border-white/50 relative group">
-                                    <div className={`absolute inset-0 opacity-20 bg-gradient-to-br from-white to-${colors.bg}`} />
-                                    {/* Placeholder for actual Step Image - using theme image as fallback for now or generic illustrations */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-neutral-400 font-light italic">
-                                        Visual for Step {index + 1}
+                                    <div
+                                        className="absolute inset-0"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${colors.glow.replace(/[\d.]+\)$/, "0.08)")}, transparent)`,
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                                        <span className="text-6xl">{step.icon}</span>
+                                        <span
+                                            className="text-sm font-medium tracking-wide opacity-60"
+                                            style={{ color: colors.line }}
+                                        >
+                                            {step.title}
+                                        </span>
                                     </div>
-                                    {/* You can replace the div above with actual Images later */}
                                 </div>
                             </motion.div>
                         </div>

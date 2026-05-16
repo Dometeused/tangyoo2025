@@ -58,6 +58,27 @@ function getThemeVars(key) {
 				quoteColors: ["text-pink-200/40","text-rose-200/35","text-pink-300/30"],
 				divBorders:  ["border-pink-100/60","border-rose-100/50","border-pink-200/40"],
 			};
+		case "baby":
+			return {
+				accent:      "#a78bfa",
+				accentGlow:  "rgba(167,139,250,0.14)",
+				dark:        "#1e1b4b",
+				gradFrom:    "#7c3aed",
+				gradTo:      "#a78bfa",
+				cardBorder:  "border-purple-200/60",
+				cardHoverBg: "group-hover:from-purple-100/30 group-hover:via-violet-100/20 group-hover:to-purple-50/30",
+				imgBg:       "from-purple-50 via-violet-50 to-purple-50",
+				ctaFrom:     "#8b5cf6",
+				ctaTo:       "#7c3aed",
+				ctaHoverFrom:"#7c3aed",
+				ctaHoverTo:  "#6d28d9",
+				testimonialBgFrom: "#faf5ff",
+				testimonialBgVia:  "#f5f3ff",
+				testimonialBgTo:   "#faf5ff",
+				dotColor:    "rgba(167,139,250,0.14)",
+				quoteColors: ["text-purple-300/35","text-violet-300/30","text-purple-200/35"],
+				divBorders:  ["border-purple-100/60","border-violet-100/50","border-purple-200/40"],
+			};
 		default: /* anniversary */
 			return {
 				accent:      "#f59e0b",
