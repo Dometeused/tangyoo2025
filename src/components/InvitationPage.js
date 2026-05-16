@@ -25,15 +25,15 @@ import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
-  const isOwner = role === "owner";
+  const isOwner = role === "owner" || role === "admin";
 
   const [showEditBioModal, setShowEditBioModal] = useState(false);
 
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
     funeral: "/funeral-bg.png",
-    family: "/anniversary-bg.jpg",
     anniversary: "/anniversary-bg.jpg",
+    baby: "/baby-bg.jpg",
   };
   const bgImage = bgImageMap[theme] || "/wedding-bg.jpg";
 
@@ -54,13 +54,21 @@ export default function InvitationPage({ event, refetchEvent }) {
       bless: "ส่งกำลังใจและรำลึกถึง",
       blessQuote: "“ทุกข้อความคือแรงใจสู่ครอบครัว”",
     },
-    family: {
-      invite: "วันแห่งครอบครัว",
-      inviteQuote: "“ความทรงจำ...สร้างชีวิตและรอยยิ้ม”",
-      gallery: "ภาพแห่งชีวิตร่วมกัน",
-      galleryQuote: "“ทุกช่วงเวลาคือของขวัญ”",
-      bless: "ฝากคำหวังดีถึงครอบครัวเรา",
-      blessQuote: "“คำอวยพรทุกคำ มีค่าตลอดไป”",
+    anniversary: {
+      invite: “ฉลองวันครบรอบแห่งรัก”,
+      inviteQuote: “”ทุกปีที่ผ่านมา คือของขวัญที่ล้ำค่า””,
+      gallery: “ภาพแห่งชีวิตร่วมกัน”,
+      galleryQuote: “”ทุกช่วงเวลาคือของขวัญ””,
+      bless: “ฝากคำอวยพรถึงเรา”,
+      blessQuote: “”คำอวยพรทุกคำ มีค่าตลอดไป””,
+    },
+    baby: {
+      invite: “ต้อนรับสมาชิกใหม่”,
+      inviteQuote: “”ความสุขเล็กๆ ที่ยิ่งใหญ่ที่สุดในโลก””,
+      gallery: “ภาพแรกของหนูน้อย”,
+      galleryQuote: “”ทุกรอยยิ้มคือความทรงจำ””,
+      bless: “ส่งคำอวยพรให้หนูน้อย”,
+      blessQuote: “”รักและพรจากทุกคน””,
     },
   };
   const h = HEADLINES[theme] || HEADLINES.wedding;
