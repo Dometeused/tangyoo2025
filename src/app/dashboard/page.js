@@ -186,8 +186,7 @@ export default function DashboardPage() {
       <AIChatWindow
         isOpen={showChat}
         onClose={() => setShowChat(false)}
-        onComplete={(data) => {
-          console.log("AI Data:", data);
+        onComplete={() => {
           setShowChat(false);
         }}
       />
