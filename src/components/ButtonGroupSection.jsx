@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAppMode } from "@/context/AppModeContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { FiUserCheck, FiMapPin, FiPhone, FiShare2 } from "react-icons/fi";
@@ -54,14 +54,8 @@ function EditModal({ open, label, value, onSave, onClose }) {
 export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
   const { theme } = useAppMode();
   const supabase = createClientComponentClient();
-
-  const THEME_GLOW = {
-    wedding: "ring-2 ring-pink-300 shadow-pink-200",
-    funeral: "ring-2 ring-gray-400 shadow-gray-500",
-    anniversary: "ring-2 ring-yellow-300 shadow-yellow-200",
-  };
-
   const [modal, setModal] = useState({ open: false, field: "", label: "", value: "" });
+  const [copied, setCopied] = useState(false);
 
   const handleEdit = (field, label, value) => {
     setModal({ open: true, field, label, value });
@@ -77,31 +71,22 @@ export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
 
   const handleClick = (action) => {
     if (action === "rsvp") {
-      // == RSVP: เพิ่มใน Google Calendar ==
-      const title = event?.title || "Wedding Invitation";
-      const details = (event?.bio ? event.bio.replace(/(<([^>]+)>)/gi, "") : "") || "ขอเชิญร่วมงาน...";
+      const title = event?.name || event?.title || "TangYoo Event";
+      const details = (event?.bio ? event.bio.replace(/(<([^>]+)>)/gi, "") : "") || "ขอเชิญร่วมงาน";
       const location = event?.event_place || "";
       const start = formatGCalDate(event?.start_datetime);
-      // ถ้าไม่มีเวลา end ให้ +3 ชั่วโมงอัตโนมัติ
       let end = event?.end_datetime ? formatGCalDate(event?.end_datetime) : "";
       if (!end && event?.start_datetime) {
         const dt = new Date(event.start_datetime);
         dt.setHours(dt.getHours() + 3);
         end = formatGCalDate(dt.toISOString());
       }
-      const gcalUrl = buildGoogleCalendarUrl({
-        title,
-        details,
-        location,
-        startDateTime: start,
-        endDateTime: end,
-      });
-      window.open(gcalUrl, "_blank");
+      window.open(buildGoogleCalendarUrl({ title, details, location, startDateTime: start, endDateTime: end }), "_blank");
       return;
     }
     if (action === "location") {
       if (isOwner) {
-        handleEdit("event_place", "แผนที่ (Google Maps URL)", event.event_place);
+        handleEdit("event_place", "Google Maps URL", event.event_place);
       } else if (event?.event_place) {
         window.open(event.event_place, "_blank");
       }
@@ -114,28 +99,31 @@ export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
       }
     }
     if (action === "share") {
-      // == แชร์ลิงก์งาน (ใช้ Web Share API บนมือถือ) ==
       const url = `${window.location.origin}/event/${event.id}`;
-      const title = event?.title || "เชิญร่วมงาน";
+      const title = event?.name || event?.title || "TangYoo Event";
       if (navigator.share) {
         navigator.share({ title, url });
       } else {
-        // fallback: คัดลอกลิงก์
         navigator.clipboard.writeText(url);
-        alert("คัดลอกลิงก์เรียบร้อย:\n" + url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       }
     }
   };
 
+  // ปุ่ม label ต่างตาม theme
+  const rsvpLabel = theme === "funeral" ? "บันทึกวัน" : "เพิ่มในปฏิทิน";
+
   const buttons = [
-    { icon: <FiUserCheck />, label: "เพิ่มลงในปฏิทิน", action: "rsvp", desc: "RSVP / Calendar" },
-    { icon: <FiMapPin />, label: "แผนที่", action: "location", desc: "Location" },
-    { icon: <FiPhone />, label: "ติดต่อ", action: "contact", desc: "Contact" },
-    { icon: <FiShare2 />, label: "แชร์", action: "share", desc: "Share" },
+    { icon: <FiUserCheck />, label: rsvpLabel, action: "rsvp" },
+    { icon: <FiMapPin />, label: "แผนที่", action: "location" },
+    { icon: <FiPhone />, label: "ติดต่อ", action: "contact" },
+    { icon: <FiShare2 />, label: copied ? "คัดลอกแล้ว!" : "แชร์", action: "share" },
   ];
 
   const hoverColor = theme === "funeral" ? "group-hover:text-stone-500 group-hover:border-stone-300"
     : theme === "anniversary" ? "group-hover:text-amber-600 group-hover:border-amber-200"
+    : theme === "baby" ? "group-hover:text-purple-400 group-hover:border-purple-200"
     : "group-hover:text-rose-400 group-hover:border-rose-200";
 
   return (
