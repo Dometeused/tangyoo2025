@@ -1,6 +1,6 @@
 "use client";
 // SparkleScrollTrail.jsx
-// แสงประกายทองตาม scroll — mobile only, family/anniversary theme only
+// แสงประกายทองตาม scroll — mobile only, anniversary/baby theme only
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
 export default function SparkleScrollTrail({ theme }) {
@@ -16,7 +16,7 @@ export default function SparkleScrollTrail({ theme }) {
   const y3 = useTransform(scrollYProgress, [0, 1], [-105, 885]);
   const y4 = useTransform(scrollYProgress, [0, 1], [-20,  970]);
 
-  if ((theme !== "family" && theme !== "anniversary") || shouldReduceMotion) return null;
+  if ((theme !== "anniversary" && theme !== "baby") || shouldReduceMotion) return null;
 
   const sparkles = [
     // { y, x offset, size, color, blur, rotate(45=diamond / 0=circle) }

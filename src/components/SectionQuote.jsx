@@ -2,7 +2,7 @@ const COLORS = {
   wedding:     "text-[#9e6b7d]",
   funeral:     "text-[#c9b49a]",
   anniversary: "text-[#9e7e46]",
-  family:      "text-[#6b7f9e]",
+  baby:        "text-[#7c3aed]",
 };
 
 // Accepts children (primary) or text prop for backward compat

@@ -11,7 +11,9 @@ import SocialMediaButton from "@/components/SocialMediaButton";
 import TimelineTree from "@/components/timeline-tree/TimelineTree";
 
 import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
+import ButtonGroupSection from "@/components/ButtonGroupSection";
 import CandleScrollTrail from "@/components/CandleScrollTrail";
+import AIGuideBubble from "@/components/ai-butler/AIGuideBubble";
 import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 
@@ -43,7 +45,12 @@ export default function MemoryPage({ event }) {
       )}
 
       {/* BGM และ Theme Effect */}
-      <BGMPlayer />
+      <BGMPlayer
+        src={`/audio/${theme || "wedding"}.mp3`}
+        youtubeUrl={event.youtube_link}
+        isOwner={isOwner}
+        eventId={event.id}
+      />
       <ThemeEffect />
       <CandleScrollTrail theme={theme} />
       <PetalScrollTrail theme={theme} />
@@ -61,7 +68,7 @@ export default function MemoryPage({ event }) {
 
           {/* 2. BioBox (Left) */}
           <div className="col-span-1 md:col-span-1 lg:col-span-4 glass-card p-6 md:p-8 flex flex-col justify-center">
-            <BioBox bio={event.bio} eventId={event.id} />
+            <BioBox bio={event.bio} eventId={event.id} theme={theme} phase={phase} />
           </div>
 
           {/* 3. Gallery Preview (Right - Wider) */}
@@ -82,11 +89,20 @@ export default function MemoryPage({ event }) {
             {/* Bio 2 */}
             <div className="glass-card p-6 md:p-8">
               <BioBox2
-                theme={event.theme}
-                name={event.name}
-                bio2={event.bio2}
-                eventBio={event.bio2} // ✅ Map Story to Poster Bio
-                eventId={event.id}
+                // Wedding
+                bridePic={event.bridePic}
+                groomPic={event.groomPic}
+                brideBio={event.brideBio}
+                groomBio={event.groomBio}
+                eventBio={event.bio2 || event.eventBio}
+                funFact1={event.funFact1}
+                funFact2={event.funFact2}
+                // Funeral
+                profile={event.profile}
+                poster_name={event.poster_name}
+                poster_caption={event.poster_caption}
+                word={event.word}
+                living={event.living}
                 isOwner={isOwner}
               />
             </div>
@@ -135,6 +151,12 @@ export default function MemoryPage({ event }) {
 
         </div>
       </div>
+
+      {/* Floating Action Bar */}
+      <ButtonGroupSection event={event} isOwner={isOwner} />
+
+      {/* AI Guide Bubble */}
+      <AIGuideBubble event={event} theme={theme} />
     </main>
   );
 }

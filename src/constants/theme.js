@@ -23,7 +23,15 @@ export const THEMES_OBJ = {
     bgm: "/audio/anniversary.mp3",
     effect: "sparkle",
     primaryColor: "#ffe082",
-    bgImage: "/anniversary-bg.png",     // <<== เพิ่มตรงนี้
+    bgImage: "/anniversary-bg.png",
+  },
+  baby: {
+    bg: "bg-purple-50",
+    accent: "text-purple-500",
+    bgm: "/audio/baby.mp3",
+    effect: "sparkle",
+    primaryColor: "#c4b5fd",
+    bgImage: "/baby-bg.jpg",
   },
 };
 
@@ -48,5 +56,12 @@ export const THEME_DRESSCODE = {
     { label: "พีช", color: "#ffd1b3" },
     { label: "ม่วง", color: "#ba68c8" },
     { label: "เขียว", color: "#a5d6a7" },
+  ],
+  baby: [
+    { label: "ม่วงอ่อน", color: "#e9d5ff" },
+    { label: "ฟ้าอ่อน", color: "#bae6fd" },
+    { label: "ชมพูอ่อน", color: "#fbcfe8" },
+    { label: "เหลืองอ่อน", color: "#fef9c3" },
+    { label: "เขียวมิ้นท์", color: "#bbf7d0" },
   ],
 };

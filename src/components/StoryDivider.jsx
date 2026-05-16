@@ -2,7 +2,7 @@ const ACCENTS = {
   wedding:     "#ddb0c0",
   funeral:     "#c9a882",
   anniversary: "#c9a050",
-  family:      "#8aacc8",
+  baby:        "#c4b5fd",
 };
 
 export default function StoryDivider({ theme = "wedding" }) {
