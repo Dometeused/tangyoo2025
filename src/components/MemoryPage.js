@@ -13,7 +13,7 @@ import TimelineTree from "@/components/timeline-tree/TimelineTree";
 import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
 import ButtonGroupSection from "@/components/ButtonGroupSection";
 import CandleScrollTrail from "@/components/CandleScrollTrail";
-import AIGuideBubble from "@/components/ai-butler/AIGuideBubble";
+// import AIGuideBubble from "@/components/ai-butler/AIGuideBubble"; // POST-MVP
 import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 
@@ -155,8 +155,8 @@ export default function MemoryPage({ event }) {
       {/* Floating Action Bar */}
       <ButtonGroupSection event={event} isOwner={isOwner} />
 
-      {/* AI Guide Bubble */}
-      <AIGuideBubble event={event} theme={theme} />
+      {/* AI Guide Bubble — POST-MVP */}
+      {/* <AIGuideBubble event={event} theme={theme} /> */}
     </main>
   );
 }

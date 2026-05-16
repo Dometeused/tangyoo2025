@@ -17,8 +17,8 @@ import BioBox2EditModal from "@/components/BioBox2EditModal";
 import SectionTitle from "@/components/SectionTitle";
 import SectionQuote from "@/components/SectionQuote";
 import StoryDivider from "@/components/StoryDivider";
-import AIVideoSection from "@/components/ai-video/AIVideoSection";
-import AIGuideBubble from "@/components/ai-butler/AIGuideBubble"; // New Import
+// import AIVideoSection from "@/components/ai-video/AIVideoSection"; // POST-MVP
+// import AIGuideBubble from "@/components/ai-butler/AIGuideBubble"; // POST-MVP
 import CandleScrollTrail from "@/components/CandleScrollTrail";
 import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
@@ -200,8 +200,8 @@ export default function InvitationPage({ event, refetchEvent }) {
         />
       </div>
 
-      {/* AI Museum Guide Bubble */}
-      <AIGuideBubble event={event} />
+      {/* AI Museum Guide Bubble — POST-MVP */}
+      {/* <AIGuideBubble event={event} /> */}
     </main>
   );
 }

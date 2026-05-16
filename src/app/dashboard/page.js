@@ -8,7 +8,7 @@ import Link from "next/link";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import QRLightbox from "@/components/QRLightbox";
 import ShareButtons from "@/components/ShareButtons";
-import AIChatWindow from "@/components/ai-butler/AIChatWindow";
+// import AIChatWindow from "@/components/ai-butler/AIChatWindow"; // POST-MVP
 import { Sparkles, Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, AlertTriangle } from "lucide-react";
 import "@/styles/dashboard.css";
 
@@ -31,7 +31,6 @@ export default function DashboardPage() {
   const [user, setUser] = useState(null);
   const [editingNameId, setEditingNameId] = useState(null);
   const [newName, setNewName] = useState("");
-  const [showChat, setShowChat] = useState(false);
   const [activeTab, setActiveTab] = useState("events");
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
   const [formErrors, setFormErrors] = useState({});
@@ -182,14 +181,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* AI Chat Window */}
-      <AIChatWindow
-        isOpen={showChat}
-        onClose={() => setShowChat(false)}
-        onComplete={() => {
-          setShowChat(false);
-        }}
-      />
+      {/* AI Chat Window — POST-MVP */}
 
       {/* ── Dashboard Header ─────────────────────────────────────── */}
       <div style={{ borderBottom: "1px solid #e7e5e3", background: "#FAF8F5" }} className="sticky top-[64px] z-30">

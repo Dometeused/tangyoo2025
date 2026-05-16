@@ -8,7 +8,7 @@ import { FiCopy, FiDownload } from "react-icons/fi";
 import Countdown from "@/components/Countdown";
 import VideoEmbedCard from "@/components/VideoEmbedCard";
 import QRCode from "react-qr-code";
-import AIVideoSection from "@/components/ai-video/AIVideoSection";
+// import AIVideoSection from "@/components/ai-video/AIVideoSection"; // POST-MVP
 
 export default function QRCodeAndScheduleSection({
   qrImageUrl,
@@ -17,7 +17,7 @@ export default function QRCodeAndScheduleSection({
 }) {
   const supabase = createClientComponentClient();
   const { role, theme, phase } = useAppMode();
-  const isOwner = isOwner || role === "admin";
+  const isOwner = role === "owner" || role === "admin";
 
   const THEME_STYLES = {
     funeral: {
@@ -71,8 +71,8 @@ export default function QRCodeAndScheduleSection({
   const isFuneral = theme === "funeral";
   const isMemoryPhase = phase === "memory";
 
-  // Video Mode: 'ai' | 'youtube' | 'none'
-  const [videoMode, setVideoMode] = useState(event?.video_mode || (isFuneral ? "ai" : "youtube"));
+  // Video Mode: 'youtube' | 'none'  (ai = POST-MVP)
+  const [videoMode, setVideoMode] = useState(event?.video_mode || "youtube");
   const [savingMode, setSavingMode] = useState(false);
 
   // Video Embed
@@ -171,8 +171,8 @@ export default function QRCodeAndScheduleSection({
         {/* Toggle Video Mode (Owner Only) */}
         {isOwner && !isMemoryPhase && (
           <div className={`flex p-1 rounded-full mb-4 shadow-sm relative z-20 ${theme === 'funeral' ? 'bg-gray-800' : 'bg-gray-100'}`}>
-            {["ai", "youtube", "none"].map((m) => {
-              const label = m === "ai" ? "AI Video" : m === "youtube" ? "YouTube" : "ปิด";
+            {["youtube", "none"].map((m) => {
+              const label = m === "youtube" ? "YouTube" : "ปิด";
               const isActive = videoMode === m;
               const activeClass = theme === 'funeral'
                 ? "bg-gray-600 text-white font-bold shadow"
@@ -201,11 +201,6 @@ export default function QRCodeAndScheduleSection({
               ปิดการแสดงผลวิดีโอ
             </div>
           ) : null
-        ) : videoMode === "ai" ? (
-          // AI Video Component
-          <div className="w-full max-w-[420px]">
-            <AIVideoSection event={event} />
-          </div>
         ) : (
           // YouTube Component
           <>
