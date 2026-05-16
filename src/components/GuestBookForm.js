@@ -110,15 +110,20 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
       if (imageFile) {
         const formData = new FormData();
         formData.append("file", imageFile);
-        const res = await fetch("/api/upload-image", {
+        const uploadRes = await fetch("/api/upload-image", {
           method: "POST",
           body: formData,
         });
-        const json = await res.json();
-        uploadedUrl = json.url;
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok) {
+          setSubmitError(uploadJson.error || "อัปโหลดรูปไม่สำเร็จ");
+          setSubmitting(false);
+          return;
+        }
+        uploadedUrl = uploadJson.url;
       }
 
-      await fetch("/api/guestbook", {
+      const gbRes = await fetch("/api/guestbook", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -129,6 +134,12 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
           imageUrl: uploadedUrl,
         }),
       });
+      const gbJson = await gbRes.json();
+      if (!gbRes.ok) {
+        setSubmitError(gbJson.error || "ส่งข้อความไม่สำเร็จ กรุณาลองใหม่");
+        setSubmitting(false);
+        return;
+      }
 
       setSubmitSuccess(true);
       setSubmitError("");
@@ -140,7 +151,7 @@ export default function GuestBookForm({ theme, memoryId, onSubmitSuccess }) {
       setTimeout(() => setSubmitSuccess(false), 3000);
 
       if (onSubmitSuccess) onSubmitSuccess();
-    } catch (err) {
+    } catch {
       setSubmitError("เกิดข้อผิดพลาดในการส่งข้อความ กรุณาลองใหม่");
     }
 

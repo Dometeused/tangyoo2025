@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { checkFields } from "@/lib/badWords";
 
 export async function POST(req) {
   try {
@@ -9,6 +10,16 @@ export async function POST(req) {
     if (!memoryId || !name || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
+
+    // ── Profanity filter ──────────────────────────────────────────
+    const { found } = checkFields(name, message, prompt);
+    if (found) {
+      return NextResponse.json(
+        { error: "ข้อความของคุณมีคำที่ไม่เหมาะสม กรุณาแก้ไขก่อนส่งอีกครั้ง" },
+        { status: 422 }
+      );
+    }
+    // ─────────────────────────────────────────────────────────────
 
     const { data, error } = await supabaseAdmin.from("guestbook").insert([
       {
@@ -21,13 +32,11 @@ export async function POST(req) {
     ]).select("*").single();
 
     if (error) {
-      console.error("Insert error:", error);
       return NextResponse.json({ error: "Failed to insert" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data });
-  } catch (err) {
-    console.error("API error:", err);
+  } catch {
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
@@ -48,13 +57,11 @@ export async function GET(req) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Fetch error:", error);
       return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data });
-  } catch (err) {
-    console.error("Unexpected error:", err);
+  } catch {
     return NextResponse.json({ error: "Unexpected error" }, { status: 500 });
   }
 }
@@ -70,7 +77,6 @@ export async function DELETE(req) {
   const { error } = await supabaseAdmin.from("guestbook").delete().eq("id", id);
 
   if (error) {
-    console.error("Delete error:", error);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 
