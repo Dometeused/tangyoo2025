@@ -127,8 +127,141 @@ export default function Home() {
 		<div
 			className={`min-h-screen flex flex-col font-kanit transition-colors duration-500 ${theme.bg} ${theme.text}`}
 		>
-			{/* ── Hero ─────────────────────────────────────────────────────── */}
+				{/* ── Hero ─────────────────────────────────────────────────────── */}
 			<HeroSection current={themeIdx} onChange={setThemeIdx} THEMES={THEMES} />
+
+			{/* ── Value Prop — "TangYoo คืออะไร" ──────────────────────────── */}
+			<section className="py-20 px-4 sm:px-6 w-full">
+				<div className="max-w-5xl mx-auto text-center">
+					<p className="text-sm font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: tv.accent }}>
+						แนวคิดของเรา
+					</p>
+					<h2 className="font-bold text-3xl md:text-5xl mb-6 leading-tight">
+						ของชำร่วยธรรมดา<br />
+						<span style={{ color: tv.accent }}>ที่สแกนแล้วได้ความทรงจำ</span>
+					</h2>
+					<p className={`text-lg md:text-xl max-w-2xl mx-auto mb-14 font-light leading-relaxed ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+						TangYoo เปลี่ยนของชำร่วยในงานสำคัญให้กลายเป็น<br className="hidden md:block" />
+						หน้าเว็บความทรงจำที่เก็บได้ตลอดไป เพียงสแกน QR บนสินค้า
+					</p>
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+						{[
+							{ icon: "📦", title: "รับของชำร่วย", desc: "แขกได้รับของที่ระลึกพร้อม QR code อยู่บนสินค้า" },
+							{ icon: "📱", title: "สแกน QR", desc: "สแกนแล้วเปิดหน้าเว็บความทรงจำสวยงามทันที" },
+							{ icon: "💾", title: "เก็บไว้ตลอดไป", desc: "รูป คำอวยพร ไทม์ไลน์ เก็บออนไลน์ไม่มีวันหาย" },
+						].map((item, i) => (
+							<div
+								key={i}
+								className="glass-strong rounded-3xl p-8 flex flex-col items-center text-center gap-4 border border-white/40"
+								style={{ boxShadow: `0 4px 32px ${tv.accentGlow}` }}
+							>
+								<span className="text-5xl">{item.icon}</span>
+								<h3 className="font-bold text-xl">{item.title}</h3>
+								<p className={`text-sm leading-relaxed font-light ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+									{item.desc}
+								</p>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
+			{/* ── Stats Bar ────────────────────────────────────────────────── */}
+			<div
+				className="py-10 px-4 w-full"
+				style={{ background: `linear-gradient(135deg, ${tv.gradFrom}18, ${tv.gradTo}18)` }}
+			>
+				<div className="max-w-4xl mx-auto grid grid-cols-3 gap-4 text-center">
+					{[
+						{ num: "500+", label: "งานที่สร้างแล้ว" },
+						{ num: "4",    label: "ธีมให้เลือก" },
+						{ num: "10K+", label: "ความทรงจำที่เก็บไว้" },
+					].map((s, i) => (
+						<div key={i}>
+							<div className="font-bold text-3xl md:text-4xl" style={{ color: tv.accent }}>{s.num}</div>
+							<div className={`text-sm mt-1 font-light ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>{s.label}</div>
+						</div>
+					))}
+				</div>
+			</div>
+
+			{/* ── Demo Preview ─────────────────────────────────────────────── */}
+			<section className="py-24 px-4 sm:px-6 w-full">
+				<div className="max-w-6xl mx-auto">
+					<div className="text-center mb-14">
+						<p className="text-sm font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: tv.accent }}>
+							ตัวอย่างจริง
+						</p>
+						<h2 className="font-bold text-3xl md:text-5xl mb-4">
+							ลองดูก่อนได้เลย
+						</h2>
+						<p className={`text-lg font-light ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+							นี่คือหน้าเว็บความทรงจำจริงๆ ที่แขกจะเห็นเมื่อสแกน QR
+						</p>
+					</div>
+
+					<div className="flex flex-col lg:flex-row items-center gap-12 justify-center">
+						{/* Phone Mockup */}
+						<div className="relative shrink-0">
+							{/* Phone frame */}
+							<div
+								className="relative w-[300px] h-[620px] rounded-[3rem] border-[8px] overflow-hidden shadow-2xl"
+								style={{
+									borderColor: theme.key === "funeral" ? "#292524" : "#e7e5e3",
+									boxShadow: `0 32px 80px ${tv.accentGlow}, 0 0 0 1px ${tv.accent}30`,
+								}}
+							>
+								<iframe
+									src="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+									className="w-full h-full border-0 rounded-[2.4rem]"
+									title="TangYoo Demo"
+									loading="lazy"
+								/>
+								{/* Notch */}
+								<div
+									className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 rounded-b-2xl z-10"
+									style={{ background: theme.key === "funeral" ? "#292524" : "#e7e5e3" }}
+								/>
+							</div>
+							{/* Glow behind phone */}
+							<div
+								className="absolute inset-0 -z-10 rounded-[3rem] blur-3xl opacity-30"
+								style={{ background: `radial-gradient(circle, ${tv.accent}, transparent 70%)` }}
+							/>
+						</div>
+
+						{/* Text beside phone */}
+						<div className="max-w-sm text-center lg:text-left">
+							<h3 className="font-bold text-2xl md:text-3xl mb-4">
+								หน้าเว็บที่แขกเห็นทันที<br />
+								<span style={{ color: tv.accent }}>เมื่อสแกน QR</span>
+							</h3>
+							<ul className={`space-y-3 mb-8 text-base font-light ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+								{[
+									"รูปภาพสวยงาม พร้อมแกลเลอรี",
+									"สมุดอวยพรออนไลน์",
+									"ไทม์ไลน์เรื่องราว",
+									"กำหนดการและแผนที่",
+								].map((f, i) => (
+									<li key={i} className="flex items-center gap-3 justify-center lg:justify-start">
+										<span className="w-5 h-5 rounded-full flex items-center justify-center text-xs text-white shrink-0" style={{ background: tv.accent }}>✓</span>
+										{f}
+									</li>
+								))}
+							</ul>
+							<a
+								href="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-white transition-all hover:opacity-90 hover:scale-105"
+								style={{ background: `linear-gradient(to right, ${tv.gradFrom}, ${tv.gradTo})` }}
+							>
+								เปิดดูเต็มหน้าจอ →
+							</a>
+						</div>
+					</div>
+				</div>
+			</section>
 
 			{/* ── Timeline Feature Section ─────────────────────────────────── */}
 			<TimelineFeatureSection theme={theme} />
@@ -258,51 +391,99 @@ export default function Home() {
 						<div className="divider-warm w-32 mx-auto mt-6" />
 					</div>
 
-					<div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-						{/* Testimonial 1 */}
-						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group">
-							<div className={`absolute top-4 right-4 text-6xl ${tv.quoteColors[0]} transition-colors`}>&quot;</div>
-							<p className="relative mb-6 leading-relaxed text-base font-light" style={{ color: theme.key === "funeral" ? "#d6d3d1" : "#525252" }}>
-								&quot;บริการของ TangYoo ช่วยให้การจัดงานอาลัยเป็นเรื่องง่ายและมีความหมาย ลูกเล่น QR Code ทำให้สามารถเก็บความทรงจำได้อย่างครบถ้วน&quot;
-							</p>
-							<div className={`flex items-center gap-4 pt-4 border-t-2 ${tv.divBorders[0]}`}>
-								<span className="text-5xl">🧑‍🦳</span>
-								<div>
-									<span className="block font-bold text-lg" style={{ color: theme.key === "funeral" ? "#f5f5f4" : "#171717" }}>คุณสมชาย ใจดี</span>
-									<span className="block text-sm mt-1" style={{ color: theme.key === "funeral" ? "#78716c" : "#737373" }}>ผู้ใช้บริการงานอาลัย</span>
+					<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+						{[
+							{
+								text: "แขกในงานประทับใจมากค่ะ หลายคนสแกน QR แล้วบอกว่าไม่เคยเห็นของชำร่วยแบบนี้มาก่อน ได้รูปและคำอวยพรกลับไปเก็บด้วย",
+								name: "คุณแพร",
+								role: "เจ้าของงานแต่งงาน",
+								avatar: "👰🏻",
+								stars: 5,
+								theme: "wedding",
+							},
+							{
+								text: "ครอบครัวรู้สึกซึ้งมากที่มีหน้าเว็บรวมรูปและคำไว้อาลัยให้สแกนดูได้ตลอด ไม่ต้องกังวลว่าความทรงจำจะหาย",
+								name: "คุณวิชัย",
+								role: "ครอบครัวงานอาลัย",
+								avatar: "🙏",
+								stars: 5,
+								theme: "funeral",
+							},
+							{
+								text: "ซื้อเป็นของขวัญวันครบรอบให้แฟน เขาชอบมากเลย แค่สแกน QR บนกล่องก็เห็น memory page ที่เราทำไว้ให้เขาเลย",
+								name: "คุณโอ๊ต",
+								role: "ของขวัญครบรอบ",
+								avatar: "💑",
+								stars: 5,
+								theme: "anniversary",
+							},
+						].map((t, i) => (
+							<div
+								key={i}
+								className="glass-strong p-7 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group flex flex-col"
+								style={{ animationDelay: `${i * 0.1}s` }}
+							>
+								{/* Stars */}
+								<div className="flex gap-1 mb-4">
+									{Array(t.stars).fill(0).map((_, s) => (
+										<span key={s} style={{ color: tv.accent }}>★</span>
+									))}
+								</div>
+								<div className={`absolute top-4 right-5 text-5xl ${tv.quoteColors[i]} transition-colors font-serif`}>&quot;</div>
+								<p className="relative mb-6 leading-relaxed text-base font-light flex-1" style={{ color: theme.key === "funeral" ? "#d6d3d1" : "#525252" }}>
+									&quot;{t.text}&quot;
+								</p>
+								<div className={`flex items-center gap-3 pt-4 border-t-2 ${tv.divBorders[i]}`}>
+									<span className="text-4xl">{t.avatar}</span>
+									<div>
+										<span className="block font-bold text-base" style={{ color: theme.key === "funeral" ? "#f5f5f4" : "#171717" }}>{t.name}</span>
+										<span className="block text-xs mt-0.5 font-light" style={{ color: theme.key === "funeral" ? "#78716c" : "#737373" }}>{t.role}</span>
+									</div>
 								</div>
 							</div>
-						</div>
+						))}
+					</div>
+				</div>
+			</section>
 
-						{/* Testimonial 2 */}
-						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group" style={{ animationDelay: "0.1s" }}>
-							<div className={`absolute top-4 right-4 text-6xl ${tv.quoteColors[1]} transition-colors`}>&quot;</div>
-							<p className="relative mb-6 leading-relaxed text-base font-light" style={{ color: theme.key === "funeral" ? "#d6d3d1" : "#525252" }}>
-								&quot;ของขวัญจาก TangYoo ทำให้วันครบรอบของเราพิเศษยิ่งขึ้น การออกแบบกรอบรูปและสมุดโน๊ตคู่รักทำได้ดีมาก ๆ ค่ะ&quot;
-							</p>
-							<div className={`flex items-center gap-4 pt-4 border-t-2 ${tv.divBorders[1]}`}>
-								<span className="text-5xl">👩🏻‍🦰</span>
-								<div>
-									<span className="block font-bold text-lg" style={{ color: theme.key === "funeral" ? "#f5f5f4" : "#171717" }}>คุณหญิง สวยงาม</span>
-									<span className="block text-sm mt-1" style={{ color: theme.key === "funeral" ? "#78716c" : "#737373" }}>ผู้ใช้บริการงานครบรอบ</span>
-								</div>
-							</div>
-						</div>
+			{/* ── Final CTA ────────────────────────────────────────────────── */}
+			<section className="py-28 px-4 sm:px-6 w-full relative overflow-hidden">
+				{/* Background gradient */}
+				<div
+					className="absolute inset-0 transition-all duration-700"
+					style={{ background: `linear-gradient(135deg, ${tv.gradFrom}22, ${tv.gradTo}11)` }}
+				/>
+				{/* Glow orbs */}
+				<div className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none" style={{ background: tv.accent }} />
+				<div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: tv.gradFrom }} />
 
-						{/* Testimonial 3 */}
-						<div className="glass-strong p-8 rounded-3xl shadow-warm-lg card-hover border-2 border-white/50 relative overflow-hidden group md:col-span-2 lg:col-span-1" style={{ animationDelay: "0.2s" }}>
-							<div className={`absolute top-4 right-4 text-6xl ${tv.quoteColors[2]} transition-colors`}>&quot;</div>
-							<p className="relative mb-6 leading-relaxed text-base font-light" style={{ color: theme.key === "funeral" ? "#d6d3d1" : "#525252" }}>
-								&quot;งานแต่งงานของเราเต็มไปด้วยความทรงจำที่สวยงาม ขอบคุณ TangYoo ที่ทำให้เราสามารถเก็บทุกโมเมนต์ได้อย่างมีค่า&quot;
-							</p>
-							<div className={`flex items-center gap-4 pt-4 border-t-2 ${tv.divBorders[2]}`}>
-								<span className="text-5xl">👩🏻‍❤️‍👨🏼</span>
-								<div>
-									<span className="block font-bold text-lg" style={{ color: theme.key === "funeral" ? "#f5f5f4" : "#171717" }}>คุณเจมส์ และ คุณปุ้ย</span>
-									<span className="block text-sm mt-1" style={{ color: theme.key === "funeral" ? "#78716c" : "#737373" }}>คู่บ่าวสาวผู้ใช้บริการ</span>
-								</div>
-							</div>
-						</div>
+				<div className="relative max-w-3xl mx-auto text-center">
+					<p className="text-sm font-semibold uppercase tracking-[0.2em] mb-4" style={{ color: tv.accent }}>
+						เริ่มต้นเลย
+					</p>
+					<h2 className="font-bold text-4xl md:text-6xl mb-6 leading-tight">
+						สร้างความทรงจำ<br />
+						<span style={{ color: tv.accent }}>ที่ไม่มีวันลืม</span>
+					</h2>
+					<p className={`text-lg md:text-xl mb-12 font-light max-w-xl mx-auto leading-relaxed ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+						เปลี่ยนงานสำคัญของคุณให้กลายเป็นความทรงจำดิจิทัลที่เข้าถึงได้ตลอดไป
+					</p>
+					<div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+						<Link
+							href={theme.ctaLink}
+							className="px-10 py-4 rounded-full font-bold text-lg text-white transition-all hover:scale-105 hover:opacity-90 shadow-warm-xl"
+							style={{ background: `linear-gradient(to right, ${tv.gradFrom}, ${tv.gradTo})` }}
+						>
+							{theme.cta} →
+						</Link>
+						<a
+							href="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+							target="_blank"
+							rel="noopener noreferrer"
+							className={`px-10 py-4 rounded-full font-semibold text-lg border-2 transition-all hover:scale-105 ${theme.key === "funeral" ? "border-stone-600 text-stone-300 hover:bg-stone-800" : "border-neutral-300 text-neutral-600 hover:bg-white"}`}
+						>
+							ดูตัวอย่างก่อน
+						</a>
 					</div>
 				</div>
 			</section>
