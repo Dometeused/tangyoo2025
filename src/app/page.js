@@ -212,9 +212,9 @@ export default function Home() {
 								}}
 							>
 								<iframe
-									src="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+									src={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
 									className="w-full h-full border-0 rounded-[2.4rem]"
-									title="TangYoo Demo"
+									title={`TangYoo Demo — ${theme.label}`}
 									loading="lazy"
 								/>
 								{/* Notch */}
@@ -250,7 +250,7 @@ export default function Home() {
 								))}
 							</ul>
 							<a
-								href="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+								href={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-white transition-all hover:opacity-90 hover:scale-105"
@@ -477,7 +477,7 @@ export default function Home() {
 							{theme.cta} →
 						</Link>
 						<a
-							href="https://tangyoo2025.vercel.app/event/2bda0f65-b59b-49d7-bb43-d3ac0106bd30"
+							href={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className={`px-10 py-4 rounded-full font-semibold text-lg border-2 transition-all hover:scale-105 ${theme.key === "funeral" ? "border-stone-600 text-stone-300 hover:bg-stone-800" : "border-neutral-300 text-neutral-600 hover:bg-white"}`}

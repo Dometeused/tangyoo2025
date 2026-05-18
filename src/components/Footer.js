@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default function FooterComponent() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/preview-event")) return null;
+  if (pathname?.startsWith("/preview-event") || pathname?.startsWith("/demo/")) return null;
   return (
     <footer
       className="w-full pt-20 pb-10 font-kanit relative overflow-hidden transition-all duration-700"

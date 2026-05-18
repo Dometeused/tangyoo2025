@@ -23,7 +23,7 @@ export default function Header() {
   const pathname = usePathname();
 
   // Hide header on preview-only pages (used as iframes)
-  if (pathname?.startsWith("/preview-event")) return null;
+  if (pathname?.startsWith("/preview-event") || pathname?.startsWith("/demo/")) return null;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
