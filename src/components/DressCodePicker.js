@@ -6,7 +6,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function DresscodePicker({ event }) {
   const { theme, role } = useAppMode();
-  const isOwner = isOwner || role === "admin";
+  const isOwner = role === "owner" || role === "admin";
   const supabase = createClientComponentClient();
   const preset = THEME_DRESSCODE[theme] || THEME_DRESSCODE["wedding"];
 
