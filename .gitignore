@@ -53,3 +53,11 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Local build logs & scratch files
+build_log*.txt
+tsc_errors*.txt
+test-*.mjs
+*.sql
+.minimax/
+.claude/
