@@ -108,6 +108,7 @@ function getThemeVars(key) {
 
 export default function Home() {
 	const [themeIdx, setThemeIdx] = useState(1); // default "งานครบรอบ"
+	const [demoPhase, setDemoPhase] = useState("invitation");
 	const theme = THEMES[themeIdx];
 	const tv = getThemeVars(theme.key);
 
@@ -195,9 +196,28 @@ export default function Home() {
 						<h2 className="font-bold text-3xl md:text-5xl mb-4">
 							ลองดูก่อนได้เลย
 						</h2>
-						<p className={`text-lg font-light ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
+						<p className={`text-lg font-light mb-8 ${theme.key === "funeral" ? "text-stone-400" : "text-neutral-500"}`}>
 							นี่คือหน้าเว็บความทรงจำจริงๆ ที่แขกจะเห็นเมื่อสแกน QR
 						</p>
+						{/* Phase Toggle */}
+						<div className="inline-flex rounded-full border-2 p-1 gap-1" style={{ borderColor: `${tv.accent}40` }}>
+							{[
+								{ key: "invitation", label: "📩 ก่อนงาน" },
+								{ key: "memory",     label: "💾 หลังงาน" },
+							].map((p) => (
+								<button
+									key={p.key}
+									onClick={() => setDemoPhase(p.key)}
+									className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+									style={demoPhase === p.key
+										? { background: `linear-gradient(to right, ${tv.gradFrom}, ${tv.gradTo})`, color: "#fff" }
+										: { color: theme.key === "funeral" ? "#a8a29e" : "#737373" }
+									}
+								>
+									{p.label}
+								</button>
+							))}
+						</div>
 					</div>
 
 					<div className="flex flex-col lg:flex-row items-center gap-12 justify-center">
@@ -212,9 +232,9 @@ export default function Home() {
 								}}
 							>
 								<iframe
-									src={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
+									src={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
 									className="w-full h-full border-0 rounded-[2.4rem]"
-									title={`TangYoo Demo — ${theme.label}`}
+									title={`TangYoo Demo — ${theme.label} (${demoPhase})`}
 									loading="lazy"
 								/>
 								{/* Notch */}
@@ -250,7 +270,7 @@ export default function Home() {
 								))}
 							</ul>
 							<a
-								href={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
+								href={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-white transition-all hover:opacity-90 hover:scale-105"
@@ -477,7 +497,7 @@ export default function Home() {
 							{theme.cta} →
 						</Link>
 						<a
-							href={`https://tangyoo2025.vercel.app/demo/${theme.key}`}
+							href={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className={`px-10 py-4 rounded-full font-semibold text-lg border-2 transition-all hover:scale-105 ${theme.key === "funeral" ? "border-stone-600 text-stone-300 hover:bg-stone-800" : "border-neutral-300 text-neutral-600 hover:bg-white"}`}

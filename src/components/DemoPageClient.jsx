@@ -3,12 +3,15 @@
 import { useEffect } from "react";
 import { useAppMode } from "@/context/AppModeContext";
 import InvitationPage from "@/components/InvitationPage";
+import MemoryPage from "@/components/MemoryPage";
 
-const DEMO_EVENTS = {
+const VALID_THEMES = ["wedding", "funeral", "anniversary", "baby"];
+const VALID_PHASES = ["invitation", "memory"];
+
+export const DEMO_EVENTS = {
   wedding: {
     id: "demo-wedding",
     theme: "wedding",
-    phase: "invitation",
     name: "ธีรพล & นภัสสร",
     date: "2025-08-15",
     start_datetime: "2025-08-15T16:00:00.000Z",
@@ -26,7 +29,6 @@ const DEMO_EVENTS = {
   funeral: {
     id: "demo-funeral",
     theme: "funeral",
-    phase: "invitation",
     name: "คุณตาวิชัย มงคลสุข",
     date: "2025-07-20",
     start_datetime: "2025-07-20T09:00:00.000Z",
@@ -44,7 +46,6 @@ const DEMO_EVENTS = {
   anniversary: {
     id: "demo-anniversary",
     theme: "anniversary",
-    phase: "invitation",
     name: "25 ปีแห่งความรัก",
     date: "2025-09-01",
     start_datetime: "2025-09-01T18:00:00.000Z",
@@ -62,7 +63,6 @@ const DEMO_EVENTS = {
   baby: {
     id: "demo-baby",
     theme: "baby",
-    phase: "invitation",
     name: "น้องมิ้นท์",
     date: "2025-06-01",
     start_datetime: "2025-06-01T10:00:00.000Z",
@@ -79,19 +79,20 @@ const DEMO_EVENTS = {
   },
 };
 
-const VALID_THEMES = ["wedding", "funeral", "anniversary", "baby"];
-
-export default function DemoPageClient({ theme }) {
+export default function DemoPageClient({ theme, phase }) {
   const { setTheme, setPhase, setRole } = useAppMode();
 
+  const safeTheme = VALID_THEMES.includes(theme) ? theme : "wedding";
+  const safePhase = VALID_PHASES.includes(phase) ? phase : "invitation";
+
   useEffect(() => {
-    const t = VALID_THEMES.includes(theme) ? theme : "wedding";
-    setTheme(t);
-    setPhase("invitation");
+    setTheme(safeTheme);
+    setPhase(safePhase);
     setRole("guest");
-  }, [theme, setTheme, setPhase, setRole]);
+  }, [safeTheme, safePhase, setTheme, setPhase, setRole]);
 
-  const event = DEMO_EVENTS[theme] || DEMO_EVENTS.wedding;
+  const event = { ...DEMO_EVENTS[safeTheme], phase: safePhase };
 
+  if (safePhase === "memory") return <MemoryPage event={event} />;
   return <InvitationPage event={event} />;
 }
