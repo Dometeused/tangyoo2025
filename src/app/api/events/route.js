@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 // ===================
 // ✅ GET: ดึง event ของ user (ไม่แปลง url ซ้ำ)
 export async function GET(req) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -32,7 +32,7 @@ export async function GET(req) {
 // ===================
 // ✅ POST: เพิ่ม event ใหม่
 export async function POST(req) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -62,6 +62,7 @@ export async function POST(req) {
         impressions: impressions || [],
         theme_song: theme_song || "",
         phase: "invitation",
+        user_id: user.id,
         email: user.email,
       },
     ])
@@ -79,7 +80,7 @@ export async function POST(req) {
 // ===================
 // ✅ DELETE: ลบ event ของตัวเอง
 export async function DELETE(req) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();

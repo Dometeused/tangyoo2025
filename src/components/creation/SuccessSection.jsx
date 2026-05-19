@@ -8,7 +8,7 @@ import * as htmlToImage from "html-to-image";
 export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) {
   const qrRef = useRef(null);
   const [copied, setCopied] = useState(false);
-  const memoryUrl = `https://tangyoo.com/memory/${memoryId}`; // In real app, use actual domain
+  const memoryUrl = `https://tangyoo2025.vercel.app/event/${memoryId}`;
 
   const copyLink = async () => {
     try {
@@ -101,7 +101,7 @@ export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) 
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href={`/memory/${memoryId}`}
+            href={`/event/${memoryId}`}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-200"
           >
             <ExternalLink size={20} />

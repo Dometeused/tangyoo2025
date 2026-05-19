@@ -1,16 +1,16 @@
 "use client";
 export const dynamic = "force-dynamic";
-;
-import { Suspense, useEffect, useState } from "react";
+
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAppMode } from "@/context/AppModeContext";
 import InvitationPage from "@/components/InvitationPage";
 import MemoryPage from "@/components/MemoryPage";
+import { DEMO_EVENTS } from "@/components/DemoPageClient";
 
-function PreviewEventContent() {
+function PreviewEventInner() {
   const searchParams = useSearchParams();
   const { setTheme, setPhase, setRole } = useAppMode();
-  const [ready, setReady] = useState(false);
 
   const theme = searchParams.get("theme") || "wedding";
   const name  = searchParams.get("name")  || "";
@@ -18,64 +18,38 @@ function PreviewEventContent() {
   const place = searchParams.get("place") || "";
   const phase = searchParams.get("phase") || "invitation";
 
-  const PLACEHOLDERS = {
-    wedding:     { name: "ชื่องานแต่งของคุณ",     poster: "คู่บ่าวสาว" },
-    funeral:     { name: "ผู้เป็นที่รักของครอบครัว", poster: "ผู้ล่วงลับ" },
-    anniversary: { name: "ชื่องานครบรอบของคุณ",   poster: "ผู้จัดงาน"   },
-    baby:        { name: "ชื่อลูกน้อยของคุณ",      poster: "ครอบครัว"    },
-  };
-  const ph = PLACEHOLDERS[theme] || PLACEHOLDERS.wedding;
-
-  const mockEvent = {
-    id: "preview",
-    name:  name  || ph.name,
-    theme,
-    phase,
-    date:  date  || "",
-    place: place || "",
-    bio:   "",
-    bio2:  "",
-    cover_url:    null,
-    profile:      null,
-    qr_url:       null,
-    schedule_url: null,
-    youtube_link: null,
-    introEffect:  false,
-    poster_name:    name || ph.poster,
-    poster_caption: "",
-    word:   "",
-    living: "",
-    bank_info:    null,
-    qr_note:      null,
-    video_mode:   "none",
-  };
+  const safeTheme = ["wedding","funeral","anniversary","baby"].includes(theme) ? theme : "wedding";
+  const safePhase = phase === "memory" ? "memory" : "invitation";
 
   useEffect(() => {
-    setTheme(theme);
-    setPhase(phase);
+    setTheme(safeTheme);
+    setPhase(safePhase);
     setRole("guest");
-    setReady(true);
-  }, [theme, phase, setTheme, setPhase, setRole]);
+  }, [safeTheme, safePhase, setTheme, setPhase, setRole]);
 
-  if (!ready) return (
-    <div className="min-h-screen flex items-center justify-center text-sm text-gray-400">
-      กำลังโหลด...
-    </div>
-  );
+  const base = DEMO_EVENTS[safeTheme] || DEMO_EVENTS.wedding;
+  const event = {
+    ...base,
+    name:        name  || base.name,
+    date:        date  || base.date,
+    place:       place || base.place,
+    event_place: place || base.event_place,
+    phase:       safePhase,
+    introEffect: false,
+  };
 
-  return phase === "memory"
-    ? <MemoryPage event={mockEvent} />
-    : <InvitationPage event={mockEvent} refetchEvent={() => {}} />;
+  if (safePhase === "memory") return <MemoryPage event={event} />;
+  return <InvitationPage event={event} />;
 }
 
 export default function PreviewEventPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center text-sm text-gray-400">
-        กำลังโหลด...
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin" />
       </div>
     }>
-      <PreviewEventContent />
+      <PreviewEventInner />
     </Suspense>
   );
 }
