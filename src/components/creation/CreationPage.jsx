@@ -42,6 +42,10 @@ export default function CreationPage() {
           introEffect: true,
         }),
       });
+      if (res.status === 401) {
+        window.location.href = "/login?redirect=/creation";
+        return;
+      }
       const json = await res.json();
       if (json.success && json.data?.id) {
         setMemoryId(json.data.id);
