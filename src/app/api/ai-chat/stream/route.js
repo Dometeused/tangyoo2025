@@ -5,7 +5,8 @@ import { cookies } from "next/headers";
 
 // Initialize Gemini
 // Fallback key added to ensure it works immediately (Server-side only)
-const API_KEY = process.env.GEMINI_API_KEY || "AIzaSyAV88nQ-KOXHbnt8AKYQ2T5CSqZMoOMc7I";
+const API_KEY = process.env.GEMINI_API_KEY;
+if (!API_KEY) throw new Error("Missing GEMINI_API_KEY env var");
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 const SYSTEM_PROMPT = `
@@ -91,7 +92,7 @@ export async function POST(req) {
         }
 
         // 2. Auth & Setup Supabase
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
         const { data: { user } } = await supabase.auth.getUser();
 

@@ -9,7 +9,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import QRLightbox from "@/components/QRLightbox";
 import ShareButtons from "@/components/ShareButtons";
 // import AIChatWindow from "@/components/ai-butler/AIChatWindow"; // POST-MVP
-import { Sparkles, Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, AlertTriangle } from "lucide-react";
+import { Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, AlertTriangle } from "lucide-react";
 import "@/styles/dashboard.css";
 
 const THEME_META = {
@@ -236,16 +236,6 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-3 flex-wrap">
-              {/* AI Button */}
-              <button
-                onClick={() => router.push("/create-realtime")}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all hover:opacity-80"
-                style={{ background: "#1c1917", color: "#fafaf9" }}
-              >
-                <Sparkles size={14} />
-                ให้ AI ช่วยสร้าง
-              </button>
-
               {/* Intro Effect toggle */}
               <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-stone-500">
                 <span>Intro Effect</span>

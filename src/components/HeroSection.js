@@ -71,26 +71,6 @@ export default function HeroSection({ current, onChange, THEMES }) {
                             </span>
                         </Link>
 
-                        {/* Create with AI Button — theme-aware warm gradient */}
-                        <Link
-                            href="/create-realtime"
-                            className="group/ai relative px-8 py-4 bg-gray-900/40 backdrop-blur-md text-white border border-white/20 rounded-full font-medium text-lg hover:bg-black/60 transition-all duration-300 flex items-center gap-2 overflow-hidden"
-                        >
-                            <span
-                                className="absolute inset-0 opacity-0 group-hover/ai:opacity-100 transition-opacity duration-500"
-                                style={{
-                                    background: `linear-gradient(to right, ${accent.from}, ${accent.to}, ${accent.from})`,
-                                }}
-                            />
-                            <svg
-                                className="w-5 h-5 transition-colors duration-300"
-                                style={{ color: accent.bolt }}
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            <span className="relative z-10">ให้ AI ช่วยสร้าง</span>
-                        </Link>
 
                         {/* Theme Switcher - Clean & Minimal */}
                         <div className="mt-8">
