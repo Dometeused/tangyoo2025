@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.97.1",
     "@google/generative-ai": "^0.24.1",
     "@mojs/core": "^1.3.0",
     "@remotion/player": "^4.0.321",
