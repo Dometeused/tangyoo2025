@@ -3,11 +3,12 @@ import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
-// Initialize Gemini
-// Fallback key added to ensure it works immediately (Server-side only)
-const API_KEY = process.env.GEMINI_API_KEY;
-if (!API_KEY) throw new Error("Missing GEMINI_API_KEY env var");
-const genAI = new GoogleGenerativeAI(API_KEY);
+// Initialize Gemini (lazy — validated at request time, not build time)
+const getGenAI = () => {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("Missing GEMINI_API_KEY env var");
+  return new GoogleGenerativeAI(key);
+};
 
 const SYSTEM_PROMPT = `
 You are "TangYoo Butler", a warm, polite, and efficient AI Butler for "TangYoo".
@@ -110,7 +111,7 @@ export async function POST(req) {
         const lastUserMessage = messages[messages.length - 1].text;
 
         // 4. Start Chat & Stream
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = getGenAI().getGenerativeModel({ model: "gemini-2.5-flash" });
         const chat = model.startChat({ history });
 
         const result = await chat.sendMessageStream(lastUserMessage);
