@@ -111,6 +111,7 @@ export default function Home() {
 	const [demoPhase, setDemoPhase] = useState("invitation");
 	const theme = THEMES[themeIdx];
 	const tv = getThemeVars(theme.key);
+	const demoHref = `/demo/${theme.key}/${demoPhase}`;
 
 	/* ── Sync CSS variables + data-attribute so Footer/Header pick them up ── */
 	useEffect(() => {
@@ -232,7 +233,8 @@ export default function Home() {
 								}}
 							>
 								<iframe
-									src={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
+									key={demoHref}
+									src={demoHref}
 									className="w-full h-full border-0 rounded-[2.4rem]"
 									title={`TangYoo Demo — ${theme.label} (${demoPhase})`}
 									loading="lazy"
@@ -270,7 +272,7 @@ export default function Home() {
 								))}
 							</ul>
 							<a
-								href={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
+								href={demoHref}
 								target="_blank"
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-white transition-all hover:opacity-90 hover:scale-105"
@@ -497,7 +499,7 @@ export default function Home() {
 							{theme.cta} →
 						</Link>
 						<a
-							href={`https://tangyoo2025.vercel.app/demo/${theme.key}/${demoPhase}`}
+							href={demoHref}
 							target="_blank"
 							rel="noopener noreferrer"
 							className={`px-10 py-4 rounded-full font-semibold text-lg border-2 transition-all hover:scale-105 ${theme.key === "funeral" ? "border-stone-600 text-stone-300 hover:bg-stone-800" : "border-neutral-300 text-neutral-600 hover:bg-white"}`}

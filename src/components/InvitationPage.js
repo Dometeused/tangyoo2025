@@ -32,8 +32,8 @@ export default function InvitationPage({ event, refetchEvent }) {
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
     funeral: "/funeral-bg.png",
-    anniversary: "/anniversary-bg.jpg",
-    baby: "/baby-bg.jpg",
+    anniversary: "/images/anniversary.png",
+    baby: "/images/welcome.png",
   };
   const bgImage = bgImageMap[theme] || "/wedding-bg.jpg";
 

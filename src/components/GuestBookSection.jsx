@@ -20,9 +20,32 @@ export default function GuestBookSection({
   const [deleteTarget, setDeleteTarget] = useState(null); // id ที่จะลบ
   const [deleting, setDeleting] = useState(false);
 
+  const demoEntries = {
+    wedding: [
+      { id: "demo-wedding-1", name: "คุณแพร", message: "ขอให้ทั้งสองคนมีความสุขมาก ๆ และจับมือกันไปทุกฤดูของชีวิตนะคะ", created_at: "2025-08-15T10:00:00.000Z" },
+      { id: "demo-wedding-2", name: "เพื่อนเจ้าบ่าว", message: "วันนี้สวยงามมาก ยินดีด้วยจากใจจริงครับ", created_at: "2025-08-15T10:10:00.000Z" },
+      { id: "demo-wedding-3", name: "ครอบครัวนภัสสร", message: "ขอให้บ้านหลังใหม่เต็มไปด้วยเสียงหัวเราะและความเข้าใจเสมอ", created_at: "2025-08-15T10:20:00.000Z" },
+    ],
+    funeral: [
+      { id: "demo-funeral-1", name: "ลูกหลาน", message: "คำสอนและความเมตตาของคุณตาจะอยู่ในใจพวกเราเสมอ", created_at: "2025-07-20T04:00:00.000Z" },
+      { id: "demo-funeral-2", name: "ครอบครัวศิริพร", message: "ขอร่วมไว้อาลัยและส่งกำลังใจให้ครอบครัวมงคลสุขอย่างสุดซึ้ง", created_at: "2025-07-20T04:15:00.000Z" },
+    ],
+    anniversary: [
+      { id: "demo-anniversary-1", name: "ลูก ๆ", message: "25 ปีของพ่อกับแม่คือเรื่องราวที่ทำให้เราเชื่อในความรัก ขอบคุณที่เป็นบ้านให้เสมอ", created_at: "2025-09-01T12:00:00.000Z" },
+      { id: "demo-anniversary-2", name: "เพื่อนเก่า", message: "ดีใจที่ได้เห็นความรักเดินทางมาไกลขนาดนี้ สุขสันต์วันครบรอบครับ", created_at: "2025-09-01T12:10:00.000Z" },
+    ],
+    baby: [
+      { id: "demo-baby-1", name: "คุณยาย", message: "ขอให้น้องมิ้นท์เติบโตอย่างสดใส แข็งแรง และมีคนรักล้อมรอบเสมอ", created_at: "2025-06-01T03:00:00.000Z" },
+      { id: "demo-baby-2", name: "น้าแอม", message: "ยินดีต้อนรับสมาชิกตัวน้อยของบ้านนะคะ", created_at: "2025-06-01T03:12:00.000Z" },
+    ],
+  };
 
   const fetchGuestbook = async () => {
     if (!memoryId) return;
+    if (String(memoryId).startsWith("demo-")) {
+      setEntries(demoEntries[theme] || demoEntries.wedding);
+      return;
+    }
     try {
       const res = await fetch(`/api/guestbook?memoryId=${memoryId}`);
       const json = await res.json();

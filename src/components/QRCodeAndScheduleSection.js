@@ -248,7 +248,7 @@ export default function QRCodeAndScheduleSection({
           title="คลิกเพื่อดูภาพใหญ่"
         >
           <Image
-            src={scheduleImageUrl || "/images/schedule-mock.png"}
+            src={scheduleImageUrl || "/schedule/funeral-sample.PNG"}
             alt="กำหนดการ"
             width={400}
             height={300}

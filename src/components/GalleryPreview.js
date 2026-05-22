@@ -28,6 +28,13 @@ export default function GalleryPreview({ event }) {
 
   const makeUrl = (filename) => {
     if (!filename) return null;
+    if (
+      filename.startsWith("/") ||
+      filename.startsWith("data:") ||
+      filename.startsWith("blob:")
+    ) {
+      return filename;
+    }
     const baseUrl =
       process.env.NEXT_PUBLIC_SUPABASE_URL ||
       "https://your-project.supabase.co";

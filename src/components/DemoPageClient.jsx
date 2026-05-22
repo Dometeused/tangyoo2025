@@ -12,7 +12,7 @@ const DEMO_ASSETS = {
   wedding: {
     cover_url: "/images/wedding.png",
     profile_url: "/covers/wedding-profile.png",
-    feature_image_1: "/covers/prewed1.jpg",
+    feature_image_1: "/demo/wedding/gallery-1.png",
     feature_image_2: "/covers/prewed2.jpg",
     feature_image_3: "/covers/prewed3.jpg",
     bridePic: "/covers/wedding-profile.png",
@@ -23,7 +23,7 @@ const DEMO_ASSETS = {
     cover_url: "/images/funeral.png",
     profile_url: "/covers/funeral-profile.png",
     profile: "/covers/funeral-profile.png",
-    feature_image_1: "/covers/funeral-cover.PNG",
+    feature_image_1: "/demo/funeral/gallery-1.png",
     feature_image_2: "/images/funeralcover.jpg",
     feature_image_3: "/images/funeral-bg.png",
     schedule_url: "/schedule/funeral-sample.PNG",
@@ -31,7 +31,7 @@ const DEMO_ASSETS = {
   anniversary: {
     cover_url: "/images/anniversary.png",
     profile_url: "/images/anniversary-gift.png",
-    feature_image_1: "/images/anniversary-gift.png",
+    feature_image_1: "/demo/anniversary/gallery-1.png",
     feature_image_2: "/images/catalog-souvenir-anniversary-1.png",
     feature_image_3: "/images/catalog-souvenir-anniversary-2.png",
     bridePic: "/images/anniversary-gift.png",
@@ -41,7 +41,7 @@ const DEMO_ASSETS = {
   baby: {
     cover_url: "/images/welcome.png",
     profile_url: "/images/Hidden Smiles in Nature.png",
-    feature_image_1: "/images/welcome.png",
+    feature_image_1: "/demo/baby/gallery-1.png",
     feature_image_2: "/images/Hidden Smiles in Nature.png",
     feature_image_3: "/images/catalog-anniversary-wedding-1.png",
     bridePic: "/images/Hidden Smiles in Nature.png",

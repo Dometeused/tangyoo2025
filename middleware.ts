@@ -1,25 +1,31 @@
-// @ts-nocheck
-// ✅ /middleware.ts
-import createMiddlewareClient from "@supabase/auth-helpers-nextjs";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  // @ts-expect-error: suppress type mistmatch for now
   const supabase = createMiddlewareClient({ req, res });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  await supabase.auth.getSession(); // ✅ จำเป็นสำหรับโหลด session ฝั่ง server
+  const { pathname } = req.nextUrl;
+
+  if (pathname.startsWith("/dashboard") && !session) {
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login") && !session) {
+    return NextResponse.redirect(new URL("/admin/login", req.url));
+  }
 
   return res;
 }
 
-// ✅ แก้ matcher ให้ครอบคลุมหน้าอื่นด้วย เช่น /event และ /api
 export const config = {
   matcher: [
-    "/dashboard/:path*",   // เดิม
-    "/event/:path*",       // ✅ เพิ่มเพื่อให้ MemoryPage/InvitationPage ใช้ session ได้
-    "/api/:path*",         // ✅ ถ้ามี API ที่ต้อง auth ตรวจ user
-    "/auth/callback", // ✅ ต้องเพิ่มตรงนี้ด้วย
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

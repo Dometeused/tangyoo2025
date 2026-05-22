@@ -23,7 +23,7 @@ export const THEMES_OBJ = {
     bgm: "/audio/anniversary.mp3",
     effect: "sparkle",
     primaryColor: "#ffe082",
-    bgImage: "/anniversary-bg.png",
+    bgImage: "/images/anniversary.png",
   },
   baby: {
     bg: "bg-purple-50",
@@ -31,7 +31,7 @@ export const THEMES_OBJ = {
     bgm: "/audio/baby.mp3",
     effect: "sparkle",
     primaryColor: "#c4b5fd",
-    bgImage: "/baby-bg.jpg",
+    bgImage: "/images/welcome.png",
   },
 };
 

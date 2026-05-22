@@ -119,7 +119,7 @@ export const THEMES = [
         text: "text-purple-700",
         dot: "bg-purple-400",
         ctaClass: "bg-purple-500 hover:bg-purple-600 text-white",
-        image: "/images/baby.png", // Placeholder
+        image: "/images/welcome.png",
         title: "ต้อนรับสมาชิกใหม่ของครอบครัว",
         desc: "บันทึกก้าวแรกและพัฒนาการสำคัญของลูกน้อย",
         features: ["ไทม์ไลน์พัฒนาการ", "อัลบั้มภาพน่ารัก", "สมุดอวยพร", "QR 2-Phase"],
@@ -127,19 +127,19 @@ export const THEMES = [
         ctaLink: "/creation?theme=baby",
         menuCTA: "สร้างหน้าเด็กแรกเกิด",
         middleSection: {
-            image: "/images/qr2way-baby.png", // Placeholder
+            image: "/images/welcome.png",
             title: "เก็บทุกรอยยิ้ม... ตั้งแต่วันแรก",
             desc: "QR Code 2-Phase ที่เติบโตไปพร้อมกับลูกน้อย บันทึกเรื่องราวจากวันแรกคลอดสู่วันเกิดปีแรก",
         },
         catalog: [
             {
                 name: "กรอบรูปแรกเกิด",
-                img: "/images/catalog-souvenir-baby-1.png",
+                img: "/images/welcome.png",
                 link: "#",
             },
             {
                 name: "อัลบั้มภาพ",
-                img: "/images/catalog-souvenir-baby-2.png",
+                img: "/images/Hidden Smiles in Nature.png",
                 link: "#",
             },
         ],
