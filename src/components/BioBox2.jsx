@@ -4,6 +4,7 @@ import { IoMdExpand } from "react-icons/io";
 import { useAppMode } from "@/context/AppModeContext";
 import BioBox2WeddingBio from "@/components/BioBox2WeddingBio";
 import BioBox2FuneralBio from "@/components/BioBox2FuneralBio";
+import BioBox2AnniversaryBio from "@/components/BioBox2AnniversaryBio";
 
 export default function BioBox2(props) {
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -19,6 +20,15 @@ export default function BioBox2(props) {
     portraitHint = (
       <div className="text-xs text-gray-500 mb-2 text-center">
         * แนะนำ: ใช้รูปถ่ายแนวตั้ง (portrait) เพื่อความสวยงาม
+      </div>
+    );
+  } else if (theme === "anniversary") {
+    PosterComponent = BioBox2AnniversaryBio;
+    const { bridePic, groomPic, brideBio, groomBio, eventBio, funFact1, funFact2 } = props;
+    posterProps = { bridePic, groomPic, brideBio, groomBio, eventBio, funFact1, funFact2 };
+    portraitHint = (
+      <div className="text-xs text-gray-500 mb-2 text-center">
+        * แนะนำ: ใส่รูปถ่ายคู่และจำนวนปีในช่อง brideBio (เช่น "25")
       </div>
     );
   } else {

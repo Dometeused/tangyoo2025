@@ -18,11 +18,11 @@ export const THEMES_OBJ = {
     bgImage: "/funeral-bg.png",         // <<== เพิ่มตรงนี้
   },
   anniversary: {
-    bg: "bg-yellow-50",
-    accent: "text-yellow-600",
+    bg: "bg-amber-950",
+    accent: "text-amber-300",
     bgm: "/audio/anniversary.mp3",
     effect: "sparkle",
-    primaryColor: "#ffe082",
+    primaryColor: "#d4a820",
     bgImage: "/images/anniversary.png",
   },
   baby: {

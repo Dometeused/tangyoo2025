@@ -1,18 +1,42 @@
 "use client";
 import { useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import ProfileImagePickerModal from "@/components/ProfileImagePickerModal";
 import { useAppMode } from "@/context/AppModeContext";
+
+const SAVE_FIELDS = {
+  wedding:     ["bridePic", "groomPic", "brideBio", "groomBio", "eventBio", "funFact1", "funFact2"],
+  anniversary: ["bridePic", "groomPic", "brideBio", "groomBio", "eventBio", "funFact1", "funFact2"],
+  funeral:     ["profile", "poster_name", "word", "living"],
+  baby:        ["bridePic", "groomPic", "brideBio", "groomBio", "eventBio", "funFact1", "funFact2"],
+};
 
 export default function BioBox2EditModal({
   open,
   onClose,
   initialData,
   onSave,
-  saving,
+  saving: externalSaving,
   eventId
 }) {
   const { theme } = useAppMode();
+  const supabase = createClientComponentClient();
   const [form, setForm] = useState(initialData);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+
+  // Save ลง Supabase
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveError("");
+    const fields = SAVE_FIELDS[theme] || [];
+    const payload = Object.fromEntries(fields.map(f => [f, form[f] ?? null]));
+    const { error } = await supabase.from("events").update(payload).eq("id", eventId);
+    setSaving(false);
+    if (error) { setSaveError("บันทึกไม่สำเร็จ: " + error.message); return; }
+    onSave?.(form);
+    onClose();
+  };
 
   // Picker modals
   const [showBridePicPicker, setShowBridePicPicker] = useState(false);
@@ -107,6 +131,49 @@ export default function BioBox2EditModal({
               </>
             )}
 
+            {/* Anniversary: bridePic, groomPic, brideBio (year), groomBio (since), eventBio, funFact1, funFact2 */}
+            {theme === "anniversary" && (
+              <>
+                {/* รูปคู่ */}
+                <div className="flex gap-4 mb-3">
+                  <div className="flex-1">
+                    <div className="mb-1 text-xs text-gray-500">รูปซ้าย</div>
+                    <div className="flex gap-2 items-center">
+                      <img src={form.bridePic || "/profile-placeholder.png"} className="w-14 h-14 object-cover rounded-full border" alt="" />
+                      <button className="px-3 py-1 bg-yellow-100 rounded text-yellow-700 text-xs" onClick={() => setShowBridePicPicker(true)} type="button">เลือกรูป</button>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="mb-1 text-xs text-gray-500">รูปขวา</div>
+                    <div className="flex gap-2 items-center">
+                      <img src={form.groomPic || "/profile-placeholder.png"} className="w-14 h-14 object-cover rounded-full border" alt="" />
+                      <button className="px-3 py-1 bg-yellow-100 rounded text-yellow-700 text-xs" onClick={() => setShowGroomPicPicker(true)} type="button">เลือกรูป</button>
+                    </div>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label className="text-xs text-gray-500 block mb-1">จำนวนปี + label เช่น "25 ปีแห่งรัก" หรือแค่ "25"</label>
+                  <input className="input w-full" placeholder='เช่น "25" หรือ "25 ปีแห่งรัก"' value={form.brideBio || ""} onChange={e => setForm(f => ({ ...f, brideBio: e.target.value }))} />
+                </div>
+                <div className="mb-3">
+                  <label className="text-xs text-gray-500 block mb-1">แถบ SINCE เช่น "SINCE · 2000"</label>
+                  <input className="input w-full" placeholder='เช่น "SINCE · 2000"' value={form.groomBio || ""} onChange={e => setForm(f => ({ ...f, groomBio: e.target.value }))} />
+                </div>
+                <div className="mb-3">
+                  <label className="text-xs text-gray-500 block mb-1">Quote ความรู้สึก</label>
+                  <input className="input w-full" placeholder='เช่น "ขอบคุณทุกความทรงจำ..."' value={form.eventBio || ""} onChange={e => setForm(f => ({ ...f, eventBio: e.target.value }))} />
+                </div>
+                <div className="mb-3">
+                  <label className="text-xs text-gray-500 block mb-1">เรื่องราว (ซ้าย)</label>
+                  <input className="input w-full" placeholder="Fun Fact 1" value={form.funFact1 || ""} onChange={e => setForm(f => ({ ...f, funFact1: e.target.value }))} />
+                </div>
+                <div className="mb-3">
+                  <label className="text-xs text-gray-500 block mb-1">เรื่องราว (ขวา)</label>
+                  <input className="input w-full" placeholder="Fun Fact 2" value={form.funFact2 || ""} onChange={e => setForm(f => ({ ...f, funFact2: e.target.value }))} />
+                </div>
+              </>
+            )}
+
             {/* Funeral: profile, poster_name, word, living */}
             {theme === "funeral" && (
               <>
@@ -153,12 +220,13 @@ export default function BioBox2EditModal({
             )}
 
             {/* Action Buttons */}
+            {saveError && <p className="text-red-500 text-xs mb-2">{saveError}</p>}
             <div className="flex gap-2 mt-6">
               <button
-                onClick={() => onSave(form)}
+                onClick={handleSave}
                 className="bg-pink-500 text-white px-6 py-2 rounded shadow"
                 disabled={saving}
-              >{saving ? "บันทึก..." : "บันทึก"}</button>
+              >{saving ? "กำลังบันทึก..." : "บันทึก"}</button>
               <button
                 onClick={onClose}
                 className="bg-gray-200 px-4 py-2 rounded"

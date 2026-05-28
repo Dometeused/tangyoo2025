@@ -38,7 +38,8 @@ export default function InvitationPage({ event, refetchEvent }) {
     anniversary: "/images/anniversary.png",
     baby: "/images/welcome.png",
   };
-  const bgImage = bgImageMap[theme] || "/wedding-bg.jpg";
+  // ถ้า event มี cover_url ให้ใช้เป็น BG แทน default ของ theme
+  const bgImage = event.cover_url || bgImageMap[theme] || "/wedding-bg.jpg";
 
   const HEADLINES = {
     wedding: {
@@ -62,8 +63,8 @@ export default function InvitationPage({ event, refetchEvent }) {
       inviteQuote: '”ทุกปีที่ผ่านมา คือของขวัญที่ล้ำค่า”',
       gallery: 'ภาพแห่งชีวิตร่วมกัน',
       galleryQuote: '”ทุกช่วงเวลาคือของขวัญ”',
-      bless: 'ฝากคำอวยพรถึงเรา',
-      blessQuote: '”คำอวยพรทุกคำ มีค่าตลอดไป”',
+      bless: 'ร่วมอวยพรวันครบรอบ',
+      blessQuote: '”ทุกคำอวยพรคือแรงใจสำหรับปีต่อ ๆ ไป”',
     },
     baby: {
       invite: 'ต้อนรับสมาชิกใหม่',
@@ -79,7 +80,11 @@ export default function InvitationPage({ event, refetchEvent }) {
   if (!event) return <div className="p-10 text-center">⏳ กำลังโหลดข้อมูล...</div>;
 
   return (
-    <main className="relative min-h-screen overflow-hidden" style={{ background: theme === "funeral" ? "#f7f3ef" : "#fdf6f0" }}>
+    <main className="relative min-h-screen overflow-hidden" style={{
+      background: theme === "funeral"     ? "#f7f3ef"
+               : theme === "anniversary" ? "#1c1000"
+               : "#fdf6f0"
+    }}>
       {showIntro && (
         <IntroOverlay
           theme={theme}
@@ -88,22 +93,39 @@ export default function InvitationPage({ event, refetchEvent }) {
       )}
       {/* BG Image */}
       <div
-        className={`fixed inset-0 w-full h-full z-0 transition-opacity duration-1000 ${theme === 'funeral' ? 'opacity-55' : 'opacity-80'}`}
+        className={`fixed inset-0 w-full h-full z-0 transition-opacity duration-1000 ${
+          theme === 'funeral'     ? 'opacity-55'
+          : theme === 'anniversary' ? 'opacity-35'
+          : 'opacity-80'
+        }`}
         style={{
           backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          /* Sepia tint on funeral bg image */
-          filter: theme === 'funeral' ? 'sepia(0.4) brightness(0.75)' : 'none',
+          filter: theme === 'funeral'     ? 'sepia(0.4) brightness(0.75)'
+                : theme === 'anniversary' ? 'sepia(0.15) brightness(0.55) saturate(1.2)'
+                : 'none',
         }}
       />
-      {/* Soft warm overlay so content stays readable */}
+      {/* Overlay */}
       <div
         className="fixed inset-0 z-[1] pointer-events-none"
-        style={{ background: theme === 'funeral' ? 'rgba(15,8,3,0.45)' : 'rgba(253,246,240,0.45)' }}
+        style={{
+          background: theme === 'funeral'     ? 'rgba(15,8,3,0.45)'
+                    : theme === 'anniversary' ? 'rgba(18,10,0,0.50)'
+                    : 'rgba(253,246,240,0.45)'
+        }}
       />
+      {/* Anniversary: soft gold glow from top */}
+      {theme === 'anniversary' && (
+        <div className="fixed inset-0 z-[2] pointer-events-none" style={{
+          background: "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(212,168,32,0.10) 0%, transparent 70%)",
+        }} />
+      )}
 
-      <div className="relative z-20 pt-24 px-6 pb-32 text-gray-800 transition-all max-w-3xl mx-auto">
+      <div className={`relative z-20 pt-24 px-6 pb-32 transition-all max-w-3xl mx-auto ${
+        theme === 'anniversary' ? 'text-amber-50' : 'text-gray-800'
+      }`}>
         <BGMPlayer
           ref={bgmRef}
           src={`/audio/${theme || "wedding"}.mp3`}
@@ -129,14 +151,16 @@ export default function InvitationPage({ event, refetchEvent }) {
           <ButtonGroupSection event={event} isOwner={isOwner} />
         </div>
 
-        {/* Layout QR + AI Video (เฉพาะ funeral) */}
-        <div className="mb-8">
-          <QRCodeAndScheduleSection
-            qrImageUrl={event.qr_url}
-            scheduleImageUrl={event.schedule_url}
-            event={event}
-          />
-        </div>
+        {/* QR + กำหนดการ + Dresscode — ซ่อนสำหรับ anniversary (ไม่เกี่ยวข้อง) */}
+        {theme !== "anniversary" && (
+          <div className="mb-8">
+            <QRCodeAndScheduleSection
+              qrImageUrl={event.qr_url}
+              scheduleImageUrl={event.schedule_url}
+              event={event}
+            />
+          </div>
+        )}
 
         <StoryDivider theme={theme} />
         <SectionTitle title={h.gallery} theme={theme} />

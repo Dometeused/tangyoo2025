@@ -1,7 +1,7 @@
 const STYLES = {
   wedding:     { text: "#6b2d4a", accent: "#ddb0c0" },
   funeral:     { text: "#f0e8df", accent: "#c9a882" },
-  anniversary: { text: "#6b4a1e", accent: "#c9a050" },
+  anniversary: { text: "#f5e090", accent: "#d4a820" },
   baby:        { text: "#5b21b6", accent: "#c4b5fd" },
 };
 

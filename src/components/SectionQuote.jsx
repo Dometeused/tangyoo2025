@@ -1,7 +1,7 @@
 const COLORS = {
   wedding:     "text-[#9e6b7d]",
   funeral:     "text-[#c9b49a]",
-  anniversary: "text-[#9e7e46]",
+  anniversary: "text-[#d4b870]",
   baby:        "text-[#7c3aed]",
 };
 

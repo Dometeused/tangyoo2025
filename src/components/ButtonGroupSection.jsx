@@ -114,12 +114,13 @@ export default function ButtonGroupSection({ event, isOwner, onEventUpdate }) {
   // ปุ่ม label ต่างตาม theme
   const rsvpLabel = theme === "funeral" ? "บันทึกวัน" : "เพิ่มในปฏิทิน";
 
-  const buttons = [
-    { icon: <FiUserCheck />, label: rsvpLabel, action: "rsvp" },
-    { icon: <FiMapPin />, label: "แผนที่", action: "location" },
-    { icon: <FiPhone />, label: "ติดต่อ", action: "contact" },
-    { icon: <FiShare2 />, label: copied ? "คัดลอกแล้ว!" : "แชร์", action: "share" },
+  const allButtons = [
+    { icon: <FiUserCheck />, label: rsvpLabel, action: "rsvp",     hideFor: ["anniversary"] },
+    { icon: <FiMapPin />,    label: "แผนที่",  action: "location", hideFor: ["anniversary"] },
+    { icon: <FiPhone />,     label: "ติดต่อ",  action: "contact",  hideFor: [] },
+    { icon: <FiShare2 />,    label: copied ? "คัดลอกแล้ว!" : "แชร์", action: "share", hideFor: [] },
   ];
+  const buttons = allButtons.filter(b => !b.hideFor.includes(theme));
 
   const hoverColor = theme === "funeral" ? "group-hover:text-stone-500 group-hover:border-stone-300"
     : theme === "anniversary" ? "group-hover:text-amber-600 group-hover:border-amber-200"
