@@ -9,7 +9,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import QRLightbox from "@/components/QRLightbox";
 import ShareButtons from "@/components/ShareButtons";
 // import AIChatWindow from "@/components/ai-butler/AIChatWindow"; // POST-MVP
-import { Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, AlertTriangle } from "lucide-react";
+import { Eye, Trash2, Pencil, Check, X, CalendarDays, MapPin, ChevronDown, AlertTriangle, Lock, Unlock } from "lucide-react";
 import "@/styles/dashboard.css";
 
 const THEME_META = {
@@ -377,6 +377,39 @@ function EventCard({
   const theme = THEME_META[event.theme] || THEME_META.anniversary;
   const phase = PHASE_META[event.phase || "invitation"];
 
+  // Privacy state
+  const [isPrivate, setIsPrivate] = useState(event.is_private || false);
+  const [pwInput, setPwInput] = useState("");
+  const [showPwRow, setShowPwRow] = useState(false);
+  const [savingPrivacy, setSavingPrivacy] = useState(false);
+  const [privacySaved, setPrivacySaved] = useState(false);
+
+  const handleTogglePrivate = async (val) => {
+    setIsPrivate(val);
+    setSavingPrivacy(true);
+    await fetch("/api/events/privacy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId: event.id, isPrivate: val, password: val ? (pwInput || undefined) : null }),
+    });
+    setSavingPrivacy(false);
+    if (!val) { setPwInput(""); setShowPwRow(false); }
+  };
+
+  const handleSavePassword = async () => {
+    if (!pwInput.trim()) return;
+    setSavingPrivacy(true);
+    await fetch("/api/events/privacy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ eventId: event.id, isPrivate: true, password: pwInput }),
+    });
+    setSavingPrivacy(false);
+    setPrivacySaved(true);
+    setTimeout(() => setPrivacySaved(false), 2000);
+    setShowPwRow(false);
+  };
+
   return (
     <article
       className="group rounded-xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-0.5"
@@ -537,6 +570,60 @@ function EventCard({
             </select>
             <ChevronDown size={12} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400" />
           </div>
+        </div>
+
+        {/* Privacy Row */}
+        <div className="pt-2" style={{ borderTop: "1px solid #f5f5f4" }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isPrivate
+                ? <Lock size={13} className="text-orange-500" />
+                : <Unlock size={13} className="text-stone-400" />
+              }
+              <span className="text-xs font-semibold text-stone-600">
+                {isPrivate ? "Private (ต้องรหัสผ่าน)" : "Public"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {isPrivate && (
+                <button
+                  onClick={() => setShowPwRow(v => !v)}
+                  className="text-[10px] px-2 py-0.5 rounded-full border border-orange-200 text-orange-500 hover:bg-orange-50 transition-colors"
+                >
+                  {showPwRow ? "ยกเลิก" : "ตั้งรหัส"}
+                </button>
+              )}
+              {/* Toggle switch */}
+              <button
+                onClick={() => handleTogglePrivate(!isPrivate)}
+                disabled={savingPrivacy}
+                className={`relative w-10 h-5 rounded-full transition-colors duration-200 ${isPrivate ? "bg-orange-500" : "bg-stone-200"}`}
+              >
+                <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${isPrivate ? "translate-x-5" : "translate-x-0.5"}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Password input row */}
+          {isPrivate && showPwRow && (
+            <div className="flex gap-2 mt-2">
+              <input
+                value={pwInput}
+                onChange={e => setPwInput(e.target.value)}
+                placeholder="ตั้งรหัสผ่าน"
+                className="flex-1 rounded-lg px-3 py-1.5 text-xs outline-none"
+                style={{ border: "1px solid #fed7aa", background: "#fff7ed" }}
+                onKeyDown={e => e.key === "Enter" && handleSavePassword()}
+              />
+              <button
+                onClick={handleSavePassword}
+                disabled={savingPrivacy || !pwInput.trim()}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-orange-500 hover:bg-orange-600 disabled:opacity-50 transition-colors"
+              >
+                {privacySaved ? "✓ บันทึก" : "บันทึก"}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Footer */}

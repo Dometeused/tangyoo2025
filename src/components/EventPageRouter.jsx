@@ -8,6 +8,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import MemoryPage from "@/components/MemoryPage";
 import InvitationPage from "@/components/InvitationPage";
+import PrivacyGate from "@/components/PrivacyGate";
 
 export default function EventPageRouter() {
   const { id: eventId } = useParams();
@@ -17,6 +18,7 @@ export default function EventPageRouter() {
   const [event, setEvent] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [locked, setLocked] = useState(false);
 
   useEffect(() => {
     if (!eventId) return;
@@ -56,6 +58,12 @@ export default function EventPageRouter() {
       setPhase(event.phase || "invitation");
       setRole(role);
 
+      // 5. Check privacy gate (skip for owner/admin)
+      if (event.is_private && role === "guest") {
+        const hasAccess = localStorage.getItem(`ty_access_${event.id}`) === "1";
+        if (!hasAccess) setLocked(true);
+      }
+
       setEvent(event);
       setIsReady(true);
     };
@@ -91,9 +99,19 @@ export default function EventPageRouter() {
     );
   }
 
-  // Route by phase
-  if (event.phase === "memory") return <MemoryPage event={event} />;
-  if (event.phase === "invitation") return <InvitationPage event={event} />;
+  // Route by phase (render behind the gate too)
+  const pageContent = event.phase === "memory"
+    ? <MemoryPage event={event} />
+    : event.phase === "invitation"
+    ? <InvitationPage event={event} />
+    : null;
+
+  return (
+    <>
+      {pageContent}
+      {locked && <PrivacyGate event={event} onUnlock={() => setLocked(false)} />}
+    </>
+  );
 
   // Fallback
   return (

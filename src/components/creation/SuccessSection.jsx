@@ -5,11 +5,13 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import * as htmlToImage from "html-to-image";
 
-export default function SuccessSection({ memoryId, themeKey, onGoToDashboard }) {
+export default function SuccessSection({ memoryId, slug, themeKey, onGoToDashboard }) {
   const qrRef = useRef(null);
   const [copied, setCopied] = useState(false);
   const [shared, setShared] = useState(false);
-  const memoryUrl = `https://tangyoo2025.vercel.app/event/${memoryId}`;
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://tangyoo.com";
+  const eventKey = slug || memoryId;
+  const memoryUrl = `${origin}/event/${eventKey}`;
 
   const copyLink = async () => {
     try {

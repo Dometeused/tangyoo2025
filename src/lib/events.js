@@ -5,16 +5,30 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export async function getEventById(id) {
   const supabase = createClientComponentClient();
-  const { data, error } = await supabase
+
+  // Try slug first, fallback UUID
+  let data = null;
+  const { data: bySlug } = await supabase
     .from("events")
     .select("*")
-    .eq("id", id)
+    .eq("slug", id)
     .single();
-
-  if (error) {
-    console.error("❌ getEventById Error:", error.message);
-    return null;
+  if (bySlug) {
+    data = bySlug;
+  } else {
+    const { data: byId, error } = await supabase
+      .from("events")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) {
+      console.error("❌ getEventById Error:", error.message);
+      return null;
+    }
+    data = byId;
   }
 
+  // Strip password — never expose to client
+  if (data) delete data.event_password;
   return data;
 }

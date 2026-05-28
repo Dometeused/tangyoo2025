@@ -21,13 +21,12 @@ import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 import BGMPlayer from "@/components/BGMPlayer";
 import ThemeEffect from "@/components/ThemeEffect";
 import IntroOverlay from "@/components/IntroOverlay";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function MemoryPage({ event }) {
   const { role, theme, phase } = useAppMode();
-  // Default to true if undefined, otherwise use the setting.
-  // We can also add a logic here to check localStorage if needed in the future.
   const [showIntro, setShowIntro] = useState(event?.introEffect !== false);
+  const bgmRef = useRef(null);
 
   if (!event) return <div className="min-h-screen flex items-center justify-center text-gray-400 font-light text-lg">⏳ กำลังโหลดข้อมูลแห่งความทรงจำ...</div>;
   const isOwner = role === "owner" || role === "admin";
@@ -40,12 +39,13 @@ export default function MemoryPage({ event }) {
       {showIntro && (
         <IntroOverlay
           theme={theme}
-          onComplete={() => setShowIntro(false)}
+          onComplete={() => { setShowIntro(false); bgmRef.current?.play(); }}
         />
       )}
 
       {/* BGM และ Theme Effect */}
       <BGMPlayer
+        ref={bgmRef}
         src={`/audio/${theme || "wedding"}.mp3`}
         youtubeUrl={event.youtube_link}
         isOwner={isOwner}

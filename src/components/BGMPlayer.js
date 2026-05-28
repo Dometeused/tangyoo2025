@@ -1,6 +1,6 @@
 // components/BGMPlayer.js
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { FiMusic, FiEdit2, FiCheck, FiX } from "react-icons/fi";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -13,13 +13,15 @@ function getYouTubeId(url) {
 
 function getStartSeconds(url) {
   if (!url) return 0;
-  // ?t=90 or &t=1m30s
   const tMatch = url.match(/[?&]t=(\d+)/);
   if (tMatch) return parseInt(tMatch[1]);
   return 0;
 }
 
-export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOwner, eventId }) {
+const BGMPlayer = forwardRef(function BGMPlayer(
+  { src = "/audio/wedding.mp3", youtubeUrl, isOwner, eventId },
+  ref
+) {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -32,15 +34,26 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
   const startSec = getStartSeconds(savedUrl);
   const useYoutube = !!ytId;
 
+  useImperativeHandle(ref, () => ({
+    play() {
+      if (useYoutube) {
+        setPlaying(true);
+      } else if (audioRef.current) {
+        audioRef.current.play().catch(() => {});
+        setPlaying(true);
+      }
+    },
+  }));
+
   const handleToggle = () => {
     if (useYoutube) {
-      setPlaying(p => !p);
+      setPlaying((p) => !p);
       return;
     }
     if (!audioRef.current) return;
     if (playing) audioRef.current.pause();
     else audioRef.current.play();
-    setPlaying(p => !p);
+    setPlaying((p) => !p);
   };
 
   const handleSave = async () => {
@@ -56,7 +69,6 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
 
   return (
     <div className="fixed top-5 right-5 z-50 flex flex-col items-end gap-2">
-
       {/* Edit panel — owner only */}
       {isOwner && editing && (
         <div className="flex items-center gap-2 bg-white/90 backdrop-blur rounded-2xl shadow-lg px-3 py-2 border border-rose-100">
@@ -65,7 +77,7 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
             className="text-xs outline-none w-52 bg-transparent text-stone-700 placeholder-stone-300"
             placeholder="YouTube URL (เช่น youtu.be/xxxxx?t=90)"
             value={inputUrl}
-            onChange={e => setInputUrl(e.target.value)}
+            onChange={(e) => setInputUrl(e.target.value)}
           />
           <button
             onClick={handleSave}
@@ -87,17 +99,15 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
 
       {/* Play button */}
       <div className="flex items-center gap-2 bg-white/70 backdrop-blur rounded-full shadow px-3 py-2">
-        {/* Edit icon — owner only */}
         {isOwner && (
           <button
-            onClick={() => setEditing(e => !e)}
+            onClick={() => setEditing((e) => !e)}
             className="text-stone-300 hover:text-rose-400 transition-colors mr-1"
             title="ตั้งค่าเพลง YouTube"
           >
             <FiEdit2 size={12} />
           </button>
         )}
-
         <button
           type="button"
           onClick={handleToggle}
@@ -106,7 +116,6 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
         >
           {playing ? <FaPause /> : <FaPlay />}
         </button>
-
         <span className="text-[10px] font-medium text-stone-400 tracking-wide">
           {useYoutube ? "♪ YT" : "BGM"}
         </span>
@@ -114,7 +123,10 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
 
       {/* Hidden YouTube iframe */}
       {useYoutube && playing && (
-        <div className="absolute -z-10 opacity-0 pointer-events-none overflow-hidden" style={{ width: 1, height: 1 }}>
+        <div
+          className="absolute -z-10 opacity-0 pointer-events-none overflow-hidden"
+          style={{ width: 1, height: 1 }}
+        >
           <iframe
             width="1"
             height="1"
@@ -126,9 +138,9 @@ export default function BGMPlayer({ src = "/audio/wedding.mp3", youtubeUrl, isOw
       )}
 
       {/* Local audio fallback */}
-      {!useYoutube && (
-        <audio ref={audioRef} src={src} loop />
-      )}
+      {!useYoutube && <audio ref={audioRef} src={src} loop />}
     </div>
   );
-}
+});
+
+export default BGMPlayer;

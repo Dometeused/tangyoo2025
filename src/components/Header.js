@@ -22,8 +22,8 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Hide header on preview-only pages (used as iframes)
-  if (pathname?.startsWith("/preview-event") || pathname?.startsWith("/demo/")) return null;
+  // Hide header on preview-only pages and auth pages
+  if (pathname?.startsWith("/preview-event") || pathname?.startsWith("/demo/") || pathname === "/login" || pathname === "/admin/login") return null;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {

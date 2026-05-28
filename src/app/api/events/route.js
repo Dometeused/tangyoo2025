@@ -29,6 +29,12 @@ export async function GET(req) {
   return NextResponse.json({ success: true, data });
 }
 
+// Generate unpredictable 8-char slug (a-z0-9) — hard to enumerate
+function generateEventSlug() {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+}
+
 // ===================
 // ✅ POST: เพิ่ม event ใหม่
 export async function POST(req) {
@@ -46,6 +52,14 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
   }
 
+  // Generate unique slug (retry up to 5 times on collision)
+  let slug = null;
+  for (let i = 0; i < 5; i++) {
+    const candidate = generateEventSlug();
+    const { data: existing } = await supabase.from("events").select("id").eq("slug", candidate).single();
+    if (!existing) { slug = candidate; break; }
+  }
+
   const { data, error } = await supabase
     .from("events")
     .insert([
@@ -54,8 +68,9 @@ export async function POST(req) {
         date,
         place,
         theme,
+        slug,
         bio: bio || "",
-        bio2: story || "", // Map story to bio2
+        bio2: story || "",
         timeline_events: timeline_events || [],
         cover_url: coverImage || "",
         youtube_link: youtube_link || "",
@@ -74,7 +89,6 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 
-  // ส่ง data ตรง ๆ
   return NextResponse.json({ success: true, data });
 }
 

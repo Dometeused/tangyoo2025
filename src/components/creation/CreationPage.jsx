@@ -11,6 +11,7 @@ export default function CreationPage() {
   const [step, setStep] = useState(1);
   const [themeKey, setThemeKey] = useState("");
   const [memoryId, setMemoryId] = useState("");
+  const [memorySlug, setMemorySlug] = useState("");
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
 
@@ -49,6 +50,7 @@ export default function CreationPage() {
       const json = await res.json();
       if (json.success && json.data?.id) {
         setMemoryId(json.data.id);
+        setMemorySlug(json.data.slug || "");
         setStep(3);
         window.scrollTo(0, 0);
       } else {
@@ -94,6 +96,7 @@ export default function CreationPage() {
       {step === 3 && (
         <SuccessSection
           memoryId={memoryId}
+          slug={memorySlug}
           themeKey={themeKey}
           onGoToDashboard={handleGoToDashboard}
         />

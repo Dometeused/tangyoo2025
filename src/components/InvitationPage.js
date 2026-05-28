@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAppMode } from "@/context/AppModeContext";
 import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
 import CoverSection from "@/components/CoverSection";
@@ -22,12 +22,15 @@ import StoryDivider from "@/components/StoryDivider";
 import CandleScrollTrail from "@/components/CandleScrollTrail";
 import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
+import IntroOverlay from "@/components/IntroOverlay";
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
   const isOwner = role === "owner" || role === "admin";
 
   const [showEditBioModal, setShowEditBioModal] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const bgmRef = useRef(null);
 
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
@@ -77,6 +80,12 @@ export default function InvitationPage({ event, refetchEvent }) {
 
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: theme === "funeral" ? "#f7f3ef" : "#fdf6f0" }}>
+      {showIntro && (
+        <IntroOverlay
+          theme={theme}
+          onComplete={() => { setShowIntro(false); bgmRef.current?.play(); }}
+        />
+      )}
       {/* BG Image */}
       <div
         className={`fixed inset-0 w-full h-full z-0 transition-opacity duration-1000 ${theme === 'funeral' ? 'opacity-55' : 'opacity-80'}`}
@@ -96,6 +105,7 @@ export default function InvitationPage({ event, refetchEvent }) {
 
       <div className="relative z-20 pt-24 px-6 pb-32 text-gray-800 transition-all max-w-3xl mx-auto">
         <BGMPlayer
+          ref={bgmRef}
           src={`/audio/${theme || "wedding"}.mp3`}
           youtubeUrl={event.youtube_link}
           isOwner={isOwner}
