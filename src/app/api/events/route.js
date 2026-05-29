@@ -61,28 +61,28 @@ export async function POST(req) {
     if (!existing) { slug = candidate; break; }
   }
 
+  const insertPayload = {
+    name,
+    date:           date || null,
+    place:          place || null,
+    theme,
+    slug,
+    bio:            bio || "",
+    bio2:           story || "",
+    timeline_events: timeline_events || [],
+    cover_url:      coverImage || "",
+    youtube_link:   youtube_link || "",
+    impressions:    impressions || [],
+    theme_song:     theme_song || "",
+    phase:          "invitation",
+    intro_effect:   introEffect ?? false,
+    user_id:        user.id,
+    email:          user.email,
+  };
+
   const { data, error } = await supabase
     .from("events")
-    .insert([
-      {
-        name,
-        date,
-        place,
-        theme,
-        slug,
-        bio: bio || "",
-        bio2: story || "",
-        timeline_events: timeline_events || [],
-        cover_url: coverImage || "",
-        youtube_link: youtube_link || "",
-        impressions: impressions || [],
-        theme_song: theme_song || "",
-        phase: "invitation",
-        intro_effect: introEffect ?? false,
-        user_id: user.id,
-        email: user.email,
-      },
-    ])
+    .insert([insertPayload])
     .select("*")
     .single();
 
