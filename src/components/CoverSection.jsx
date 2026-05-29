@@ -26,6 +26,9 @@ export default function CoverSection({ event, refetchEvent }) {
   const [savingPrivacy, setSavingPrivacy] = useState(false);
   const [privacySaved,  setPrivacySaved]  = useState(false);
 
+  // Section toggles
+  const [showGuestbook, setShowGuestbook] = useState(event.show_guestbook !== false);
+
   const [uploadingCover,   setUploadingCover]   = useState(false);
   const [uploadingBg,      setUploadingBg]      = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
@@ -85,9 +88,11 @@ export default function CoverSection({ event, refetchEvent }) {
     await supabase.from("events").update({
       is_private: isPrivate,
       event_password: isPrivate && password ? password : null,
+      show_guestbook: showGuestbook,
     }).eq("id", event.id);
     setSavingPrivacy(false);
     setPrivacySaved(true);
+    refetchEvent?.();
     setTimeout(() => setPrivacySaved(false), 2000);
   };
 
@@ -322,6 +327,22 @@ export default function CoverSection({ event, refetchEvent }) {
                   </button>
                 </div>
               )}
+
+              {/* Guestbook toggle */}
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                <div>
+                  <p className="text-sm font-medium text-gray-700">✍️ สมุดอวยพร</p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    {showGuestbook ? "แสดงอยู่ — แขกร่วมเขียนได้" : "ซ่อนอยู่ — เหมาะสำหรับของขวัญ"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowGuestbook(v => !v)}
+                  className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${showGuestbook ? "bg-green-500" : "bg-gray-200"}`}
+                >
+                  <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${showGuestbook ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
               <button
                 onClick={handleSavePrivacy}
                 disabled={savingPrivacy}

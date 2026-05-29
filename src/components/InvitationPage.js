@@ -218,7 +218,9 @@ export default function InvitationPage({ event, refetchEvent }) {
         <div className="flex flex-col md:flex-row gap-8 mb-12 items-start">
           {/* Left Column: Story + Guestbook */}
           <div className="md:w-1/2 w-full flex flex-col gap-16">
-            <GuestBookSection memoryId={event.id} role={role} theme={theme} />
+            {event.show_guestbook !== false && (
+              <GuestBookSection memoryId={event.id} role={role} theme={theme} />
+            )}
             <TimelineTree
               eventId={event.id}
               event={event}
