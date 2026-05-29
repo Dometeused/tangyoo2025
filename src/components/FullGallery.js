@@ -127,18 +127,15 @@ export default function FullGallery() {
     const img = gallery[index];
     const filename = img.src.split("/").pop();
 
-    // Optimistic Update
+    // Optimistic toggle (checkbox — ไม่ reset อันอื่น)
     const oldGallery = [...gallery];
-    const newGallery = gallery.map((item, i) => ({
-      ...item,
-      is_featured: i === index ? !item.is_featured : false // Assuming single featured image
-    }));
+    const newGallery = gallery.map((item, i) =>
+      i === index ? { ...item, is_featured: !item.is_featured } : item
+    );
     setGallery(newGallery);
 
     const { error } = await setFeaturedImage(eventId, filename);
-    if (error) {
-      setGallery(oldGallery);
-    }
+    if (error) setGallery(oldGallery);
   }
 
   async function handleSetCover(index) {

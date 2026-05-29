@@ -49,7 +49,7 @@ export async function updateGalleryCaption(eventId, filename, caption) {
 export async function fetchGalleryCaptions(eventId) {
   const { data, error } = await supabase
     .from("gallery_metadata")
-    .select("filename, caption, is_featured")
+    .select("filename, caption, is_featured, is_cover, is_profile")
     .eq("event_id", eventId);
 
   if (error) {
@@ -79,22 +79,45 @@ export async function getFeaturedImage(eventId) {
   return publicUrl;
 }
 
-// ✅ SET Featured Image
+// ✅ SET Featured Image — toggle + sync to events.feature_image_1/2/3
 export async function setFeaturedImage(eventId, filename) {
-  const { error: resetError } = await supabase
+  // 1. หา is_featured ปัจจุบัน
+  const { data: current } = await supabase
     .from("gallery_metadata")
-    .update({ is_featured: false })
-    .eq("event_id", eventId);
-
-  if (resetError) return { error: resetError };
-
-  const result = await supabase
-    .from("gallery_metadata")
-    .update({ is_featured: true })
+    .select("is_featured")
     .eq("event_id", eventId)
-    .eq("filename", filename);
+    .eq("filename", filename)
+    .maybeSingle();
 
-  return result;
+  const newVal = !(current?.is_featured ?? false);
+
+  // 2. Toggle
+  const { error: upsertError } = await supabase
+    .from("gallery_metadata")
+    .upsert({ event_id: eventId, filename, is_featured: newVal }, { onConflict: "event_id,filename" });
+
+  if (upsertError) return { error: upsertError };
+
+  // 3. ดึง featured images ทั้งหมด (max 3) แล้ว sync ไป events
+  const { data: featuredRows } = await supabase
+    .from("gallery_metadata")
+    .select("filename")
+    .eq("event_id", eventId)
+    .eq("is_featured", true)
+    .limit(3);
+
+  const getUrl = (fname) =>
+    supabase.storage.from("gallery").getPublicUrl(`${eventId}/${fname}`).data.publicUrl;
+
+  const urls = (featuredRows || []).map((r) => getUrl(r.filename));
+
+  await supabase.from("events").update({
+    feature_image_1: urls[0] ?? null,
+    feature_image_2: urls[1] ?? null,
+    feature_image_3: urls[2] ?? null,
+  }).eq("id", eventId);
+
+  return { error: null };
 }
 
 // ✅ SET Cover Image
