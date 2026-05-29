@@ -34,8 +34,9 @@ export default function FullGallery() {
   const { id: eventId } = useParams();
   const [gallery, setGallery] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadToast, setUploadToast] = useState(""); // "" | "success" | "error"
   const [isOwner, setIsOwner] = useState(false);
-  const [editMode, setEditMode] = useState(false); // Toggle cleanup mode
+  const [editMode, setEditMode] = useState(false);
   const { theme, phase } = useAppMode();
 
   // Theme Logic
@@ -193,19 +194,35 @@ export default function FullGallery() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     setUploading(true);
+    setUploadToast("");
+
+    let successCount = 0;
+    let errorCount = 0;
 
     for (const file of files) {
       const formData = new FormData();
       formData.append("file", file);
-
-      await fetch(`/api/gallery/upload?eventId=${eventId}`, {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const res = await fetch(`/api/gallery/upload?eventId=${eventId}`, {
+          method: "POST",
+          body: formData,
+        });
+        if (res.ok) successCount++;
+        else errorCount++;
+      } catch {
+        errorCount++;
+      }
     }
 
     setUploading(false);
-    fetchImages();
+    await fetchImages();
+
+    if (errorCount === 0) {
+      setUploadToast(`✓ อัปโหลดสำเร็จ ${successCount} รูป`);
+    } else {
+      setUploadToast(`⚠ สำเร็จ ${successCount} / ไม่สำเร็จ ${errorCount} รูป`);
+    }
+    setTimeout(() => setUploadToast(""), 4000);
   }
 
   const slides = gallery.map((img) => ({
@@ -253,6 +270,13 @@ export default function FullGallery() {
           </div>
         )}
       </div>
+
+      {/* Upload Toast */}
+      {uploadToast && (
+        <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-xl text-sm font-medium text-white transition-all ${uploadToast.startsWith("✓") ? "bg-green-500" : "bg-orange-500"}`}>
+          {uploadToast}
+        </div>
+      )}
 
       {/* Masonry Grid */}
       {gallery.length > 0 ? (

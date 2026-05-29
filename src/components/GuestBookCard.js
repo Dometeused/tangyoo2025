@@ -222,7 +222,7 @@ export default function GuestBookCard({
       </div>
 
       {showLightbox && (
-        <Modal onClose={() => setShowLightbox(false)}>
+        <Modal onClose={() => setShowLightbox(false)} variant="lightbox">
           <img src={photoUrl} alt="รูปจากแขก"
             className="max-w-full max-h-[90vh] mx-auto rounded-2xl shadow"
             style={{ background: "transparent", border: "none" }} />
