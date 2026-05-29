@@ -228,7 +228,7 @@ export default function InvitationPage({ event, refetchEvent }) {
           </div>
 
           {/* Right Column: Sticky Poster */}
-          <div className="md:w-1/2 w-full sticky top-24 self-start">
+          <div className="md:w-1/2 w-full sticky top-24 self-start z-10">
             <BioBox2
               // Wedding
               bridePic={event.bridePic}

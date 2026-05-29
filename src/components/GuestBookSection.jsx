@@ -100,8 +100,8 @@ export default function GuestBookSection({
   return (
     <section className="w-full flex flex-col items-center py-10 px-2 md:px-0">
 
-      {/* HEADER ACTION AREA - Z-index fix */}
-      <div className="relative w-full max-w-6xl flex justify-between items-center mb-6 px-4 z-20">
+      {/* HEADER ACTION AREA */}
+      <div className="relative w-full max-w-6xl flex justify-between items-center mb-6 px-4 z-[5]">
         {/* Navigation Controls (Top) */}
         <div className="flex gap-4">
           {currentPage > 0 && (
