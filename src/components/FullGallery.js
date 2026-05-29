@@ -35,9 +35,10 @@ export default function FullGallery() {
   const { id: eventId } = useParams();
   const [gallery, setGallery] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [uploadToast, setUploadToast] = useState(""); // "" | "success" | "error"
+  const [uploadToast, setUploadToast] = useState("");
   const [isOwner, setIsOwner] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [featuredUrls, setFeaturedUrls] = useState([]); // URLs ที่ pin ไว้ (max 3)
   const { theme, phase } = useAppMode();
 
   // Theme Logic
@@ -77,7 +78,21 @@ export default function FullGallery() {
 
   useEffect(() => {
     fetchImages();
+    fetchFeatured();
   }, [eventId]);
+
+  // โหลด feature_image_1/2/3 จาก events table
+  async function fetchFeatured() {
+    if (!eventId) return;
+    const { data } = await supabase
+      .from("events")
+      .select("feature_image_1, feature_image_2, feature_image_3")
+      .eq("id", eventId)
+      .single();
+    if (data) {
+      setFeaturedUrls([data.feature_image_1, data.feature_image_2, data.feature_image_3].filter(Boolean));
+    }
+  }
 
   async function fetchImages() {
     if (!eventId) return;
@@ -124,18 +139,41 @@ export default function FullGallery() {
   }
 
   async function handleSetFeatured(index) {
-    const img = gallery[index];
-    const filename = img.src.split("/").pop();
+    const imgUrl = gallery[index].src;
+    const alreadyFeatured = featuredUrls.includes(imgUrl);
 
-    // Optimistic toggle (checkbox — ไม่ reset อันอื่น)
-    const oldGallery = [...gallery];
-    const newGallery = gallery.map((item, i) =>
-      i === index ? { ...item, is_featured: !item.is_featured } : item
-    );
-    setGallery(newGallery);
+    let newFeatured;
+    if (alreadyFeatured) {
+      // เอาออก
+      newFeatured = featuredUrls.filter(u => u !== imgUrl);
+    } else {
+      // เพิ่ม (max 3)
+      if (featuredUrls.length >= 3) {
+        setUploadToast("⚠ เลือกได้สูงสุด 3 รูป — เอาออกก่อนแล้วค่อยเพิ่ม");
+        setTimeout(() => setUploadToast(""), 3000);
+        return;
+      }
+      newFeatured = [...featuredUrls, imgUrl];
+    }
 
-    const { error } = await setFeaturedImage(eventId, filename);
-    if (error) setGallery(oldGallery);
+    // Optimistic update
+    setFeaturedUrls(newFeatured);
+
+    // บันทึกลง events table โดยตรง
+    const { error } = await supabase.from("events").update({
+      feature_image_1: newFeatured[0] ?? null,
+      feature_image_2: newFeatured[1] ?? null,
+      feature_image_3: newFeatured[2] ?? null,
+    }).eq("id", eventId);
+
+    if (error) {
+      setFeaturedUrls(featuredUrls); // revert
+      setUploadToast("⚠ บันทึกไม่สำเร็จ: " + error.message);
+      setTimeout(() => setUploadToast(""), 4000);
+    } else {
+      setUploadToast(alreadyFeatured ? "เอารูปออกจากหน้างานแล้ว" : "✓ ปักหมุดขึ้นหน้างานแล้ว");
+      setTimeout(() => setUploadToast(""), 2500);
+    }
   }
 
   async function handleSetCover(index) {
@@ -308,11 +346,13 @@ export default function FullGallery() {
                   </div>
                 )}
 
-                {/* Badges (Always Visible) */}
+                {/* Badges */}
                 <div className="absolute top-2 left-2 flex flex-col gap-1">
-                  {img.is_featured && <span className="bg-yellow-400/90 text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">Featured</span>}
-                  {img.is_cover && <span className="bg-green-500/90 text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">Cover</span>}
-                  {img.is_profile && <span className="bg-blue-500/90 text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">Profile</span>}
+                  {featuredUrls.includes(img.src) && (
+                    <span className="bg-yellow-400/90 text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">⭐ หน้างาน</span>
+                  )}
+                  {img.is_cover   && <span className="bg-green-500/90 text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">Cover</span>}
+                  {img.is_profile && <span className="bg-blue-500/90  text-white text-[10px] px-2 py-1 rounded-full shadow-sm backdrop-blur-sm">Profile</span>}
                 </div>
 
                 {/* Edit Mode Overlays */}
@@ -321,8 +361,8 @@ export default function FullGallery() {
                     <div className="flex flex-wrap justify-center gap-2 mb-4">
                       <button
                         onClick={() => handleSetFeatured(index)}
-                        className={`p-3 rounded-full shadow-lg hover:scale-110 transition ${img.is_featured ? "bg-yellow-400 text-white" : "bg-white text-gray-400"}`}
-                        title="ตั้งเป็น Featured"
+                        className={`p-3 rounded-full shadow-lg hover:scale-110 transition ${featuredUrls.includes(img.src) ? "bg-yellow-400 text-white" : "bg-white text-gray-400"}`}
+                        title={featuredUrls.includes(img.src) ? "เอาออกจากหน้างาน" : "ปักหมุดขึ้นหน้างาน (max 3)"}
                       >
                         <FaStar />
                       </button>
