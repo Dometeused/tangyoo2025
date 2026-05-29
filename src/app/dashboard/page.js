@@ -79,22 +79,21 @@ export default function DashboardPage() {
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const name = form.get("name")?.trim();
-    const date = form.get("date");
-    const place = form.get("place")?.trim();
+    const name  = form.get("name")?.trim();
+    const date  = form.get("date") || null;
+    const place = form.get("place")?.trim() || null;
+    const theme = form.get("theme") || "wedding";
 
-    // Client-side validation
+    // ชื่อ Event เท่านั้นที่บังคับ — วันที่/สถานที่เพิ่มทีหลังได้
     const errors = {};
     if (!name) errors.name = "กรุณากรอกชื่อ Event";
-    if (!date) errors.date = "กรุณาเลือกวันที่";
-    if (!place) errors.place = "กรุณากรอกสถานที่";
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
     setFormErrors({});
 
-    const newEvent = { name, date, place, introEffect: form.get("introEffect") === "on", theme: "wedding" };
+    const newEvent = { name, date, place, introEffect: form.get("introEffect") === "on", theme };
     const res = await fetch("/api/events", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -252,9 +251,11 @@ export default function DashboardPage() {
 
           <form onSubmit={handleCreateEvent}>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+
+              {/* ชื่อ Event */}
               <div className="md:col-span-4 space-y-1.5">
                 <label className="block text-xs font-semibold text-stone-500 uppercase tracking-widest">
-                  ชื่อ Event
+                  ชื่อ Event <span className="text-red-400">*</span>
                 </label>
                 <input
                   name="name"
@@ -271,44 +272,61 @@ export default function DashboardPage() {
                 />
                 {formErrors.name && <p className="text-xs text-red-500 mt-0.5">{formErrors.name}</p>}
               </div>
+
+              {/* Theme */}
+              <div className="md:col-span-2 space-y-1.5">
+                <label className="block text-xs font-semibold text-stone-500 uppercase tracking-widest">
+                  ประเภท
+                </label>
+                <div className="relative">
+                  <select
+                    name="theme"
+                    defaultValue="wedding"
+                    className="w-full appearance-none rounded-lg px-4 py-2.5 text-sm text-stone-800 outline-none transition-all cursor-pointer"
+                    style={{ background: "#fff", border: "1px solid #e7e5e3", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)" }}
+                    onFocus={e => e.target.style.borderColor = "#f97316"}
+                    onBlur={e => e.target.style.borderColor = "#e7e5e3"}
+                  >
+                    <option value="wedding">💍 Wedding</option>
+                    <option value="anniversary">✨ Anniversary</option>
+                    <option value="funeral">🕯️ Funeral</option>
+                    <option value="baby">🍼 Baby</option>
+                  </select>
+                  <ChevronDown size={12} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                </div>
+              </div>
+
+              {/* วันที่ (optional) */}
               <div className="md:col-span-3 space-y-1.5">
                 <label className="block text-xs font-semibold text-stone-500 uppercase tracking-widest">
-                  วันที่
+                  วันที่ <span className="text-stone-300 normal-case font-normal">(optional)</span>
                 </label>
                 <input
                   name="date"
                   type="date"
                   className="w-full rounded-lg px-4 py-2.5 text-sm text-stone-800 outline-none transition-all"
-                  style={{
-                    background: "#fff",
-                    border: `1px solid ${formErrors.date ? "#ef4444" : "#e7e5e3"}`,
-                    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
-                  }}
-                  onFocus={e => e.target.style.borderColor = formErrors.date ? "#ef4444" : "#f97316"}
-                  onBlur={e => e.target.style.borderColor = formErrors.date ? "#ef4444" : "#e7e5e3"}
-                  onChange={() => setFormErrors(p => ({ ...p, date: undefined }))}
+                  style={{ background: "#fff", border: "1px solid #e7e5e3", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)" }}
+                  onFocus={e => e.target.style.borderColor = "#f97316"}
+                  onBlur={e => e.target.style.borderColor = "#e7e5e3"}
                 />
-                {formErrors.date && <p className="text-xs text-red-500 mt-0.5">{formErrors.date}</p>}
               </div>
-              <div className="md:col-span-3 space-y-1.5">
+
+              {/* สถานที่ (optional) */}
+              <div className="md:col-span-1 space-y-1.5">
                 <label className="block text-xs font-semibold text-stone-500 uppercase tracking-widest">
-                  สถานที่
+                  สถานที่ <span className="text-stone-300 normal-case font-normal">(optional)</span>
                 </label>
                 <input
                   name="place"
-                  placeholder="เช่น โรงแรมดุสิตธานี"
+                  placeholder="ชื่อสถานที่"
                   className="w-full rounded-lg px-4 py-2.5 text-sm text-stone-800 outline-none transition-all"
-                  style={{
-                    background: "#fff",
-                    border: `1px solid ${formErrors.place ? "#ef4444" : "#e7e5e3"}`,
-                    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)",
-                  }}
-                  onFocus={e => e.target.style.borderColor = formErrors.place ? "#ef4444" : "#f97316"}
-                  onBlur={e => e.target.style.borderColor = formErrors.place ? "#ef4444" : "#e7e5e3"}
-                  onChange={() => setFormErrors(p => ({ ...p, place: undefined }))}
+                  style={{ background: "#fff", border: "1px solid #e7e5e3", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.04)" }}
+                  onFocus={e => e.target.style.borderColor = "#f97316"}
+                  onBlur={e => e.target.style.borderColor = "#e7e5e3"}
                 />
-                {formErrors.place && <p className="text-xs text-red-500 mt-0.5">{formErrors.place}</p>}
               </div>
+
+              {/* Submit */}
               <div className="md:col-span-2 flex flex-col gap-1">
                 <button
                   type="submit"
@@ -319,6 +337,7 @@ export default function DashboardPage() {
                 </button>
                 {formErrors.general && <p className="text-xs text-red-500 text-center">{formErrors.general}</p>}
               </div>
+
             </div>
           </form>
         </section>
