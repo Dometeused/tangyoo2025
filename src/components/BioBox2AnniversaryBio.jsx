@@ -7,20 +7,19 @@ const GOLD      = "#b8800a";
 const GOLD_MID  = "#d4a820";
 const GOLD_LITE = "#e8cc70";
 const LINE      = "#eddfa8";
-const DARK      = "#3a2400";
 const MUTED     = "#7a5c20";
 const SOFT      = "#a08840";
 
 /* ── Gold ornamental line ───────────────────────────── */
 function GoldLine({ label }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 20px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "0 24px" }}>
       <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${LINE} 80%)` }} />
       {label
-        ? <span style={{ color: GOLD_MID, fontSize: "8px", letterSpacing: "0.3em", whiteSpace: "nowrap", fontWeight: 500 }}>
+        ? <span style={{ color: GOLD_MID, fontSize: "9px", letterSpacing: "0.32em", whiteSpace: "nowrap", fontWeight: 600 }}>
             {label}
           </span>
-        : <span style={{ color: GOLD_LITE, fontSize: "8px" }}>✦</span>
+        : <span style={{ color: GOLD_LITE, fontSize: "10px" }}>✦</span>
       }
       <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${LINE} 80%)` }} />
     </div>
@@ -28,13 +27,18 @@ function GoldLine({ label }) {
 }
 
 /* ── Round couple photo slot ───────────────────────── */
-function RoundPhoto({ src, size = 80 }) {
+function RoundPhoto({ src, size = 110 }) {
   return (
     <div style={{
       width: size, height: size,
       borderRadius: "50%",
-      border: `2px solid ${GOLD_LITE}`,
-      boxShadow: `0 0 0 3px rgba(212,168,32,0.12), 0 4px 16px rgba(180,120,0,0.18)`,
+      /* double ring: white gap + gold outer */
+      boxShadow: `
+        0 0 0 3px ${BG},
+        0 0 0 5px ${GOLD_LITE},
+        0 0 0 7px ${BG},
+        0 6px 20px rgba(180,120,0,0.22)
+      `,
       background: LINE,
       overflow: "hidden",
       flexShrink: 0,
@@ -42,7 +46,7 @@ function RoundPhoto({ src, size = 80 }) {
       {src
         ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: GOLD_LITE, fontSize: "18px" }}>✦</span>
+            <span style={{ color: GOLD_LITE, fontSize: "22px" }}>✦</span>
           </div>
       }
     </div>
@@ -57,64 +61,73 @@ export default function BioBox2AnniversaryBio({
   funFact1, funFact2,
   className, style,
 }) {
-  // Extract year number from brideBio e.g. "25" or "25 ปี\nแห่งรัก" → "25"
-  const yearNum = (brideBio || "").match(/\d+/)?.[0] || "✦";
-  // Rest of brideBio after the number (the label, e.g. "ปีแห่งความรัก")
+  const yearNum   = (brideBio || "").match(/\d+/)?.[0] || "✦";
   const yearLabel = (brideBio || "")
-    .replace(/\d+/, "")
-    .replace(/\n/g, " ")
-    .trim() || "ปีแห่งความรัก";
+    .replace(/\d+/, "").replace(/\n/g, " ").trim() || "ปีแห่งความรัก";
 
   return (
     <div
       className={`w-full flex flex-col overflow-hidden ${className ?? ""}`}
-      style={{ background: BG, fontFamily: "var(--font-kanit, sans-serif)", position: "relative", justifyContent: "space-between", ...style }}
+      style={{
+        background: BG,
+        fontFamily: "var(--font-kanit, sans-serif)",
+        position: "relative",
+        justifyContent: "space-between",
+        ...style,
+      }}
     >
-
-      {/* ── Subtle gold corner ornament ── */}
+      {/* Subtle top glow */}
       <div style={{
         position: "absolute", top: 0, left: 0, right: 0,
-        height: "30%",
-        background: "linear-gradient(180deg, rgba(232,204,112,0.12) 0%, transparent 100%)",
+        height: "35%",
+        background: "linear-gradient(180deg, rgba(232,204,112,0.14) 0%, transparent 100%)",
         pointerEvents: "none",
       }} />
 
       {/* ═══ TOP GROUP ═══ */}
       <div>
-        {/* ── Top ornamental header ── */}
-        <div style={{ padding: "14px 20px 10px", display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {/* Header ornament */}
+        <div style={{ padding: "16px 24px 12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ flex: 1, height: 1, background: LINE }} />
-            <span style={{ color: GOLD_LITE, fontSize: "8px", letterSpacing: "0.35em" }}>✦ ✦ ✦</span>
+            <span style={{ color: GOLD_LITE, fontSize: "9px", letterSpacing: "0.4em" }}>✦ ✦ ✦</span>
             <div style={{ flex: 1, height: 1, background: LINE }} />
           </div>
         </div>
 
-        {/* ── Hero: Photos + Year number ── */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, padding: "4px 24px 8px" }}>
+        {/* Hero: Photos + Year */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: 10, padding: "0 20px 12px",
+        }}>
           <RoundPhoto src={bridePic} />
 
           {/* Center milestone */}
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0 }}>
+            {/* Year number — Playfair Display */}
             <div style={{
-              fontSize: "clamp(3.2rem,14vw,4.5rem)",
-              fontWeight: 700,
+              fontFamily: "var(--font-playfair, Georgia, serif)",
+              fontSize: "clamp(3.6rem,15vw,5rem)",
+              fontWeight: 800,
               lineHeight: 1,
               letterSpacing: "-0.02em",
-              background: `linear-gradient(180deg, ${GOLD_LITE} 0%, ${GOLD_MID} 45%, ${GOLD} 100%)`,
+              background: `linear-gradient(180deg, ${GOLD_LITE} 0%, ${GOLD_MID} 40%, ${GOLD} 100%)`,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              filter: "drop-shadow(0 2px 6px rgba(180,120,0,0.3))",
+              filter: "drop-shadow(0 2px 8px rgba(180,120,0,0.28))",
             }}>
               {yearNum}
             </div>
+            {/* Year label */}
             <div style={{
-              fontSize: "9px",
+              fontFamily: "var(--font-playfair, Georgia, serif)",
+              fontStyle: "italic",
+              fontSize: "11px",
               color: MUTED,
-              letterSpacing: "0.18em",
+              letterSpacing: "0.12em",
               textAlign: "center",
-              marginTop: 2,
+              marginTop: 4,
             }}>
               {yearLabel}
             </div>
@@ -123,20 +136,21 @@ export default function BioBox2AnniversaryBio({
           <RoundPhoto src={groomPic} />
         </div>
 
-        {/* ── "Since" label from groomBio ── */}
-        <div style={{ margin: "4px 0 10px" }}>
+        {/* SINCE label */}
+        <div style={{ margin: "0 0 12px" }}>
           <GoldLine label={groomBio || "SINCE · 2000"} />
         </div>
 
-        {/* ── Love story quote ── */}
+        {/* Quote */}
         {eventBio && (
-          <div style={{ padding: "0 22px 8px" }}>
+          <div style={{ padding: "0 26px 10px" }}>
             <p style={{
-              fontSize: "10px",
-              color: SOFT,
-              lineHeight: 1.85,
-              textAlign: "center",
+              fontFamily: "var(--font-playfair, Georgia, serif)",
               fontStyle: "italic",
+              fontSize: "11px",
+              color: SOFT,
+              lineHeight: 2,
+              textAlign: "center",
               whiteSpace: "pre-line",
             }}>
               &ldquo;{eventBio}&rdquo;
@@ -146,64 +160,70 @@ export default function BioBox2AnniversaryBio({
       </div>
 
       {/* ═══ MIDDLE ORNAMENT ═══ */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, padding: "0 28px" }}>
-        {/* Decorative lines */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "0 32px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${GOLD_MID})` }} />
-          <span style={{ color: GOLD_MID, fontSize: "8px", letterSpacing: "0.2em" }}>✦</span>
+          <span style={{ color: GOLD_MID, fontSize: "9px" }}>✦</span>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${GOLD_MID})` }} />
         </div>
-        {/* Big heart */}
+
+        {/* Heart */}
         <span style={{
-          fontSize: "38px",
+          fontSize: "44px",
           lineHeight: 1,
           background: `linear-gradient(160deg, ${GOLD_LITE} 0%, ${GOLD_MID} 60%, ${GOLD} 100%)`,
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          filter: "drop-shadow(0 1px 4px rgba(180,120,0,0.25))",
+          filter: "drop-shadow(0 2px 6px rgba(180,120,0,0.28))",
         }}>♡</span>
-        {/* Tagline */}
-        <p style={{ fontSize: "7.5px", color: MUTED, letterSpacing: "0.32em", textAlign: "center" }}>
+
+        <p style={{
+          fontFamily: "var(--font-playfair, Georgia, serif)",
+          fontSize: "8px",
+          color: MUTED,
+          letterSpacing: "0.38em",
+          textAlign: "center",
+        }}>
           LOVE · TIME · FOREVER
         </p>
-        {/* Bottom lines */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${GOLD_MID})` }} />
-          <span style={{ color: GOLD_MID, fontSize: "8px", letterSpacing: "0.2em" }}>✦</span>
+          <span style={{ color: GOLD_MID, fontSize: "9px" }}>✦</span>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${GOLD_MID})` }} />
         </div>
       </div>
 
       {/* ═══ BOTTOM GROUP ═══ */}
       <div>
-        {/* ── Fun facts row ── */}
+        {/* Fun facts */}
         {(funFact1 || funFact2) && (
           <>
-            <div style={{ margin: "0 0 8px" }}>
+            <div style={{ margin: "0 0 10px" }}>
               <GoldLine />
             </div>
-            <div style={{ display: "flex", gap: 0, padding: "0 20px 8px" }}>
+            <div style={{ display: "flex", gap: 0, padding: "0 22px 10px" }}>
               {funFact1 && (
-                <div style={{ flex: 1, paddingRight: 10, borderRight: `1px solid ${LINE}` }}>
-                  <p style={{ fontSize: "9px", color: MUTED, lineHeight: 1.7, textAlign: "center" }}>{funFact1}</p>
+                <div style={{ flex: 1, paddingRight: 12, borderRight: `1px solid ${LINE}` }}>
+                  <p style={{ fontSize: "10px", color: MUTED, lineHeight: 1.8, textAlign: "center" }}>{funFact1}</p>
                 </div>
               )}
               {funFact2 && (
-                <div style={{ flex: 1, paddingLeft: 10 }}>
-                  <p style={{ fontSize: "9px", color: MUTED, lineHeight: 1.7, textAlign: "center" }}>{funFact2}</p>
+                <div style={{ flex: 1, paddingLeft: 12 }}>
+                  <p style={{ fontSize: "10px", color: MUTED, lineHeight: 1.8, textAlign: "center" }}>{funFact2}</p>
                 </div>
               )}
             </div>
           </>
         )}
 
-        {/* ── Footer ── */}
-        <div style={{ padding: "6px 20px 14px", display: "flex", flexDirection: "column", gap: 5 }}>
+        {/* Footer */}
+        <div style={{ padding: "6px 24px 16px", display: "flex", flexDirection: "column", gap: 6 }}>
           <GoldLine />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "7px", color: SOFT, letterSpacing: "0.12em" }}>✦ TANGYOO</span>
-            <span style={{ fontSize: "7px", color: SOFT, letterSpacing: "0.12em" }}>MEMORY FOREVER ✦</span>
+            <span style={{ fontSize: "7.5px", color: SOFT, letterSpacing: "0.14em" }}>✦ TANGYOO</span>
+            <span style={{ fontSize: "7.5px", color: SOFT, letterSpacing: "0.14em" }}>MEMORY FOREVER ✦</span>
           </div>
         </div>
       </div>
