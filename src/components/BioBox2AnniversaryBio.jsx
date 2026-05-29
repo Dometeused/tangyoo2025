@@ -27,7 +27,7 @@ function GoldLine({ label }) {
 }
 
 /* ── Round couple photo slot ───────────────────────── */
-function RoundPhoto({ src, size = 110 }) {
+function RoundPhoto({ src, size = 140 }) {
   return (
     <div style={{
       width: size, height: size,
@@ -35,9 +35,9 @@ function RoundPhoto({ src, size = 110 }) {
       /* double ring: white gap + gold outer */
       boxShadow: `
         0 0 0 3px ${BG},
-        0 0 0 5px ${GOLD_LITE},
-        0 0 0 7px ${BG},
-        0 6px 20px rgba(180,120,0,0.22)
+        0 0 0 6px ${GOLD_LITE},
+        0 0 0 9px ${BG},
+        0 8px 24px rgba(180,120,0,0.25)
       `,
       background: LINE,
       overflow: "hidden",
@@ -98,7 +98,7 @@ export default function BioBox2AnniversaryBio({
         {/* Hero: Photos + Year */}
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "center",
-          gap: 10, padding: "0 20px 12px",
+          gap: 6, padding: "0 16px 14px",
         }}>
           <RoundPhoto src={bridePic} />
 
@@ -107,7 +107,7 @@ export default function BioBox2AnniversaryBio({
             {/* Year number — Playfair Display */}
             <div style={{
               fontFamily: "var(--font-playfair, Georgia, serif)",
-              fontSize: "clamp(3.6rem,15vw,5rem)",
+              fontSize: "clamp(3rem,12vw,4.2rem)",
               fontWeight: 800,
               lineHeight: 1,
               letterSpacing: "-0.02em",
@@ -123,11 +123,11 @@ export default function BioBox2AnniversaryBio({
             <div style={{
               fontFamily: "var(--font-playfair, Georgia, serif)",
               fontStyle: "italic",
-              fontSize: "11px",
+              fontSize: "10px",
               color: MUTED,
-              letterSpacing: "0.12em",
+              letterSpacing: "0.10em",
               textAlign: "center",
-              marginTop: 4,
+              marginTop: 3,
             }}>
               {yearLabel}
             </div>
