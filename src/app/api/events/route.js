@@ -48,7 +48,8 @@ export async function POST(req) {
   }
 
   const { name, date, place, theme, bio, story, timeline_events, coverImage, youtube_link, impressions, theme_song, introEffect } = await req.json();
-  if (!name || !date || !place || !theme) {
+  // date + place เป็น optional — เพิ่มทีหลังได้
+  if (!name || !theme) {
     return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
   }
 
