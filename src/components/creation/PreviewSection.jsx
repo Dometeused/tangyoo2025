@@ -46,8 +46,7 @@ export default function PreviewSection({ themeKey, onBack, onNext, loading }) {
   const handleSubmit = () => {
     const errs = {};
     if (!formData.name.trim()) errs.name = "กรุณากรอกชื่องาน";
-    if (!formData.date)        errs.date = "กรุณาเลือกวันที่";
-    if (!formData.place.trim()) errs.place = "กรุณากรอกสถานที่";
+    // date + place เป็น optional — เพิ่มทีหลังได้
     if (Object.keys(errs).length > 0) { setErrors(errs); return; }
     onNext(formData);
   };

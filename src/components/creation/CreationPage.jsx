@@ -54,10 +54,10 @@ export default function CreationPage() {
         setStep(3);
         window.scrollTo(0, 0);
       } else {
-        setCreateError("สร้าง Event ไม่สำเร็จ กรุณาลองใหม่");
+        setCreateError(`สร้าง Event ไม่สำเร็จ: ${json.error || "กรุณาลองใหม่"}`);
       }
-    } catch {
-      setCreateError("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    } catch (err) {
+      setCreateError(`เกิดข้อผิดพลาด: ${err.message}`);
     } finally {
       setCreating(false);
     }

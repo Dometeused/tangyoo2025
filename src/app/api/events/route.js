@@ -87,7 +87,8 @@ export async function POST(req) {
     .single();
 
   if (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error("[events POST] Supabase error:", error);
+    return NextResponse.json({ success: false, error: error.message, details: error.details }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, data });
