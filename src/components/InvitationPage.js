@@ -164,7 +164,7 @@ export default function InvitationPage({ event, refetchEvent }) {
           <BioBox bio={event.bio} eventId={event.id} theme={theme} phase={phase} />
         </div>
         <div className="mb-8">
-          <CoverSection event={event} />
+          <CoverSection event={event} refetchEvent={refetchEvent} />
         </div>
         <div className="mb-8">
           <ButtonGroupSection event={event} isOwner={isOwner} />

@@ -379,7 +379,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
 
       {/* ── Lightbox ── */}
       {showLightbox && (
-        <Modal onClose={() => setShowLightbox(null)}>
+        <Modal onClose={() => setShowLightbox(null)} variant="lightbox">
           <img src={showLightbox} className="max-w-full max-h-[85vh] rounded-xl shadow-2xl" alt="Preview" />
         </Modal>
       )}

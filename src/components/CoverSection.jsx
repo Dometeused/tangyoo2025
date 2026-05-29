@@ -5,7 +5,7 @@ import { useAppMode } from "@/context/AppModeContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Modal from "@/components/Modal";
 
-export default function CoverSection({ event }) {
+export default function CoverSection({ event, refetchEvent }) {
   const { role } = useAppMode();
   const isOwner = role === "owner" || role === "admin";
   const supabase = createClientComponentClient();
@@ -29,19 +29,24 @@ export default function CoverSection({ event }) {
   const [uploadingBg,      setUploadingBg]      = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [uploadError,      setUploadError]      = useState("");
+  const [uploadSuccess,    setUploadSuccess]    = useState("");
 
   // Upload helper
-  const uploadImage = async (file, dbField, onSuccess) => {
+  const uploadImage = async (file, dbField, onSuccess, label = "รูป") => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setUploadError("Session หมดอายุ กรุณา login ใหม่"); return; }
+    if (!user) { setUploadError("Session หมดอายุ กรุณา login ใหม่"); return false; }
     const filePath = `${user.id}/${Date.now()}_${file.name}`;
     const { error: upErr } = await supabase.storage.from("gallery").upload(filePath, file, { upsert: true });
-    if (upErr) { setUploadError("อัปโหลดไม่สำเร็จ"); return; }
+    if (upErr) { setUploadError("อัปโหลดไม่สำเร็จ: " + upErr.message); return false; }
     const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(filePath);
     const { error: dbErr } = await supabase.from("events").update({ [dbField]: urlData.publicUrl }).eq("id", event.id);
-    if (dbErr) { setUploadError("บันทึกไม่สำเร็จ"); return; }
+    if (dbErr) { setUploadError("บันทึกไม่สำเร็จ: " + dbErr.message); return false; }
     onSuccess(urlData.publicUrl);
     setUploadError("");
+    setUploadSuccess(`✓ อัปโหลด${label}สำเร็จ`);
+    setTimeout(() => setUploadSuccess(""), 3000);
+    refetchEvent?.();
+    return true;
   };
 
   const handleMoveCover = async (delta) => {
@@ -53,21 +58,21 @@ export default function CoverSection({ event }) {
   const handleUploadCover = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingCover(true);
-    await uploadImage(file, "cover_url", (url) => { setCoverUrl(url); if (!bgUrl) setBgUrl(url); });
+    await uploadImage(file, "cover_url", (url) => { setCoverUrl(url); if (!bgUrl) setBgUrl(url); }, "ภาพปก");
     setUploadingCover(false);
   };
 
   const handleUploadBg = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingBg(true);
-    await uploadImage(file, "bg_url", (url) => setBgUrl(url));
+    await uploadImage(file, "bg_url", (url) => setBgUrl(url), "ภาพพื้นหลัง");
     setUploadingBg(false);
   };
 
   const handleUploadProfile = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingProfile(true);
-    await uploadImage(file, "profile_url", (url) => { setProfileUrl(url); setShowProfile(true); });
+    await uploadImage(file, "profile_url", (url) => { setProfileUrl(url); setShowProfile(true); }, "โปรไฟล์");
     setUploadingProfile(false);
   };
 
@@ -182,6 +187,11 @@ export default function CoverSection({ event }) {
             {uploadError && (
               <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-2">
                 {uploadError}
+              </div>
+            )}
+            {uploadSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl px-4 py-2 flex items-center gap-2">
+                {uploadSuccess}
               </div>
             )}
 
