@@ -3,7 +3,7 @@ import supabase from "@/lib/supabaseClient";
 
 // ✅ GET URLs
 export async function listGalleryImages(eventId) {
-  const bucket = "event-gallery";
+  const bucket = "gallery";
   const { data, error } = await supabase.storage
     .from(bucket)
     .list(eventId, { limit: 100, offset: 0 });
@@ -16,7 +16,7 @@ export async function listGalleryImages(eventId) {
 
 // ✅ DELETE image + caption
 export async function deleteGalleryImage(eventId, filename) {
-  const bucket = "event-gallery";
+  const bucket = "gallery";
 
   const { error: storageError } = await supabase.storage
     .from(bucket)
@@ -71,7 +71,7 @@ export async function getFeaturedImage(eventId) {
 
   if (error || !data) return null;
 
-  const bucket = "event-gallery";
+  const bucket = "gallery";
   const publicUrl = supabase.storage
     .from(bucket)
     .getPublicUrl(`${eventId}/${data.filename}`).data.publicUrl;
