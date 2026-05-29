@@ -48,7 +48,7 @@ export default function BioBox2EditModal({
     <>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full relative">
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={onClose}
               className="absolute top-3 right-3 text-xl text-gray-400 hover:text-black"

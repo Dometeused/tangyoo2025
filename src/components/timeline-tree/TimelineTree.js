@@ -39,6 +39,10 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
   const dotRefs = useRef([]);
   const [glowAnim, setGlowAnim] = useState(null);
 
+  /* ─── Scroll highlight tracker ─── */
+  const itemRefs  = useRef([]);
+  const [activeIdx, setActiveIdx] = useState(0);
+
   useEffect(() => {
     if (theme !== "funeral" || milestones.length === 0) return;
 
@@ -91,6 +95,26 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
 
     return () => clearTimeout(timer);
   }, [milestones.length, theme]);
+
+  /* ─── Scroll highlight: window scroll → nearest item to 40% viewport ─── */
+  useEffect(() => {
+    const handleScroll = () => {
+      const target = window.innerHeight * 0.4;
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      itemRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - target);
+        if (dist < bestDist) { bestDist = dist; bestIdx = idx; }
+      });
+      setActiveIdx(bestIdx);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [milestones.length]);
 
   /* ─── Load milestones ─── */
   useEffect(() => {
@@ -206,12 +230,27 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
           {timelineItems.map((m, idx) => (
             <motion.div
               key={m.id ?? `card-${idx}`}
+              ref={el => { itemRefs.current[idx] = el; }}
               initial={{ opacity: 0, x: -10 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-30px" }}
               transition={{ duration: 0.45, delay: idx * 0.07 }}
               className="relative"
             >
+              {/* Dot glow — blurred div ที่ animate opacity */}
+              <motion.div
+                className="absolute pointer-events-none"
+                style={{
+                  left: "-34px", top: "-3px",
+                  width: "24px", height: "24px",
+                  borderRadius: "50%",
+                  background: t.line,
+                  filter: "blur(8px)",
+                }}
+                animate={{ opacity: activeIdx === idx ? 0.85 : 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              />
+
               {/* Dot */}
               <motion.div
                 ref={el => { dotRefs.current[idx] = el; }}
@@ -232,25 +271,40 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
                     `0 0 0 2px white, 0 0 10px 5px rgba(215,155,25,0.9)`,
                     m.isFinal ? `0 0 0 3px white, 0 0 0 5px ${t.line}` : "0 0 0 2px white",
                   ],
-                } : {}}
+                } : {
+                  scale: activeIdx === idx ? 1.4 : 1,
+                }}
                 transition={theme === "funeral" && glowAnim ? {
                   duration:    0.9,
                   delay:       glowAnim.times[idx * 2 + 1] * glowAnim.duration,
                   repeat:      Infinity,
                   repeatDelay: glowAnim.duration - 0.9,
                   ease:        "easeInOut",
-                } : {}}
+                } : { duration: 0.35, ease: "easeOut" }}
               />
 
               {/* Card content */}
-              <div className={`pb-6 ${idx < timelineItems.length - 1 ? "border-b" : ""}`}
+              <div className={`relative pb-6 ${idx < timelineItems.length - 1 ? "border-b" : ""}`}
                 style={{ borderColor: `${t.line}40` }}>
+
+                {/* Active glow wash — follows scroll */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  animate={{ opacity: activeIdx === idx ? 0.75 : 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  style={{
+                    background: `radial-gradient(ellipse 80% 100% at 0% 50%, ${t.line}, transparent 70%)`,
+                  }}
+                />
 
                 {/* Year row */}
                 <div className="flex items-center gap-2 mb-1">
                   <span
-                    className="text-[10px] tracking-[0.25em] font-medium uppercase"
-                    style={{ color: t.year }}
+                    className="text-[10px] tracking-[0.25em] uppercase transition-all duration-300"
+                    style={{
+                      color:      activeIdx === idx ? t.line : t.year,
+                      fontWeight: activeIdx === idx ? 700 : 500,
+                    }}
                   >
                     {m.year}
                   </span>
@@ -271,8 +325,8 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
 
                 {/* Title */}
                 <h3
-                  className="text-sm md:text-base font-medium leading-snug mb-1"
-                  style={{ color: m.isFinal ? t.dot : t.title }}
+                  className="text-sm md:text-base font-medium leading-snug mb-1 transition-colors duration-300"
+                  style={{ color: m.isFinal ? t.dot : activeIdx === idx ? t.line : t.title }}
                 >
                   {m.text}
                 </h3>

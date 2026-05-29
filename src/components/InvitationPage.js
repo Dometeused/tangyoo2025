@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useAppMode } from "@/context/AppModeContext";
 import QRCodeAndScheduleSection from "@/components/QRCodeAndScheduleSection";
 import CoverSection from "@/components/CoverSection";
@@ -28,9 +29,15 @@ export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
   const isOwner = role === "owner" || role === "admin";
 
+  const supabase = createClientComponentClient();
   const [showEditBioModal, setShowEditBioModal] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const bgmRef = useRef(null);
+
+  // บันทึก custom wording ลง Supabase
+  const saveWording = async (field, value) => {
+    await supabase.from("events").update({ [field]: value }).eq("id", event.id);
+  };
 
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
@@ -139,8 +146,19 @@ export default function InvitationPage({ event, refetchEvent }) {
         <SparkleScrollTrail theme={theme} />
 
         {/* ส่วนหัว */}
-        <SectionTitle title={h.invite} theme={theme} />
-        <SectionQuote theme={theme}>{h.inviteQuote}</SectionQuote>
+        <SectionTitle
+          title={event.headline_invite || h.invite}
+          theme={theme}
+          editable={isOwner}
+          onSave={v => saveWording("headline_invite", v)}
+        />
+        <SectionQuote
+          theme={theme}
+          editable={isOwner}
+          onSave={v => saveWording("quote_invite", v)}
+        >
+          {event.quote_invite || h.inviteQuote}
+        </SectionQuote>
         <div className="mb-4">
           <BioBox bio={event.bio} eventId={event.id} theme={theme} phase={phase} />
         </div>
@@ -170,8 +188,19 @@ export default function InvitationPage({ event, refetchEvent }) {
         </div>
 
         <StoryDivider theme={theme} />
-        <SectionTitle title={h.bless} theme={theme} />
-        <SectionQuote theme={theme}>{h.blessQuote}</SectionQuote>
+        <SectionTitle
+          title={event.headline_bless || h.bless}
+          theme={theme}
+          editable={isOwner}
+          onSave={v => saveWording("headline_bless", v)}
+        />
+        <SectionQuote
+          theme={theme}
+          editable={isOwner}
+          onSave={v => saveWording("quote_bless", v)}
+        >
+          {event.quote_bless || h.blessQuote}
+        </SectionQuote>
         <div className="flex justify-center gap-3 mb-8">
           <BlessingSocialRow event={event} socialProps={{
             line: event.line,
