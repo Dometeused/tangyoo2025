@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { FiSettings, FiChevronUp, FiChevronDown, FiCamera, FiImage, FiLock, FiUnlock, FiEye, FiEyeOff } from "react-icons/fi";
+import { compressImage } from "@/lib/compressImage";
 import { useAppMode } from "@/context/AppModeContext";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Modal from "@/components/Modal";
@@ -58,21 +59,24 @@ export default function CoverSection({ event, refetchEvent }) {
   const handleUploadCover = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingCover(true);
-    await uploadImage(file, "cover_url", (url) => { setCoverUrl(url); if (!bgUrl) setBgUrl(url); }, "ภาพปก");
+    const compressed = await compressImage(file, { maxWidth: 1600, maxHeight: 1200, quality: 0.85 });
+    await uploadImage(compressed, "cover_url", (url) => { setCoverUrl(url); if (!bgUrl) setBgUrl(url); }, "ภาพปก");
     setUploadingCover(false);
   };
 
   const handleUploadBg = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingBg(true);
-    await uploadImage(file, "bg_url", (url) => setBgUrl(url), "ภาพพื้นหลัง");
+    const compressed = await compressImage(file, { maxWidth: 1920, maxHeight: 1080, quality: 0.85 });
+    await uploadImage(compressed, "bg_url", (url) => setBgUrl(url), "ภาพพื้นหลัง");
     setUploadingBg(false);
   };
 
   const handleUploadProfile = async (e) => {
     const file = e.target.files[0]; if (!file) return;
     setUploadingProfile(true);
-    await uploadImage(file, "profile_url", (url) => { setProfileUrl(url); setShowProfile(true); }, "โปรไฟล์");
+    const compressed = await compressImage(file, { maxWidth: 800, maxHeight: 800, quality: 0.88 });
+    await uploadImage(compressed, "profile_url", (url) => { setProfileUrl(url); setShowProfile(true); }, "โปรไฟล์");
     setUploadingProfile(false);
   };
 

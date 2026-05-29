@@ -29,6 +29,7 @@ import {
   FaCheck
 } from "react-icons/fa";
 import { THEMES } from "@/data/themes";
+import { compressImage } from "@/lib/compressImage";
 
 export default function FullGallery() {
   const { id: eventId } = useParams();
@@ -200,9 +201,11 @@ export default function FullGallery() {
     let errorCount = 0;
 
     for (const file of files) {
-      const formData = new FormData();
-      formData.append("file", file);
       try {
+        // บีบอัดก่อน upload: max 1920px, quality 82%
+        const compressed = await compressImage(file, { maxWidth: 1920, maxHeight: 1920, quality: 0.82 });
+        const formData = new FormData();
+        formData.append("file", compressed);
         const res = await fetch(`/api/gallery/upload?eventId=${eventId}`, {
           method: "POST",
           body: formData,
