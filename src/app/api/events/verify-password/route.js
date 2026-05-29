@@ -1,43 +1,36 @@
-import { createClient } from "@supabase/supabase-js";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
 export async function POST(req) {
-  const { eventId, password } = await req.json();
-  if (!eventId || !password) {
-    return NextResponse.json({ success: false }, { status: 400 });
-  }
+  try {
+    const { eventId, password } = await req.json();
+    if (!eventId || !password) {
+      return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
+    }
 
-  // Lookup by slug first, fallback UUID
-  let event = null;
-  const { data: bySlug } = await supabaseAdmin
-    .from("events")
-    .select("id, is_private, event_password")
-    .eq("slug", eventId)
-    .single();
-  if (bySlug) {
-    event = bySlug;
-  } else {
-    const { data: byId } = await supabaseAdmin
+    const cookieStore = await cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+
+    const { data: event, error } = await supabase
       .from("events")
-      .select("id, is_private, event_password")
-      .eq("id", eventId)
+      .select("id, event_password, is_private")
+      .or(`id.eq.${eventId},slug.eq.${eventId}`)
       .single();
-    event = byId;
-  }
 
-  if (!event || !event.is_private) {
-    return NextResponse.json({ success: false, error: "not_private" }, { status: 400 });
-  }
+    if (error || !event) {
+      return NextResponse.json({ success: false, error: "event not found" }, { status: 404 });
+    }
 
-  const correct = event.event_password && event.event_password === password;
-  if (!correct) {
-    return NextResponse.json({ success: false, error: "wrong_password" });
-  }
+    if (!event.is_private)      return NextResponse.json({ success: true });
+    if (!event.event_password)  return NextResponse.json({ success: true });
 
-  return NextResponse.json({ success: true });
+    const match = event.event_password.trim() === password.trim();
+    return NextResponse.json(
+      match ? { success: true } : { success: false, error: "wrong password" },
+      { status: match ? 200 : 401 }
+    );
+  } catch (err) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
 }

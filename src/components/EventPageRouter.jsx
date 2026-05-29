@@ -20,54 +20,42 @@ export default function EventPageRouter() {
   const [notFound, setNotFound] = useState(false);
   const [locked, setLocked] = useState(false);
 
+  const load = async () => {
+    const ev = await getEventById(eventId);
+    if (!ev) { setNotFound(true); return; }
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    let role = "guest";
+    if (user) {
+      const { data: profile } = await supabase
+        .from("profiles").select("is_admin").eq("id", user.id).single();
+
+      if (profile?.is_admin) {
+        role = "admin";
+      } else if (
+        (ev.user_id && user.id === ev.user_id) ||
+        (ev.email   && user.email?.toLowerCase() === ev.email?.toLowerCase())
+      ) {
+        role = "owner";
+      }
+    }
+
+    setTheme(ev.theme || "wedding");
+    setPhase(ev.phase  || "invitation");
+    setRole(role);
+
+    if (ev.is_private && role === "guest") {
+      const hasAccess = localStorage.getItem(`ty_access_${ev.id}`) === "1";
+      if (!hasAccess) setLocked(true);
+    }
+
+    setEvent(ev);
+    setIsReady(true);
+  };
+
   useEffect(() => {
     if (!eventId) return;
-
-    const load = async () => {
-      // 1. Load event
-      const event = await getEventById(eventId);
-      if (!event) {
-        setNotFound(true);
-        return;
-      }
-
-      // 2. Get current user
-      const { data: { user } } = await supabase.auth.getUser();
-
-      // 3. Determine role (admin > owner > guest)
-      let role = "guest";
-
-      if (user) {
-        // Check admin via profiles table
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("is_admin")
-          .eq("id", user.id)
-          .single();
-
-        if (profile?.is_admin) {
-          role = "admin";
-        } else if (event.user_id && user.id === event.user_id) {
-          // Owner = user_id ตรงกัน (ไม่ใช้ email)
-          role = "owner";
-        }
-      }
-
-      // 4. Set context
-      setTheme(event.theme || "wedding");
-      setPhase(event.phase || "invitation");
-      setRole(role);
-
-      // 5. Check privacy gate (skip for owner/admin)
-      if (event.is_private && role === "guest") {
-        const hasAccess = localStorage.getItem(`ty_access_${event.id}`) === "1";
-        if (!hasAccess) setLocked(true);
-      }
-
-      setEvent(event);
-      setIsReady(true);
-    };
-
     load();
   }, [eventId]);
 
@@ -101,9 +89,9 @@ export default function EventPageRouter() {
 
   // Route by phase (render behind the gate too)
   const pageContent = event.phase === "memory"
-    ? <MemoryPage event={event} />
+    ? <MemoryPage event={event} refetchEvent={load} />
     : event.phase === "invitation"
-    ? <InvitationPage event={event} />
+    ? <InvitationPage event={event} refetchEvent={load} />
     : null;
 
   return (
