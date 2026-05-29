@@ -46,7 +46,8 @@ export default function InvitationPage({ event, refetchEvent }) {
     baby: "/images/welcome.png",
   };
   // ถ้า event มี cover_url ให้ใช้เป็น BG แทน default ของ theme
-  const bgImage = event.cover_url || bgImageMap[theme] || "/wedding-bg.jpg";
+  // bg_url (แยกต่างหาก) → cover_url (ถ้าไม่มี bg) → default theme
+  const bgImage = event.bg_url || event.cover_url || bgImageMap[theme] || "/wedding-bg.jpg";
 
   const HEADLINES = {
     wedding: {
