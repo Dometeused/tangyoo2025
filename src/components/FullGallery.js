@@ -269,7 +269,7 @@ export default function FullGallery() {
   }));
 
   return (
-    <main className={`min-h-screen p-4 md:p-8 font-kanit transition-colors duration-500 ${bgClass} ${textClass}`}>
+    <main className={`min-h-screen pt-20 px-4 pb-8 md:px-8 font-kanit transition-colors duration-500 ${bgClass} ${textClass}`}>
 
       {/* Header & Controls */}
       <div className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
