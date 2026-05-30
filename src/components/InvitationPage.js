@@ -24,6 +24,7 @@ import CandleScrollTrail from "@/components/CandleScrollTrail";
 import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 import IntroOverlay from "@/components/IntroOverlay";
+import AnniversaryCounter from "@/components/AnniversaryCounter";
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
@@ -186,6 +187,13 @@ export default function InvitationPage({ event, refetchEvent }) {
               scheduleImageUrl={event.schedule_url}
               event={event}
             />
+          </div>
+        )}
+
+        {/* Anniversary days counter */}
+        {theme === "anniversary" && event.date && (
+          <div className="mb-8">
+            <AnniversaryCounter coupleSince={event.date} />
           </div>
         )}
 

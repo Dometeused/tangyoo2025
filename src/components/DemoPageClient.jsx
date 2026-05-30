@@ -120,7 +120,7 @@ export const DEMO_EVENTS = {
     id: "demo-anniversary",
     theme: "anniversary",
     name: "25 ปีแห่งความรัก",
-    date: "2025-09-01",
+    date: "2000-09-01",
     start_datetime: "2025-09-01T18:00:00.000Z",
     end_datetime: "2025-09-01T22:00:00.000Z",
     event_place: "https://maps.google.com/?q=The+Glass+House+Pattaya",

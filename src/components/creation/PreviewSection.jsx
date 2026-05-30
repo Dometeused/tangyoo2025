@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { THEMES } from "@/data/themes";
 import { ArrowLeft, ArrowRight, Type, CalendarDays, MapPin, RefreshCw } from "lucide-react";
+import { differenceInDays, differenceInYears } from "date-fns";
 
 function buildPreviewUrl(themeKey, formData, phase) {
   const params = new URLSearchParams({
@@ -154,7 +155,8 @@ export default function PreviewSection({ themeKey, onBack, onNext, loading }) {
             {/* Date */}
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest flex items-center gap-1">
-                <CalendarDays size={12} /> วันที่จัดงาน *
+                <CalendarDays size={12} />
+                {themeKey === "anniversary" ? "วันเริ่มต้นความสัมพันธ์ *" : "วันที่จัดงาน *"}
               </label>
               <input
                 type="date"
@@ -165,6 +167,17 @@ export default function PreviewSection({ themeKey, onBack, onNext, loading }) {
                 onFocus={e => { e.target.style.borderColor = "#f97316"; e.target.style.boxShadow = "0 0 0 3px rgba(249,115,22,0.1)"; }}
                 onBlur={e => { e.target.style.borderColor = errors.date ? "#ef4444" : "#e7e5e3"; e.target.style.boxShadow = "inset 0 1px 3px rgba(0,0,0,0.04)"; }}
               />
+              {themeKey === "anniversary" && formData.date && (() => {
+                const since = new Date(formData.date);
+                const today = new Date();
+                const days = differenceInDays(today, since);
+                const years = differenceInYears(today, since);
+                if (days > 0) return (
+                  <p className="text-xs font-semibold" style={{ color: "#b8800a" }}>
+                    ✦ {days.toLocaleString()} วัน · {years} ปีแห่งความทรงจำ
+                  </p>
+                );
+              })()}
               {errors.date && <p className="text-xs text-red-500">{errors.date}</p>}
             </div>
 

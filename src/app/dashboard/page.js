@@ -654,7 +654,7 @@ function EventCard({
             <ShareButtons url={`/event/${event.id}`} />
           </div>
           <div className="scale-75 origin-right opacity-70 hover:opacity-100 transition-opacity">
-            <QRLightbox url={event.qr_url} />
+            <QRLightbox url={event.qr_url} eventId={event.id} eventName={event.name} />
           </div>
         </div>
       </div>
