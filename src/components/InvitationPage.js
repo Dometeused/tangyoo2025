@@ -39,6 +39,14 @@ export default function InvitationPage({ event, refetchEvent }) {
     await supabase.from("events").update({ [field]: value }).eq("id", event.id);
   };
 
+  // Toggle สมุดอวยพร
+  const [showGuestbook, setShowGuestbook] = useState(event.show_guestbook !== false);
+  const toggleGuestbook = async () => {
+    const next = !showGuestbook;
+    setShowGuestbook(next);
+    await supabase.from("events").update({ show_guestbook: next }).eq("id", event.id);
+  };
+
   const bgImageMap = {
     wedding: "/wedding-bg.jpg",
     funeral: "/funeral-bg.png",
@@ -218,9 +226,29 @@ export default function InvitationPage({ event, refetchEvent }) {
         <div className="flex flex-col md:flex-row gap-8 mb-12 items-start">
           {/* Left Column: Story + Guestbook */}
           <div className="md:w-1/2 w-full flex flex-col gap-16">
-            {event.show_guestbook !== false && (
-              <GuestBookSection memoryId={event.id} role={role} theme={theme} />
-            )}
+            {/* GuestBook — toggle inline สำหรับ owner */}
+            {showGuestbook ? (
+              <div className="relative">
+                {isOwner && (
+                  <button
+                    onClick={toggleGuestbook}
+                    className="absolute top-2 right-2 z-20 flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-white/70 backdrop-blur border border-gray-200 text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all shadow-sm"
+                  >
+                    ✕ ซ่อนสมุดอวยพร
+                  </button>
+                )}
+                <GuestBookSection memoryId={event.id} role={role} theme={theme} />
+              </div>
+            ) : isOwner ? (
+              <button
+                onClick={toggleGuestbook}
+                className="w-full py-6 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center gap-2 text-gray-400 hover:border-pink-300 hover:text-pink-400 hover:bg-pink-50/30 transition-all"
+              >
+                <span className="text-2xl">✍️</span>
+                <span className="text-sm font-medium">สมุดอวยพร (ซ่อนอยู่)</span>
+                <span className="text-xs">กดเพื่อเปิดให้แขกเขียนอวยพร</span>
+              </button>
+            ) : null}
             <TimelineTree
               eventId={event.id}
               event={event}
