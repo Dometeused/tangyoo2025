@@ -8,8 +8,12 @@ export default function QRLightbox({ url, eventId, eventName }) {
   const [open, setOpen] = useState(false);
   const qrRef = useRef(null);
 
-  // Support both legacy image URL mode and new dynamic mode
-  const qrValue = url || (eventId ? `${typeof window !== "undefined" ? window.location.origin : "https://tangyoo.com"}/event/${eventId}` : null);
+  // If we have an eventId, always generate QR dynamically from event URL
+  // Only fall back to image url if no eventId is provided (legacy mode)
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://tangyoo.com";
+  const qrValue = eventId
+    ? `${origin}/event/${eventId}`
+    : url || null;
   if (!qrValue) return null;
 
   const downloadQR = () => {
@@ -22,7 +26,8 @@ export default function QRLightbox({ url, eventId, eventName }) {
     }).catch(() => {});
   };
 
-  const isImageUrl = url && !eventId;
+  // Legacy: show actual image if we only have url (no eventId)
+  const isImageUrl = !eventId && !!url;
 
   return (
     <>
