@@ -225,7 +225,7 @@ export default function InvitationPage({ event, refetchEvent }) {
         {/* BioBox2/Timeline/Guestbook */}
         <div className="flex flex-col md:flex-row gap-8 mb-12 items-start">
           {/* Left Column: Story + Guestbook */}
-          <div className="md:w-1/2 w-full flex flex-col gap-16">
+          <div className="md:w-1/2 w-full flex flex-col gap-16 overflow-x-hidden">
             {/* GuestBook — toggle inline สำหรับ owner */}
             {showGuestbook ? (
               <div className="relative">

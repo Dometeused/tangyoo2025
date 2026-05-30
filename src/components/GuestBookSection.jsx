@@ -139,10 +139,10 @@ export default function GuestBookSection({
       </div>
 
       {/* Big Book Container */}
-      <div className="relative w-full max-w-6xl mx-auto perspective-1000 z-10">
+      <div className="relative w-full max-w-6xl mx-auto perspective-1000 z-10 overflow-hidden">
 
-        {/* Leather Cover (Backing) */}
-        <div className="absolute inset-0 bg-[#3e2723] rounded-2xl shadow-2xl transform translate-y-4 md:translate-x-2 md:rotate-1 z-0 border-2 border-[#281815]"></div>
+        {/* Leather Cover (Backing) — ลบ rotate ออกเพื่อไม่ให้ยื่นทับ column ขวา */}
+        <div className="absolute inset-0 bg-[#3e2723] rounded-2xl shadow-2xl transform translate-y-2 z-0 border-2 border-[#281815]"></div>
 
         {/* The Open Book */}
         <div className="relative z-10 bg-[#fdfbf7] rounded-xl flex flex-col md:flex-row overflow-hidden min-h-[700px] shadow-2xl border border-[#d7ccc8]">
