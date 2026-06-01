@@ -185,16 +185,19 @@ export default function BioBox2WeddingBio({
       <div>
         {/* Love story / eventBio — always shown */}
         <div style={{ padding: "0 22px 10px" }}>
-          <p style={{
-            fontSize: "9.5px",
-            color: hasEventBio ? SOFT : BLUSH,
-            fontStyle: hasEventBio ? "normal" : "italic",
-            lineHeight: 1.85,
-            textAlign: "center",
-            whiteSpace: "pre-line",
-          }}>
-            {eventBio || '"เรื่องราวความรักของเรา..."'}
-          </p>
+          {hasEventBio ? (
+            <div
+              dangerouslySetInnerHTML={{ __html: eventBio }}
+              style={{
+                fontSize: "9.5px", color: SOFT,
+                lineHeight: 1.85, textAlign: "center",
+              }}
+            />
+          ) : (
+            <p style={{ fontSize: "9.5px", color: BLUSH, fontStyle: "italic", lineHeight: 1.85, textAlign: "center" }}>
+              "เรื่องราวความรักของเรา..."
+            </p>
+          )}
         </div>
 
         {/* Footer */}

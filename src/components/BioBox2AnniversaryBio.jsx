@@ -144,17 +144,17 @@ export default function BioBox2AnniversaryBio({
         {/* Quote */}
         {eventBio && (
           <div style={{ padding: "0 26px 10px" }}>
-            <p style={{
-              fontFamily: "var(--font-playfair, Georgia, serif)",
-              fontStyle: "italic",
-              fontSize: "11px",
-              color: SOFT,
-              lineHeight: 2,
-              textAlign: "center",
-              whiteSpace: "pre-line",
-            }}>
-              &ldquo;{eventBio}&rdquo;
-            </p>
+            <div
+              dangerouslySetInnerHTML={{ __html: eventBio }}
+              style={{
+                fontFamily: "var(--font-playfair, Georgia, serif)",
+                fontStyle: "italic",
+                fontSize: "11px",
+                color: SOFT,
+                lineHeight: 2,
+                textAlign: "center",
+              }}
+            />
           </div>
         )}
       </div>

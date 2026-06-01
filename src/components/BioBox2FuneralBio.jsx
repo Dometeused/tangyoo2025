@@ -113,16 +113,11 @@ export default function BioBox2FuneralBio({
       {word && (
         <div className="px-6 flex flex-col items-center gap-0.5 mb-1">
           <span style={{ color: BRONZE, fontSize: "9px" }}>"</span>
-          <p
+          <div
+            dangerouslySetInnerHTML={{ __html: word }}
             className="text-center italic font-light leading-relaxed"
-            style={{
-              color: MIDBROWN,
-              fontSize: "clamp(9px, 2.2vw, 12px)",
-              letterSpacing: "0.03em",
-            }}
-          >
-            {word}
-          </p>
+            style={{ color: MIDBROWN, fontSize: "clamp(9px, 2.2vw, 12px)", letterSpacing: "0.03em" }}
+          />
           <span style={{ color: BRONZE, fontSize: "9px" }}>"</span>
         </div>
       )}
