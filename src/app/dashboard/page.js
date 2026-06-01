@@ -540,7 +540,7 @@ function EventCard({
         <div className="flex items-center gap-4 text-xs text-stone-400">
           <span className="flex items-center gap-1">
             <CalendarDays size={12} />
-            {event.date || "—"}
+            {event.date ? event.date.slice(0, 10) : "—"}
           </span>
           {event.place && (
             <span className="flex items-center gap-1 truncate">
