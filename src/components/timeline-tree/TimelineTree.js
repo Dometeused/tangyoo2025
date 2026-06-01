@@ -127,7 +127,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
     if (!eventId) { if (initial.length) setMilestones(initial); return; }
 
     setLoading(true);
-    fetch(`/api/milestones?event_id=${eventId}`)
+    fetch(`/api/milestones?memoryId=${eventId}`)
       .then(r => r.json())
       .then(({ data }) => setMilestones(data?.length ? data : initial))
       .finally(() => setLoading(false));
@@ -161,9 +161,16 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
     e.preventDefault(); if (!form.year || !form.text) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/milestones", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, event_id: eventId }) });
-      const { data } = await res.json();
-      if (data) setMilestones(p => [...p, data]);
+      const res = await fetch("/api/milestones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, memoryId: eventId }),  // ✅ ตรงกับ DB column
+      });
+      const { data, error } = await res.json();
+      if (error) { console.error("[handleAdd]", error); return; }
+      // API returns array from .select("*"), take first item
+      const newItem = Array.isArray(data) ? data[0] : data;
+      if (newItem) setMilestones(p => [...p, newItem]);  // ✅ push object ไม่ใช่ array
       setForm({ year: "", text: "", emoji: "", image_url: "", detail: "" });
       setImagePreview(null); setShowForm(false);
     } finally { setLoading(false); }
