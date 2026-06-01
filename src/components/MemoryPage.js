@@ -21,6 +21,9 @@ import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 import BGMPlayer from "@/components/BGMPlayer";
 import ThemeEffect from "@/components/ThemeEffect";
 import IntroOverlay from "@/components/IntroOverlay";
+import AnniversaryCounter from "@/components/AnniversaryCounter";
+import BirthdayAgeCounter from "@/components/BirthdayAgeCounter";
+import BirthdayLetter from "@/components/BirthdayLetter";
 import { useState, useRef } from "react";
 
 export default function MemoryPage({ event }) {
@@ -137,6 +140,38 @@ export default function MemoryPage({ event }) {
               />
             </div>
           </div>
+
+          {/* Anniversary counter + letter */}
+          {theme === "anniversary" && event.date && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-12">
+              <AnniversaryCounter coupleSince={event.date} />
+            </div>
+          )}
+          {theme === "anniversary" && event.bio && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-12">
+              <BirthdayLetter
+                eventName={event.name}
+                bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+                senderName={null}
+              />
+            </div>
+          )}
+
+          {/* Birthday counter + letter */}
+          {theme === "baby" && event.date && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-12">
+              <BirthdayAgeCounter birthday={event.date} eventName={event.name} />
+            </div>
+          )}
+          {theme === "baby" && event.bio && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-12">
+              <BirthdayLetter
+                eventName={event.name}
+                bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+                senderName={null}
+              />
+            </div>
+          )}
 
           {/* 7. QR Code + Dress Code + Schedule (Full Width) */}
           <div className="col-span-1 md:col-span-2 lg:col-span-12">
