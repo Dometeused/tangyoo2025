@@ -45,7 +45,17 @@ export default function InvitationPage({ event, refetchEvent }) {
   const toggleGuestbook = async () => {
     const next = !showGuestbook;
     setShowGuestbook(next);
-    await supabase.from("events").update({ show_guestbook: next }).eq("id", event.id);
+    const { error } = await supabase
+      .from("events")
+      .update({ show_guestbook: next })
+      .eq("id", event.id);
+    if (error) {
+      console.error("[toggleGuestbook] save failed:", error);
+      // revert local state if DB save failed
+      setShowGuestbook(!next);
+    } else if (refetchEvent) {
+      refetchEvent();
+    }
   };
 
   const bgImageMap = {
