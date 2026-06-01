@@ -29,7 +29,7 @@ export default function EventPageRouter() {
     let role = "guest";
     if (user) {
       const { data: profile } = await supabase
-        .from("profiles").select("is_admin").eq("id", user.id).single();
+        .from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
 
       if (profile?.is_admin) {
         role = "admin";
