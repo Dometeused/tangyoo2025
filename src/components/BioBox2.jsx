@@ -48,7 +48,7 @@ export default function BioBox2(props) {
 
       {/* กล่องโปสเตอร์พร้อม Lightbox */}
       <div
-        className="relative w-full max-w-[420px] aspect-[7/10] rounded-2xl overflow-hidden shadow-2xl cursor-pointer bg-white border border-gray-100 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:-translate-y-1"
+        className="relative w-full max-w-[420px] min-h-[480px] rounded-2xl overflow-hidden shadow-2xl cursor-pointer bg-white border border-gray-100 transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:-translate-y-1"
         onClick={() => setOpenLightbox(true)}
         tabIndex={0}
         aria-label="แสดงโปสเตอร์เต็มจอ"
@@ -86,7 +86,7 @@ export default function BioBox2(props) {
           >
             ✕
           </button>
-          <div className="w-[min(95vw,900px)] h-[min(95vh,1200px)] flex items-center justify-center">
+          <div className="w-[min(90vw,500px)] max-h-[90vh] overflow-y-auto rounded-2xl flex items-start justify-center">
             <PosterComponent {...posterProps} className="w-full h-full" />
           </div>
         </div>

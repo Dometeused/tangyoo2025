@@ -152,7 +152,7 @@ export default function InvitationPage({ event, refetchEvent }) {
         }} />
       )}
 
-      <div className={`relative z-20 pt-24 px-6 pb-52 transition-all max-w-3xl mx-auto ${
+      <div className={`relative z-20 pt-24 px-6 pb-64 transition-all max-w-3xl mx-auto ${
         theme === 'anniversary' ? 'text-amber-50' : 'text-gray-800'
       }`}>
         <BGMPlayer
