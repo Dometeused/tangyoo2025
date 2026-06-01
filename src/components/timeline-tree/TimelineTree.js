@@ -157,29 +157,38 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
     setImagePreview(url); setForm(p => ({ ...p, image_url: url }));
   };
 
+  // Refetch milestones from DB → always in sync
+  const refetchMilestones = async () => {
+    const res = await fetch(`/api/milestones?event_id=${eventId}`);
+    const { data } = await res.json();
+    if (data) setMilestones(data);
+  };
+
   const handleAdd = async e => {
-    e.preventDefault(); if (!form.year || !form.text) return;
+    e.preventDefault();
+    if (!form.year || !form.text) return;
     setLoading(true);
     try {
       const res = await fetch("/api/milestones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, event_id: eventId }),  // ✅ API will normalize
+        body: JSON.stringify({ ...form, event_id: eventId }),
       });
-      const { data, error } = await res.json();
+      const { error } = await res.json();
       if (error) { console.error("[handleAdd]", error); return; }
-      // API returns array from .select("*"), take first item
-      const newItem = Array.isArray(data) ? data[0] : data;
-      if (newItem) setMilestones(p => [...p, newItem]);  // ✅ push object ไม่ใช่ array
+      await refetchMilestones();   // ✅ refetch จาก DB แทน merge เอง
       setForm({ year: "", text: "", emoji: "", image_url: "", detail: "" });
-      setImagePreview(null); setShowForm(false);
+      setImagePreview(null);
+      setShowForm(false);
     } finally { setLoading(false); }
   };
 
   const handleDelete = async id => {
     setLoading(true);
-    try { await fetch(`/api/milestones?id=${id}`, { method: "DELETE" }); setMilestones(p => p.filter(m => m.id !== id)); }
-    finally { setLoading(false); setDeleteTarget(null); }
+    try {
+      await fetch(`/api/milestones?id=${id}`, { method: "DELETE" });
+      await refetchMilestones();   // ✅ refetch จาก DB แทน filter เอง
+    } finally { setLoading(false); setDeleteTarget(null); }
   };
 
   /* ─── Render ─── */
