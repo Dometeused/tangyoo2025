@@ -7,12 +7,13 @@ export async function getEventById(id) {
   const supabase = createClientComponentClient();
 
   // Try slug first, fallback UUID
+  // Use maybeSingle() — .single() throws 406 when no row found
   let data = null;
   const { data: bySlug } = await supabase
     .from("events")
     .select("*")
     .eq("slug", id)
-    .single();
+    .maybeSingle();
   if (bySlug) {
     data = bySlug;
   } else {

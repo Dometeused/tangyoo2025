@@ -12,7 +12,7 @@ export async function POST(req) {
       .from("events")
       .select("heart_count")
       .eq("id", eventId)
-      .single();
+      .maybeSingle();
 
     if (fetchError) return NextResponse.json({ error: fetchError.message }, { status: 500 });
 
@@ -42,7 +42,7 @@ export async function GET(req) {
       .from("events")
       .select("heart_count")
       .eq("id", eventId)
-      .single();
+      .maybeSingle();
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

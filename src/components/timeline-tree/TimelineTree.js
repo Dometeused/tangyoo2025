@@ -127,7 +127,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
     if (!eventId) { if (initial.length) setMilestones(initial); return; }
 
     setLoading(true);
-    fetch(`/api/milestones?memoryId=${eventId}`)
+    fetch(`/api/milestones?event_id=${eventId}`)
       .then(r => r.json())
       .then(({ data }) => setMilestones(data?.length ? data : initial))
       .finally(() => setLoading(false));
@@ -164,7 +164,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
       const res = await fetch("/api/milestones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, memoryId: eventId }),  // ✅ ตรงกับ DB column
+        body: JSON.stringify({ ...form, event_id: eventId }),  // ✅ API will normalize
       });
       const { data, error } = await res.json();
       if (error) { console.error("[handleAdd]", error); return; }

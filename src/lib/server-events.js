@@ -11,7 +11,7 @@ export async function getEventById(eventId) {
     .from("events")
     .select("*")
     .eq("slug", eventId)
-    .single();
+    .maybeSingle();
   if (bySlug) return bySlug;
 
   const { data, error } = await supabase
