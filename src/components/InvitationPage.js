@@ -25,6 +25,8 @@ import PetalScrollTrail from "@/components/PetalScrollTrail";
 import SparkleScrollTrail from "@/components/SparkleScrollTrail";
 import IntroOverlay from "@/components/IntroOverlay";
 import AnniversaryCounter from "@/components/AnniversaryCounter";
+import BirthdayLetter from "@/components/BirthdayLetter";
+import BirthdayAgeCounter from "@/components/BirthdayAgeCounter";
 
 export default function InvitationPage({ event, refetchEvent }) {
   const { role, theme, phase } = useAppMode();
@@ -204,6 +206,24 @@ export default function InvitationPage({ event, refetchEvent }) {
         {theme === "anniversary" && event.date && (
           <div className="mb-8">
             <AnniversaryCounter coupleSince={event.date} />
+          </div>
+        )}
+
+        {/* Birthday: Age counter */}
+        {theme === "baby" && event.date && (
+          <div className="mb-8">
+            <BirthdayAgeCounter birthday={event.date} eventName={event.name} />
+          </div>
+        )}
+
+        {/* Birthday: Letter from sender */}
+        {theme === "baby" && event.bio && (
+          <div className="mb-8">
+            <BirthdayLetter
+              eventName={event.name}
+              bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+              senderName={null}
+            />
           </div>
         )}
 
