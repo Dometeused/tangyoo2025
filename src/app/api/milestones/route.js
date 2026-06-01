@@ -6,10 +6,11 @@ export async function GET(req) {
   const cookieStore = await cookies();
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const { searchParams } = new URL(req.url);
-  const eventId = searchParams.get("event_id") || searchParams.get("memoryId");
+  // Accept any alias — DB column is memory_id
+  const eventId = searchParams.get("event_id") || searchParams.get("memoryId") || searchParams.get("memory_id");
 
   let query = supabase.from("milestones").select("*").order("year", { ascending: true });
-  if (eventId) query = query.eq("event_id", eventId);
+  if (eventId) query = query.eq("memory_id", eventId);
 
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
@@ -21,13 +22,13 @@ export async function POST(req) {
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
   const body = await req.json();
 
-  // Normalize: accept both field names, always save as event_id
-  const eventId = body.event_id || body.memoryId;
-  const { event_id: _a, memoryId: _b, ...rest } = body;
+  // Normalize all possible field names → memory_id
+  const eventId = body.event_id || body.memoryId || body.memory_id;
+  const { event_id: _a, memoryId: _b, memory_id: _c, ...rest } = body;
 
   const { data, error } = await supabase
     .from("milestones")
-    .insert([{ ...rest, event_id: eventId }])
+    .insert([{ ...rest, memory_id: eventId }])
     .select("*");
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
