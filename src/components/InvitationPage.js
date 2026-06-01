@@ -202,10 +202,19 @@ export default function InvitationPage({ event, refetchEvent }) {
           </div>
         )}
 
-        {/* Anniversary days counter */}
+        {/* Anniversary: days counter + letter */}
         {theme === "anniversary" && event.date && (
           <div className="mb-8">
             <AnniversaryCounter coupleSince={event.date} />
+          </div>
+        )}
+        {theme === "anniversary" && event.bio && (
+          <div className="mb-8">
+            <BirthdayLetter
+              eventName={event.name}
+              bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+              senderName={null}
+            />
           </div>
         )}
 
