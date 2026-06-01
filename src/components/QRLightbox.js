@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import QRCode from "react-qr-code";
 import { QrCode, Download, X } from "lucide-react";
 import * as htmlToImage from "html-to-image";
@@ -7,10 +8,12 @@ import * as htmlToImage from "html-to-image";
 export default function QRLightbox({ url, eventId, eventName }) {
   const [open, setOpen] = useState(false);
   const [qrValue, setQrValue] = useState(null);
+  const [mounted, setMounted] = useState(false);
   const qrRef = useRef(null);
 
-  // Compute QR value on client only (avoids SSR/hydration mismatch)
+  // Must be client-only (window.location)
   useEffect(() => {
+    setMounted(true);
     if (eventId) {
       setQrValue(`${window.location.origin}/event/${eventId}`);
     } else if (url) {
@@ -18,11 +21,7 @@ export default function QRLightbox({ url, eventId, eventName }) {
     }
   }, [eventId, url]);
 
-  if (!qrValue && !eventId && !url) return null;
-
-  // Placeholder button even before qrValue is set (avoids layout shift)
-  const showButton = eventId || url;
-  if (!showButton) return null;
+  if (!mounted || (!eventId && !url)) return null;
 
   const isImageUrl = !eventId && !!url;
 
@@ -38,75 +37,100 @@ export default function QRLightbox({ url, eventId, eventName }) {
       .catch(() => {});
   };
 
+  const modal = open ? (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 99999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 16,
+        background: "rgba(0,0,0,0.65)",
+      }}
+      onClick={() => setOpen(false)}
+    >
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: 20,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          padding: 24,
+          width: "100%",
+          maxWidth: 320,
+          textAlign: "center",
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <span style={{ fontWeight: 700, fontSize: 14, color: "#1c1917", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 240 }}>
+            {eventName || "QR Code"}
+          </span>
+          <button
+            onClick={() => setOpen(false)}
+            style={{ width: 28, height: 28, borderRadius: "50%", border: "none", background: "#f5f5f4", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+          >
+            <X size={14} color="#78716c" />
+          </button>
+        </div>
+
+        {/* QR */}
+        <div ref={qrRef} style={{ background: "#fff", padding: 16, borderRadius: 12, display: "inline-block", marginBottom: 12 }}>
+          {qrValue ? (
+            isImageUrl
+              ? <img src={url} alt="QR" style={{ width: 192, height: 192, objectFit: "contain" }} />
+              : <QRCode value={qrValue} size={192} />
+          ) : (
+            <div style={{ width: 192, height: 192, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: 32, height: 32, border: "3px solid #f97316", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+            </div>
+          )}
+        </div>
+
+        {/* URL */}
+        {qrValue && (
+          <p style={{ fontSize: 10, color: "#a8a29e", fontFamily: "monospace", wordBreak: "break-all", marginBottom: 16 }}>
+            {qrValue}
+          </p>
+        )}
+
+        {/* Download */}
+        <button
+          onClick={downloadQR}
+          disabled={!qrValue}
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+            width: "100%", padding: "10px 0", borderRadius: 12, border: "none",
+            background: qrValue ? "#f97316" : "#e7e5e3",
+            color: "#fff", fontWeight: 700, fontSize: 14, cursor: qrValue ? "pointer" : "not-allowed",
+          }}
+        >
+          <Download size={14} />
+          บันทึก QR
+        </button>
+      </div>
+    </div>
+  ) : null;
+
   return (
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all hover:opacity-80 active:scale-95"
-        style={{ background: "#f5f5f4", color: "#57534e", border: "1px solid #e7e5e3" }}
+        style={{
+          display: "flex", alignItems: "center", gap: 6,
+          padding: "6px 10px", borderRadius: 8, border: "1px solid #e7e5e3",
+          background: "#f5f5f4", color: "#57534e", fontSize: 12, fontWeight: 600, cursor: "pointer",
+        }}
         title="ดู QR Code"
       >
         <QrCode size={13} />
         QR Code
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.65)" }}
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="bg-white rounded-2xl shadow-2xl p-6 w-full text-center"
-            style={{ maxWidth: 320 }}
-            onClick={e => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-stone-800 text-sm truncate pr-2 max-w-[220px]">
-                {eventName || "QR Code"}
-              </h3>
-              <button
-                onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-stone-100 transition-colors shrink-0"
-              >
-                <X size={14} className="text-stone-400" />
-              </button>
-            </div>
-
-            {/* QR */}
-            <div ref={qrRef} className="bg-white p-4 rounded-xl inline-block mb-3">
-              {qrValue ? (
-                isImageUrl
-                  ? <img src={url} alt="QR" style={{ width: 192, height: 192, objectFit: "contain" }} />
-                  : <QRCode value={qrValue} size={192} />
-              ) : (
-                <div style={{ width: 192, height: 192, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <div className="w-8 h-8 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
-            </div>
-
-            {/* URL */}
-            {qrValue && (
-              <p className="text-stone-400 mb-4 break-all" style={{ fontSize: "10px", fontFamily: "monospace" }}>
-                {qrValue}
-              </p>
-            )}
-
-            {/* Download */}
-            <button
-              onClick={downloadQR}
-              disabled={!qrValue}
-              className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ background: "#f97316" }}
-            >
-              <Download size={14} />
-              บันทึก QR
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Portal: renders at document.body — bypasses CSS transform stacking context */}
+      {mounted && createPortal(modal, document.body)}
     </>
   );
 }
