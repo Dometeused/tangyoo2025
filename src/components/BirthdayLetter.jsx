@@ -114,20 +114,20 @@ export default function BirthdayLetter({ eventName, bio, senderName }) {
 
         <DashedLine />
 
-        {/* Letter content */}
-        <div style={{
-          fontFamily: "Georgia, 'Times New Roman', serif",
-          fontStyle: "italic",
-          fontSize: "clamp(0.85rem, 3.5vw, 1rem)",
-          color: "#5a3e18",
-          lineHeight: 2.0,
-          whiteSpace: "pre-line",
-          textAlign: "left",
-          padding: "8px 4px",
-          letterSpacing: "0.01em",
-        }}>
-          {bio}
-        </div>
+        {/* Letter content — render HTML from TipTap */}
+        <div
+          dangerouslySetInnerHTML={{ __html: bio }}
+          style={{
+            fontFamily: "Georgia, 'Times New Roman', serif",
+            fontStyle: "italic",
+            fontSize: "clamp(0.85rem, 3.5vw, 1rem)",
+            color: "#5a3e18",
+            lineHeight: 2.0,
+            textAlign: "left",
+            padding: "8px 4px",
+            letterSpacing: "0.01em",
+          }}
+        />
 
         <DashedLine />
 

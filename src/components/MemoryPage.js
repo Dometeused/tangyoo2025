@@ -151,7 +151,7 @@ export default function MemoryPage({ event }) {
             <div className="col-span-1 md:col-span-2 lg:col-span-12">
               <BirthdayLetter
                 eventName={event.name}
-                bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+                bio={event.bio || ""}
                 senderName={null}
               />
             </div>
@@ -167,7 +167,7 @@ export default function MemoryPage({ event }) {
             <div className="col-span-1 md:col-span-2 lg:col-span-12">
               <BirthdayLetter
                 eventName={event.name}
-                bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+                bio={event.bio || ""}
                 senderName={null}
               />
             </div>

@@ -212,7 +212,7 @@ export default function InvitationPage({ event, refetchEvent }) {
           <div className="mb-8">
             <BirthdayLetter
               eventName={event.name}
-              bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+              bio={event.bio || ""}
               senderName={null}
             />
           </div>
@@ -230,7 +230,7 @@ export default function InvitationPage({ event, refetchEvent }) {
           <div className="mb-8">
             <BirthdayLetter
               eventName={event.name}
-              bio={event.bio?.replace(/<[^>]*>/g, "") || ""}
+              bio={event.bio || ""}
               senderName={null}
             />
           </div>
