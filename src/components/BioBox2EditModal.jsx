@@ -90,7 +90,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="ข้อความเจ้าสาว (Bride Bio)"
                     value={form.brideBio || ""}
                     onChange={e => setForm(f => ({ ...f, brideBio: e.target.value }))}
@@ -98,7 +98,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="ข้อความเจ้าบ่าว (Groom Bio)"
                     value={form.groomBio || ""}
                     onChange={e => setForm(f => ({ ...f, groomBio: e.target.value }))}
@@ -106,7 +106,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="ข้อความกลาง (Event Bio)"
                     value={form.eventBio || ""}
                     onChange={e => setForm(f => ({ ...f, eventBio: e.target.value }))}
@@ -114,7 +114,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="Fun Fact 1"
                     value={form.funFact1 || ""}
                     onChange={e => setForm(f => ({ ...f, funFact1: e.target.value }))}
@@ -122,7 +122,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="Fun Fact 2"
                     value={form.funFact2 || ""}
                     onChange={e => setForm(f => ({ ...f, funFact2: e.target.value }))}
@@ -153,23 +153,23 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <label className="text-xs text-gray-500 block mb-1">จำนวนปี + label เช่น "25 ปีแห่งรัก" หรือแค่ "25"</label>
-                  <input className="input w-full" placeholder='เช่น "25" หรือ "25 ปีแห่งรัก"' value={form.brideBio || ""} onChange={e => setForm(f => ({ ...f, brideBio: e.target.value }))} />
+                  <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100" placeholder='เช่น "25" หรือ "25 ปีแห่งรัก"' value={form.brideBio || ""} onChange={e => setForm(f => ({ ...f, brideBio: e.target.value }))} />
                 </div>
                 <div className="mb-3">
                   <label className="text-xs text-gray-500 block mb-1">แถบ SINCE เช่น "SINCE · 2000"</label>
-                  <input className="input w-full" placeholder='เช่น "SINCE · 2000"' value={form.groomBio || ""} onChange={e => setForm(f => ({ ...f, groomBio: e.target.value }))} />
+                  <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100" placeholder='เช่น "SINCE · 2000"' value={form.groomBio || ""} onChange={e => setForm(f => ({ ...f, groomBio: e.target.value }))} />
                 </div>
                 <div className="mb-3">
                   <label className="text-xs text-gray-500 block mb-1">Quote ความรู้สึก</label>
-                  <input className="input w-full" placeholder='เช่น "ขอบคุณทุกความทรงจำ..."' value={form.eventBio || ""} onChange={e => setForm(f => ({ ...f, eventBio: e.target.value }))} />
+                  <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100" placeholder='เช่น "ขอบคุณทุกความทรงจำ..."' value={form.eventBio || ""} onChange={e => setForm(f => ({ ...f, eventBio: e.target.value }))} />
                 </div>
                 <div className="mb-3">
                   <label className="text-xs text-gray-500 block mb-1">เรื่องราว (ซ้าย)</label>
-                  <input className="input w-full" placeholder="Fun Fact 1" value={form.funFact1 || ""} onChange={e => setForm(f => ({ ...f, funFact1: e.target.value }))} />
+                  <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100" placeholder="Fun Fact 1" value={form.funFact1 || ""} onChange={e => setForm(f => ({ ...f, funFact1: e.target.value }))} />
                 </div>
                 <div className="mb-3">
                   <label className="text-xs text-gray-500 block mb-1">เรื่องราว (ขวา)</label>
-                  <input className="input w-full" placeholder="Fun Fact 2" value={form.funFact2 || ""} onChange={e => setForm(f => ({ ...f, funFact2: e.target.value }))} />
+                  <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100" placeholder="Fun Fact 2" value={form.funFact2 || ""} onChange={e => setForm(f => ({ ...f, funFact2: e.target.value }))} />
                 </div>
               </>
             )}
@@ -194,7 +194,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="ชื่อ-สกุล (poster_name)"
                     value={form.poster_name || ""}
                     onChange={e => setForm(f => ({ ...f, poster_name: e.target.value }))}
@@ -202,7 +202,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="วรรคทอง/ข้อความพิเศษ (word)"
                     value={form.word || ""}
                     onChange={e => setForm(f => ({ ...f, word: e.target.value }))}
@@ -210,7 +210,7 @@ export default function BioBox2EditModal({
                 </div>
                 <div className="mb-3">
                   <input
-                    className="input w-full"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 bg-white outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100"
                     placeholder="ช่วงปีเกิด-ถึงปีเสียชีวิต (living)"
                     value={form.living || ""}
                     onChange={e => setForm(f => ({ ...f, living: e.target.value }))}
