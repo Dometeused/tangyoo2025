@@ -17,7 +17,7 @@ const TIMELINE_TITLE = {
 const THEME = {
   wedding:     { line: "#ddb0c0", dot: "#6b2d4a", year: "#9e6b7d", title: "#3d2020", badge: "#6b2d4a", badgeBg: "#fdf2f8" },
   funeral:     { line: "#c9a882", dot: "#5a3a1a", year: "#9e7e46", title: "#2a1a0a", badge: "#5a3a1a", badgeBg: "#fdf8f0" },
-  anniversary: { line: "#c9a050", dot: "#6b4a1e", year: "#9e7e46", title: "#2a1a0a", badge: "#6b4a1e", badgeBg: "#fdf8f0" },
+  anniversary: { line: "#e8cc70", dot: "#e8cc70", year: "#d4a820", title: "#f5e8c0", badge: "#d4a820", badgeBg: "rgba(212,168,32,0.15)" },
   baby:        { line: "#c8a8d8", dot: "#7b3f8a", year: "#9e6b8a", title: "#3d1a3d", badge: "#7b3f8a", badgeBg: "#fdf0ff" },
 };
 
@@ -349,7 +349,7 @@ export default function TimelineTree({ eventId, event, theme = "wedding" }) {
 
                 {/* Detail */}
                 {m.detail && (
-                  <p className="text-xs md:text-sm font-light leading-relaxed" style={{ color: "#9e8585" }}>
+                  <p className="text-xs md:text-sm font-light leading-relaxed" style={{ color: theme === "anniversary" ? "#c9a878" : "#9e8585" }}>
                     {m.detail}
                   </p>
                 )}
