@@ -754,7 +754,6 @@ export default function IntroOverlay({ theme, onComplete }) {
   const handleInteraction = () => {
     if (isOpening) return;
     setIsOpening(true);
-    if (theme === "anniversary") setBoxOpen(true);
 
     timerRef.current = setTimeout(() => {
       setIsVisible(false);
@@ -898,258 +897,136 @@ export default function IntroOverlay({ theme, onComplete }) {
         {(theme === "anniversary" || theme === "birthday") && (
           <div
             className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
-            style={{ background: "linear-gradient(160deg, #fff8f2 0%, #fdf0e4 50%, #fff8f2 100%)" }}
+            style={{ background: "linear-gradient(160deg, #0e0800 0%, #1c1000 50%, #0e0800 100%)" }}
             onClick={handleInteraction}
           >
-            {/* Rose gold dust — visible on light bg */}
+            {/* Gold dust particles */}
             {Array.from({ length: 48 }).map((_, i) => (
-              <RoseGoldDust key={i} delay={i * 0.1} />
+              <GoldDust key={i} delay={i * 0.1} />
             ))}
 
-            {/* Soft glow — สีตาม boxColor */}
-            <motion.div
-              className="absolute pointer-events-none rounded-full"
-              style={{
-                width: 320, height: 320,
-                background: `radial-gradient(circle, ${boxColor.glow} 0%, transparent 65%)`,
-                top: "50%", left: "50%",
-                transform: "translate(-50%, -60%)",
-              }}
+            {/* Ambient glow */}
+            <motion.div className="absolute pointer-events-none rounded-full"
+              style={{ width: 320, height: 320, top: "50%", left: "50%", transform: "translate(-50%,-60%)",
+                background: "radial-gradient(circle, rgba(212,168,32,0.12) 0%, transparent 65%)" }}
               animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.06, 1] }}
               transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
             />
 
-            {/* ── Anniversary balloons — gold / rose-gold / champagne ── */}
-            <div style={{ position: "relative", width: 240, height: 130 }}>
-              {/* Gold strings — fade out on open */}
-              <motion.svg
-                width="240" height="130" viewBox="0 0 240 130"
-                style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
-                animate={boxOpen ? { opacity: 0 } : {}}
-                transition={boxOpen ? { duration: 0.18 } : {}}
-              >
-                <path d="M51 73 Q76 86 107 92" stroke="rgba(200,165,55,0.38)" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
-                <path d="M109 64 Q110 80 110 92" stroke="rgba(200,165,55,0.38)" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
-                <path d="M174 69 Q145 84 113 92" stroke="rgba(200,165,55,0.38)" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
-              </motion.svg>
-
-              {/* Left — rose gold */}
-              <motion.div
-                style={{ position: "absolute", left: 20, top: 16 }}
-                animate={boxOpen ? { y: -130, x: -38, opacity: 0 } : { y: [0, -6, 0] }}
-                transition={boxOpen ? { duration: 0.65, delay: 0.05, ease: "easeIn" } : { repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
-              >
-                <svg width="62" height="70" viewBox="0 0 62 70"
-                  style={{ filter: "drop-shadow(0 4px 12px rgba(210,140,80,0.35))" }}>
-                  <defs>
-                    <radialGradient id="avRG" cx="35%" cy="28%" r="65%">
-                      <stop offset="0%" stopColor="#ffd8c8"/><stop offset="100%" stopColor="#c88858"/>
-                    </radialGradient>
-                  </defs>
-                  <ellipse cx="31" cy="27" rx="23" ry="27" fill="url(#avRG)"/>
-                  <ellipse cx="22" cy="17" rx="8"  ry="10" fill="rgba(255,255,255,0.34)"/>
-                  <path d="M28 54 L31 60 L34 54 Z" fill="#c88858"/>
-                </svg>
-              </motion.div>
-
-              {/* Center — gold (largest) */}
-              <motion.div
-                style={{ position: "absolute", left: 76, top: 3 }}
-                animate={boxOpen ? { y: -148, opacity: 0 } : { y: [0, -9, 0] }}
-                transition={boxOpen ? { duration: 0.62, ease: "easeIn" } : { repeat: Infinity, duration: 4.0, ease: "easeInOut" }}
-              >
-                <svg width="66" height="74" viewBox="0 0 66 74"
-                  style={{ filter: "drop-shadow(0 4px 16px rgba(230,190,30,0.45))" }}>
-                  <defs>
-                    <radialGradient id="avGold" cx="35%" cy="28%" r="65%">
-                      <stop offset="0%" stopColor="#fff8c0"/><stop offset="100%" stopColor="#e8c040"/>
-                    </radialGradient>
-                  </defs>
-                  <ellipse cx="33" cy="29" rx="25" ry="29" fill="url(#avGold)"/>
-                  <ellipse cx="23" cy="18" rx="9"  ry="11" fill="rgba(255,255,255,0.36)"/>
-                  <path d="M30 58 L33 65 L36 58 Z" fill="#e8c040"/>
-                </svg>
-              </motion.div>
-
-              {/* Right — champagne */}
-              <motion.div
-                style={{ position: "absolute", left: 144, top: 12 }}
-                animate={boxOpen ? { y: -126, x: 34, opacity: 0 } : { y: [0, -5, 0] }}
-                transition={boxOpen ? { duration: 0.68, delay: 0.10, ease: "easeIn" } : { repeat: Infinity, duration: 3.8, delay: 0.5, ease: "easeInOut" }}
-              >
-                <svg width="60" height="68" viewBox="0 0 60 68"
-                  style={{ filter: "drop-shadow(0 4px 12px rgba(195,160,60,0.30))" }}>
-                  <defs>
-                    <radialGradient id="avChamp" cx="35%" cy="28%" r="65%">
-                      <stop offset="0%" stopColor="#f0e8d0"/><stop offset="100%" stopColor="#c8a858"/>
-                    </radialGradient>
-                  </defs>
-                  <ellipse cx="30" cy="27" rx="22" ry="27" fill="url(#avChamp)"/>
-                  <ellipse cx="21" cy="17" rx="8"  ry="9"  fill="rgba(255,255,255,0.32)"/>
-                  <path d="M27 54 L30 60 L33 54 Z" fill="#c8a858"/>
-                </svg>
-              </motion.div>
-            </div>
-
-            {/* Box */}
+            {/* ── ENVELOPE ── */}
             <motion.div
-              className="relative"
-              style={{ width: 164, height: 176, marginTop: -20 }}
-              animate={boxOpen ? { scale: [1, 1.06, 0], opacity: [1, 1, 0] } : {}}
-              transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+              style={{ position: "relative", width: 240, height: 170 }}
+              animate={isOpening ? { scale: [1, 1.05, 0.9], opacity: [1, 1, 0], y: [0, -10, 20] } : { y: [0, -8, 0] }}
+              transition={isOpening ? { duration: 0.8, ease: [0.4, 0, 0.2, 1] } : { repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
             >
-              {/* === LID === */}
-              <motion.div
-                className="absolute top-0 left-0 w-full z-20"
-                style={{ height: 54, transformOrigin: "top center" }}
-                animate={boxOpen ? { y: -90, rotateX: 120, opacity: 0 } : { y: [0, -7, 0] }}
-                transition={boxOpen
-                  ? { duration: 0.5, ease: [0.4, 0, 1, 1] }
-                  : { repeat: Infinity, duration: 2.8, ease: "easeInOut" }
-                }
-              >
-                {/* Lid surface — สีตาม boxColor */}
-                <div className="w-full h-full relative overflow-hidden" style={{
-                  borderRadius: "10px 10px 0 0",
-                  background: boxColor.lid,
-                  boxShadow: `inset 0 1px 0 ${boxColor.shimmer}, inset 0 -1px 0 rgba(0,0,0,0.5)`,
-                }}>
-                  {/* Shimmer sweep */}
-                  <motion.div
-                    className="absolute inset-y-0 w-10 pointer-events-none"
-                    style={{ background: `linear-gradient(90deg, transparent, ${boxColor.shimmer}, transparent)`, skewX: "-15deg" }}
-                    animate={{ x: [-60, 200] }}
-                    transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut", repeatDelay: 1.2 }}
-                  />
-                  <div className="absolute top-0 left-0 right-0 h-[1px]"
-                    style={{ background: `linear-gradient(90deg, transparent, ${boxColor.topLine}, transparent)` }} />
-                  {/* Ribbon on lid */}
-                  <div className="absolute left-1/2 -translate-x-1/2 w-[14px] h-full"
-                    style={{ background: "linear-gradient(180deg, #e8c060, #f8e080, #e8c060)", opacity: 0.95 }} />
-                  <div className="absolute left-1/2 -translate-x-1/2 w-[3px] h-full"
-                    style={{ background: "rgba(255,255,255,0.45)", marginLeft: -1 }} />
-                </div>
+              <svg width="240" height="170" viewBox="0 0 240 170" fill="none">
+                <defs>
+                  <linearGradient id="envBody" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#2a1e08"/><stop offset="100%" stopColor="#1a1204"/>
+                  </linearGradient>
+                  <linearGradient id="envFlap" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#3a2a0e"/><stop offset="100%" stopColor="#2a1e08"/>
+                  </linearGradient>
+                  <linearGradient id="envEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(212,168,32,0)"/>
+                    <stop offset="50%" stopColor="rgba(212,168,32,0.6)"/>
+                    <stop offset="100%" stopColor="rgba(212,168,32,0)"/>
+                  </linearGradient>
+                </defs>
 
-                {/* Bow — SVG ใหญ่ขึ้น proportions ดีขึ้น */}
-                <div className="absolute left-1/2 -translate-x-1/2" style={{ top: -48, width: 100, height: 56 }}>
-                  <svg viewBox="0 0 100 56" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: "visible" }}>
-                    <defs>
-                      <linearGradient id="bowG" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#fde080" />
-                        <stop offset="45%" stopColor="#e8c050" />
-                        <stop offset="100%" stopColor="#b89030" />
-                      </linearGradient>
-                      <linearGradient id="bowDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#c9a040" />
-                        <stop offset="100%" stopColor="#806010" />
-                      </linearGradient>
-                    </defs>
-                    {/* Left loop — upper face */}
-                    <path d="M50 30 C42 18, 10 8, 8 24 C6 38, 36 42, 50 30Z" fill="url(#bowG)" />
-                    {/* Left loop — shadow underside */}
-                    <path d="M50 30 C44 34, 18 40, 8 24 C6 38, 36 42, 50 30Z" fill="url(#bowDark)" opacity="0.5" />
-                    {/* Right loop — upper face */}
-                    <path d="M50 30 C58 18, 90 8, 92 24 C94 38, 64 42, 50 30Z" fill="url(#bowG)" />
-                    {/* Right loop — shadow underside */}
-                    <path d="M50 30 C56 34, 82 40, 92 24 C94 38, 64 42, 50 30Z" fill="url(#bowDark)" opacity="0.5" />
-                    {/* Left tail */}
-                    <path d="M50 32 C43 38, 32 48, 26 56" stroke="url(#bowG)" strokeWidth="6" strokeLinecap="round" />
-                    {/* Right tail */}
-                    <path d="M50 32 C57 38, 68 48, 74 56" stroke="url(#bowG)" strokeWidth="6" strokeLinecap="round" />
-                    {/* Knot */}
-                    <ellipse cx="50" cy="30" rx="9" ry="7" fill="#fde080" />
-                    <ellipse cx="50" cy="28" rx="5" ry="3.5" fill="rgba(255,255,255,0.5)" />
-                  </svg>
-                </div>
-              </motion.div>
+                {/* Shadow */}
+                <ellipse cx="120" cy="166" rx="90" ry="6" fill="rgba(0,0,0,0.4)"/>
 
-              {/* === BODY === */}
-              <div className="absolute w-full overflow-hidden" style={{
-                top: 50,
-                height: 126,
-                borderRadius: "0 0 12px 12px",
-                background: boxColor.body,
-                boxShadow: `0 20px 60px ${boxColor.shadow}, inset 0 1px 0 ${boxColor.shimmer}`,
-              }}>
-                {/* Shimmer sweep on body */}
-                <motion.div
-                  className="absolute inset-y-0 w-14 pointer-events-none"
-                  style={{ background: `linear-gradient(90deg, transparent, ${boxColor.shimmer}, transparent)`, skewX: "-15deg" }}
-                  animate={{ x: [-80, 220] }}
-                  transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", repeatDelay: 0.8, delay: 0.5 }}
+                {/* Envelope body */}
+                <rect x="10" y="50" width="220" height="110" rx="8" fill="url(#envBody)"
+                  style={{ filter: "drop-shadow(0 8px 32px rgba(0,0,0,0.6))" }}/>
+                <rect x="10" y="50" width="220" height="110" rx="8" fill="none"
+                  stroke="rgba(212,168,32,0.25)" strokeWidth="1"/>
+
+                {/* Bottom V fold */}
+                <path d="M10 160 L120 100 L230 160 Z" fill="rgba(212,168,32,0.06)"/>
+                <path d="M10 160 L120 100" stroke="rgba(212,168,32,0.15)" strokeWidth="0.8"/>
+                <path d="M230 160 L120 100" stroke="rgba(212,168,32,0.15)" strokeWidth="0.8"/>
+
+                {/* Left side fold */}
+                <path d="M10 50 L120 100 L10 160 Z" fill="rgba(212,168,32,0.04)"/>
+                {/* Right side fold */}
+                <path d="M230 50 L120 100 L230 160 Z" fill="rgba(212,168,32,0.04)"/>
+
+                {/* Top flap — animates open */}
+                <motion.path
+                  d="M10 50 L120 108 L230 50 Z"
+                  fill="url(#envFlap)"
+                  stroke="rgba(212,168,32,0.3)" strokeWidth="1"
+                  style={{ transformOrigin: "120px 50px" }}
+                  animate={isOpening ? { rotateX: -160, opacity: 0 } : {}}
+                  transition={isOpening ? { duration: 0.5, ease: [0.4, 0, 1, 1] } : {}}
                 />
-                {/* Ribbon on body */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-[14px] h-full"
-                  style={{ background: "linear-gradient(180deg, #e8c060, #f8e080, #e8c060)", opacity: 0.9 }} />
-                <div className="absolute left-1/2 -translate-x-1/2 w-[3px] h-full"
-                  style={{ background: "rgba(255,255,255,0.4)", marginLeft: -1 }} />
-                {/* Left edge highlight */}
-                <div className="absolute top-0 left-0 w-[1px] h-full"
-                  style={{ background: `linear-gradient(180deg, ${boxColor.topLine}, transparent)` }} />
-                {/* Inner light when open */}
-                <AnimatePresence>
-                  {boxOpen && (
-                    <motion.div className="absolute inset-0"
-                      style={{
-                        background: "radial-gradient(circle at 50% 20%, rgba(255,220,80,0.95) 0%, rgba(255,120,60,0.5) 40%, transparent 70%)",
-                        borderRadius: "0 0 12px 12px",
-                      }}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.35 }}
-                    />
-                  )}
-                </AnimatePresence>
-              </div>
 
-              {/* Gap */}
-              <div className="absolute left-0 right-0 z-10" style={{ top: 49, height: 2, background: "rgba(0,0,0,0.7)" }} />
+                {/* Edge shimmer */}
+                <rect x="10" y="50" width="220" height="1" rx="0.5" fill="url(#envEdge)"/>
+
+                {/* Wax seal */}
+                <motion.g
+                  style={{ transformOrigin: "120px 79px" }}
+                  animate={isOpening ? { scale: 0, opacity: 0 } : { scale: [1, 1.04, 1] }}
+                  transition={isOpening ? { duration: 0.3 } : { repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                >
+                  <circle cx="120" cy="79" r="22" fill="rgba(212,168,32,0.15)"/>
+                  <circle cx="120" cy="79" r="18" fill="#b8800a"/>
+                  <circle cx="120" cy="79" r="14" fill="none" stroke="rgba(255,230,100,0.4)" strokeWidth="1"/>
+                  <text x="120" y="85" textAnchor="middle" fontSize="14" fill="rgba(255,230,100,0.9)"
+                    fontFamily="Georgia, serif">✦</text>
+                </motion.g>
+              </svg>
+
+              {/* Letter sliding out on open */}
+              <AnimatePresence>
+                {isOpening && (
+                  <motion.div
+                    style={{
+                      position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+                      width: 180, height: 120,
+                      background: "linear-gradient(160deg, #fdf8ee, #faf4e4)",
+                      borderRadius: 6,
+                      boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
+                      border: "1px solid rgba(212,168,32,0.3)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}
+                    initial={{ y: 30, opacity: 0 }}
+                    animate={{ y: -60, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <span style={{ fontSize: 28, filter: "drop-shadow(0 2px 6px rgba(180,120,0,0.4))" }}>✉️</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
 
-            {/* Gold burst — rays + sparks + shockwave */}
+            {/* Gold burst on open */}
             <AnimatePresence>
-              {boxOpen && (
+              {isOpening && (
                 <>
-                  {/* 12 rays */}
                   {Array.from({ length: 12 }).map((_, i) => (
                     <GoldRay key={i} angle={i * 30} delay={0.05 + i * 0.02} />
                   ))}
-
-                  {/* 30 sparks exploding outward */}
                   {Array.from({ length: 30 }).map((_, i) => (
                     <GoldSpark key={i} delay={0.05 + Math.random() * 0.15} />
                   ))}
-
-                  {/* Shockwave ring */}
-                  <motion.div
-                    className="absolute pointer-events-none rounded-full"
-                    style={{
-                      border: "2px solid rgba(255,200,0,0.6)",
-                      top: "50%", left: "50%",
-                      transform: "translate(-50%,-50%)",
-                    }}
+                  <motion.div className="absolute pointer-events-none rounded-full"
+                    style={{ border: "2px solid rgba(212,168,32,0.5)", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}
                     initial={{ width: 20, height: 20, opacity: 1 }}
-                    animate={{ width: 320, height: 320, opacity: 0 }}
-                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    animate={{ width: 380, height: 380, opacity: 0 }}
+                    transition={{ duration: 1.0, ease: "easeOut" }}
                   />
-
-                  {/* Second softer shockwave */}
-                  <motion.div
-                    className="absolute pointer-events-none rounded-full"
-                    style={{
-                      border: "1px solid rgba(255,220,80,0.3)",
-                      top: "50%", left: "50%",
-                      transform: "translate(-50%,-50%)",
-                    }}
+                  <motion.div className="absolute pointer-events-none rounded-full"
+                    style={{ border: "1px solid rgba(232,204,112,0.25)", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}
                     initial={{ width: 20, height: 20, opacity: 1 }}
-                    animate={{ width: 500, height: 500, opacity: 0 }}
-                    transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
+                    animate={{ width: 560, height: 560, opacity: 0 }}
+                    transition={{ duration: 1.3, ease: "easeOut", delay: 0.1 }}
                   />
-
-                  {/* Core flash */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: "radial-gradient(circle, rgba(255,230,100,0.45) 0%, transparent 55%)" }}
+                  <motion.div className="absolute inset-0 pointer-events-none"
+                    style={{ background: "radial-gradient(circle, rgba(212,168,32,0.25) 0%, transparent 55%)" }}
                     initial={{ opacity: 0, scale: 0.3 }}
                     animate={{ opacity: [0, 1, 0], scale: [0.3, 1.2, 1.8] }}
                     transition={{ duration: 1.0, ease: "easeOut" }}
@@ -1160,19 +1037,25 @@ export default function IntroOverlay({ theme, onComplete }) {
 
             <AnimatePresence>
               {!isOpening && (
-                <motion.div
-                  className="mt-10 flex flex-col items-center gap-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                <motion.div className="mt-10 flex flex-col items-center gap-3"
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 >
                   <motion.p
+                    style={{ fontSize: 11, letterSpacing: "0.08em",
+                      fontFamily: "Georgia, serif", fontStyle: "italic",
+                      color: "rgba(212,168,32,0.5)" }}
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ repeat: Infinity, duration: 3 }}
+                  >
+                    มีจดหมายถึงคุณ
+                  </motion.p>
+                  <motion.p
                     className="font-kanit font-light tracking-[0.35em] text-xs"
-                    style={{ color: "rgba(160,80,60,0.7)" }}
-                    animate={{ opacity: [0.4, 0.85, 0.4] }}
+                    style={{ color: "rgba(232,204,112,0.6)" }}
+                    animate={{ opacity: [0.4, 0.9, 0.4] }}
                     transition={{ repeat: Infinity, duration: 2.5 }}
                   >
-                    แตะเพื่อเปิดของขวัญ
+                    แตะเพื่อเปิด
                   </motion.p>
                 </motion.div>
               )}
