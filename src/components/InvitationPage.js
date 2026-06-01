@@ -152,7 +152,7 @@ export default function InvitationPage({ event, refetchEvent }) {
         }} />
       )}
 
-      <div className={`relative z-20 pt-24 px-6 pb-32 transition-all max-w-3xl mx-auto ${
+      <div className={`relative z-20 pt-24 px-6 pb-52 transition-all max-w-3xl mx-auto ${
         theme === 'anniversary' ? 'text-amber-50' : 'text-gray-800'
       }`}>
         <BGMPlayer
@@ -305,7 +305,7 @@ export default function InvitationPage({ event, refetchEvent }) {
           </div>
 
           {/* Right Column: Sticky Poster */}
-          <div className="md:w-1/2 w-full sticky top-24 self-start z-10">
+          <div className="md:w-1/2 w-full sticky top-24 self-start z-10 pb-24">
             <BioBox2
               // Wedding
               bridePic={event.bridePic}
