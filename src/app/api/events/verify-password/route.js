@@ -1,6 +1,10 @@
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { createClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export async function POST(req) {
   try {
@@ -9,14 +13,16 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "missing fields" }, { status: 400 });
     }
 
-    const cookieStore = await cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const isUUID = UUID_RE.test(eventId);
 
-    const { data: event, error } = await supabase
+    const query = supabaseAdmin
       .from("events")
-      .select("id, event_password, is_private")
-      .or(`id.eq.${eventId},slug.eq.${eventId}`)
-      .single();
+      .select("id, event_password, is_private");
+
+    const { data: event, error } = isUUID
+      ? await query.or(`id.eq.${eventId},slug.eq.${eventId}`).single()
+      : await query.eq("slug", eventId).single();
 
     if (error || !event) {
       return NextResponse.json({ success: false, error: "event not found" }, { status: 404 });
