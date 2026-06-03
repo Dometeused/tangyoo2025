@@ -88,28 +88,16 @@ export default function BirthdayLetter({ eventName, bio, senderName }) {
 
         <DashedLine />
 
-        {/* "ถึง" header */}
+        {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 16 }}>
           <p style={{
             fontFamily: "var(--font-kanit, sans-serif)",
             fontSize: 11,
             letterSpacing: "0.35em",
             color: "#a08040",
-            marginBottom: 4,
           }}>
-            ✦ จดหมายถึง ✦
+            ✦ จดหมาย ✦
           </p>
-          <h3 style={{
-            fontFamily: "Georgia, 'Times New Roman', serif",
-            fontStyle: "italic",
-            fontSize: "clamp(1.2rem, 5vw, 1.6rem)",
-            fontWeight: 700,
-            color: "#7a5820",
-            lineHeight: 1.2,
-            letterSpacing: "-0.01em",
-          }}>
-            {eventName || "คุณ"}
-          </h3>
         </div>
 
         <DashedLine />
@@ -121,7 +109,7 @@ export default function BirthdayLetter({ eventName, bio, senderName }) {
             fontFamily: "Georgia, 'Times New Roman', serif",
             fontStyle: "italic",
             fontSize: "clamp(0.85rem, 3.5vw, 1rem)",
-            color: "#5a3e18",
+            color: "#3a2608",
             lineHeight: 2.0,
             textAlign: "left",
             padding: "8px 4px",
